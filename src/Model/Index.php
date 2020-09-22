@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Model;
 
+use DateTimeImmutable;
 use DateTimeInterface;
 use GibsonOS\Core\Model\AbstractModel;
+use mysqlDatabase;
 
 class Index extends AbstractModel
 {
@@ -52,6 +54,13 @@ class Index extends AbstractModel
      * @var Rule|null
      */
     private $rule;
+
+    public function __construct(mysqlDatabase $database = null)
+    {
+        $this->setAdded(new DateTimeImmutable());
+
+        parent::__construct($database);
+    }
 
     public static function getTableName(): string
     {

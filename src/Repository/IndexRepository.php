@@ -7,6 +7,7 @@ use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Repository\AbstractRepository;
 use GibsonOS\Module\Archivist\Model\Index;
+use GibsonOS\Module\Archivist\Model\Rule;
 
 class IndexRepository extends AbstractRepository
 {
@@ -18,7 +19,8 @@ class IndexRepository extends AbstractRepository
     {
         $table = $this->getTable(Index::getTableName());
         $table
-            ->setWhere('`input_path`=?')
+            ->appendJoinLeft(Rule::getTableName(), '`' . Index::getTableName() . '`.`rule_id`=`' . Rule::getTableName() . '`.`id`')
+            ->setWhere('`' . Index::getTableName() . '`.`input_path`=?')
             ->addParameter($inputPath)
         ;
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6dd732f125dcf5aef3e2d9258abd5b26",
+    "content-hash": "b78b1e66ba8e7c0e00baed903d84e5c7",
     "packages": [
         {
             "name": "gibson-os/core",
@@ -73,7 +73,7 @@
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/mdo.git",
-                "reference": "980a92176fb910b18e343d1b58bd37fbafbb2a5b"
+                "reference": "6089a246dbf5e9ff611c2dc5742a1a86e852fe19"
             },
             "require": {
                 "ext-mbstring": "*",
@@ -117,7 +117,7 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2020-09-22T14:00:44+00:00"
+            "time": "2020-09-22T18:59:58+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",

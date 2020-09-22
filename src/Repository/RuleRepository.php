@@ -23,7 +23,7 @@ class RuleRepository extends AbstractRepository
         $table->setOrderBy('`active` DESC');
 
         if (!$table->select()) {
-            throw (new SelectError())->setTable($table);
+            return [];
         }
 
         do {
