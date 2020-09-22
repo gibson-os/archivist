@@ -1,0 +1,40 @@
+{
+  "name": "gibson-os/documentator",
+  "require": {
+    "mdo/mdo": "dev-master",
+    "gibson-os/core": "dev-master"
+  },
+  "require-dev": {
+    "codeception/codeception": "^3.1",
+    "friendsofphp/php-cs-fixer": "^2.15",
+    "phpmd/phpmd": "^2.7",
+    "captainhook/captainhook": "^4.5",
+    "captainhook/plugin-composer": "^4.0",
+    "vimeo/psalm": "^3.11"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@wolli.dyndns.tv:/home/git/mdo.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Core.git"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "GibsonOS\\Module\\Scan\\": "src/",
+      "Gibson\\Test\\Unit\\": "tests/unit/"
+    }
+  },
+  "scripts": {
+    "php-cs": "php ./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix src --verbose",
+    "php-cs-dry": "php ./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix src --verbose --dry-run",
+    "php-psalm": "php ./vendor/vimeo/psalm/psalm",
+    "php-md": "php ./vendor/phpmd/phpmd/src/bin/phpmd src text ruleset.xml",
+    "php-unit": "php ./vendor/codeception/codeception/codecept run unit --ext DotReporter",
+    "php-unit-push": "php ./vendor/codeception/codeception/codecept run unit --ext DotReporter --no-ansi --no-colors",
+    "php-unit-add": "php ./vendor/codeception/codeception/codecept generate:test unit"
+  }
+}
