@@ -2,8 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Archivist.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Archivist.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/IndexerCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/IndexerCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Index.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Rule.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Rule.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/IndexRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/IndexRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/RuleRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RuleRepository.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,7 +175,7 @@
       <option name="presentableId" value="Default" />
       <updated>1600774946803</updated>
       <workItem from="1600774947950" duration="7845000" />
-      <workItem from="1600787304390" duration="9000" />
+      <workItem from="1600787304390" duration="830000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
@@ -192,7 +198,14 @@
       <option name="project" value="LOCAL" />
       <updated>1600784271907</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Change composer name to archivist">
+      <created>1600787360696</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1600787360696</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -203,7 +216,8 @@
     <MESSAGE value="Change to archivist" />
     <MESSAGE value="Add index command" />
     <MESSAGE value="Add gitkeep" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add gitkeep" />
+    <MESSAGE value="Change composer name to archivist" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change composer name to archivist" />
   </component>
   <component name="WindowStateProjectService">
     <state x="586" y="198" key="#Inspections" timestamp="1600783566752">
@@ -220,10 +234,11 @@
     </state>
     <state x="765" y="201" key="#com.intellij.ide.util.MemberChooser/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600780267347" />
     <state x="2685" y="201" key="#com.intellij.ide.util.MemberChooser/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600777991570" />
-    <state x="577" y="106" key="CommitChangelistDialog2" timestamp="1600784265480">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="2497" y="106" key="CommitChangelistDialog2" timestamp="1600787351963">
+      <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="577" y="106" key="CommitChangelistDialog2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600784265480" />
+    <state x="2497" y="106" key="CommitChangelistDialog2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600787351963" />
     <state x="691" y="242" key="NewPhpClassDialog" timestamp="1600781095376">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -233,10 +248,15 @@
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="2381" y="164" key="SettingsEditor/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600775084061" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1600784273188">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="2472" y="252" key="Vcs.Push.Dialog.v2" timestamp="1600787377248">
+      <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="252" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600784273188" />
+    <state x="2472" y="252" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600787377248" />
+    <state x="666" y="224" width="587" height="592" key="find.popup" timestamp="1600788389119">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="666" y="224" width="587" height="592" key="find.popup/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600788389119" />
     <state x="732" y="421" key="git4idea.remote.GitConfigureRemotesDialog" timestamp="1600774986579">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

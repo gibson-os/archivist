@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace GibsonOS\Module\Scan\Repository;
+namespace GibsonOS\Module\Archivist\Repository;
 
 use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Repository\AbstractRepository;
-use GibsonOS\Module\Scan\Model\Index;
+use GibsonOS\Module\Archivist\Model\Index;
 
 class IndexRepository extends AbstractRepository
 {

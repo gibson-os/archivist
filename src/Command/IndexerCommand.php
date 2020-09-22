@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace GibsonOS\Module\Scan\Command;
+namespace GibsonOS\Module\Archivist\Command;
 
 use GibsonOS\Core\Command\AbstractCommand;
 use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Service\DirService;
-use GibsonOS\Module\Scan\Repository\RuleRepository;
+use GibsonOS\Module\Archivist\Repository\RuleRepository;
 
 class IndexerCommand extends AbstractCommand
 {
@@ -45,6 +45,7 @@ class IndexerCommand extends AbstractCommand
             }
 
             foreach ($this->dirService->getFiles($directory, $rule->getObserveFilename() ?? '*') as $file) {
+                echo $file . PHP_EOL;
             }
         }
 

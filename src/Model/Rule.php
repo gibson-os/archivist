@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace GibsonOS\Module\Scan\Model;
+namespace GibsonOS\Module\Archivist\Model;
 
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Model\User;
