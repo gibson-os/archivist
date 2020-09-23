@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/6644c731-baf5-4148-b10c-2b50c51dab33.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/6644c731-baf5-4148-b10c-2b50c51dab33.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/6644c731-baf5-4148-b10c-2b50c51dab33/storage_v2/_src_/schema/gibson_os.cbOTTQ.zip" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/6644c731-baf5-4148-b10c-2b50c51dab33/storage_v2/_src_/schema/gibson_os.cbOTTQ.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Command/IndexerCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/IndexerCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Index.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Rule.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Rule.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/IndexRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/IndexRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/RuleService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/RuleService.php" afterDir="false" />
-    </list>
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -181,7 +171,7 @@
       <workItem from="1600798692700" duration="47000" />
       <workItem from="1600798761128" duration="3870000" />
       <workItem from="1600805582114" duration="7026000" />
-      <workItem from="1600849596160" duration="1477000" />
+      <workItem from="1600849596160" duration="1996000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
@@ -218,7 +208,14 @@
       <option name="project" value="LOCAL" />
       <updated>1600788471308</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Change indexer command">
+      <created>1600851172267</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1600851172267</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -258,12 +255,12 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600850760776" />
-    <state x="577" y="106" key="CommitChangelistDialog2" timestamp="1600812625104">
+    <state x="577" y="106" key="CommitChangelistDialog2" timestamp="1600851166895">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="577" y="106" key="CommitChangelistDialog2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600788463658" />
     <state x="2497" y="106" key="CommitChangelistDialog2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600787351963" />
-    <state x="577" y="106" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1600812625104" />
+    <state x="577" y="106" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1600851166895" />
     <state width="1293" height="274" key="GridCell.Tab.0.bottom" timestamp="1600800946632">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -289,11 +286,12 @@
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="2381" y="164" key="SettingsEditor/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600775084061" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1600788473347">
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1600851174917">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="252" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600788473347" />
     <state x="2472" y="252" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600787377248" />
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1600851174917" />
     <state x="814" y="407" width="316" height="247" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1600811467318">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
