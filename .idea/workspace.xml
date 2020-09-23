@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Update composer">
-      <change afterPath="$PROJECT_DIR$/assets/js/index/TabPanel.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/js/rule/Grid.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/js/rule/model/Grid.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/js/rule/store/Grid.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Store/RuleStore.php" afterDir="false" />
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/assets/js/rule/Window.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/js/index/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/index/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/RuleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RuleController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rule/Grid.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Grid.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -257,7 +252,14 @@
       <option name="project" value="LOCAL" />
       <updated>1600856081893</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Add rule store">
+      <created>1600898989115</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1600898989115</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -273,7 +275,8 @@
     <MESSAGE value="Change indexer command" />
     <MESSAGE value="Update composer" />
     <MESSAGE value="Change workspace" />
-    <option name="LAST_COMMIT_MESSAGE" value="Change workspace" />
+    <MESSAGE value="Add rule store" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add rule store" />
   </component>
   <component name="WindowStateProjectService">
     <state x="586" y="198" key="#Inspections" timestamp="1600783566752">
@@ -300,12 +303,12 @@
     </state>
     <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600856567236" />
     <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600898300775" />
-    <state x="577" y="106" key="CommitChangelistDialog2" timestamp="1600893333169">
+    <state x="242" y="106" width="1300" height="864" key="CommitChangelistDialog2" timestamp="1600898979394">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="577" y="106" key="CommitChangelistDialog2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600893333169" />
     <state x="2497" y="106" key="CommitChangelistDialog2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600787351963" />
-    <state x="577" y="106" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1600856076530" />
+    <state x="242" y="106" width="1300" height="864" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1600898979394" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1600896363408">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -336,12 +339,12 @@
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="2381" y="164" key="SettingsEditor/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600775084061" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1600856085789">
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1600898991712">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="252" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600788473347" />
     <state x="2472" y="252" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600787377248" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1600856085789" />
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1600898991712" />
     <state x="814" y="407" width="316" height="247" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1600811467318">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

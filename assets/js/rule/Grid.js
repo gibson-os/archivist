@@ -42,7 +42,16 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
         me.dockedItems = [{
             xtype: 'gosToolbar',
             dock: 'top',
-            items: []
+            items: [{
+                iconCls: 'icon_system system_add',
+                handler: {}
+            },{
+                iconCls: 'icon_system system_delete',
+                disabled: true,
+                handler: {
+
+                }
+            }]
         },{
             xtype: 'gosToolbarPaging',
             itemId: 'explorerHtml5Paging',
