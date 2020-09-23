@@ -3,7 +3,7 @@ Ext.define('GibsonOS.module.archivist.index.App', {
     alias: ['widget.gosModuleArchivistIndexApp'],
     title: 'Archivator',
     appIcon: 'icon_scan',
-    width: 600,
+    width: 700,
     height: 500,
     requiredPermission: {
         module: 'archivist',
@@ -11,6 +11,10 @@ Ext.define('GibsonOS.module.archivist.index.App', {
     },
     initComponent: function() {
         let me = this;
+
+        me.items = [{
+            xtype: 'gosModuleArchivistIndexTabPanel'
+        }];
 
         me.callParent();
     }

@@ -2,11 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Update composer">
-      <change afterPath="$PROJECT_DIR$/assets/js/index/App.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Controller/IndexController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Controller/RuleController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/js/index/TabPanel.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/js/rule/Grid.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/js/rule/model/Grid.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/js/rule/store/Grid.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Store/RuleStore.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/index/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/index/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/RuleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RuleController.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -247,7 +250,14 @@
       <option name="project" value="LOCAL" />
       <updated>1600854421978</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Change workspace">
+      <created>1600856081893</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1600856081893</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -262,7 +272,8 @@
     <MESSAGE value="Fix namespace" />
     <MESSAGE value="Change indexer command" />
     <MESSAGE value="Update composer" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update composer" />
+    <MESSAGE value="Change workspace" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change workspace" />
   </component>
   <component name="WindowStateProjectService">
     <state x="586" y="198" key="#Inspections" timestamp="1600783566752">
@@ -274,27 +285,31 @@
     </state>
     <state x="552" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600779231862" />
     <state x="2472" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600779191788" />
-    <state x="765" y="201" key="#com.intellij.ide.util.MemberChooser" timestamp="1600808759442">
+    <state x="765" y="201" key="#com.intellij.ide.util.MemberChooser" timestamp="1600898567389">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="201" key="#com.intellij.ide.util.MemberChooser/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600780267347" />
     <state x="2685" y="201" key="#com.intellij.ide.util.MemberChooser/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600777991570" />
-    <state x="765" y="201" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1600808759442" />
+    <state x="765" y="201" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1600898567389" />
     <state x="629" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1600811512040">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="629" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600811512040" />
-    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1600856567236">
+    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1600898300775">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600856567236" />
-    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600850760776" />
+    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600898300775" />
     <state x="577" y="106" key="CommitChangelistDialog2" timestamp="1600893333169">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="577" y="106" key="CommitChangelistDialog2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600893333169" />
     <state x="2497" y="106" key="CommitChangelistDialog2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600787351963" />
-    <state x="577" y="106" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1600854413809" />
+    <state x="577" y="106" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1600856076530" />
+    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1600896363408">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600896363408" />
     <state width="1293" height="274" key="GridCell.Tab.0.bottom" timestamp="1600800946632">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -311,21 +326,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1293" height="274" key="GridCell.Tab.0.right/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600800946632" />
-    <state x="691" y="242" key="NewPhpClassDialog" timestamp="1600856513433">
+    <state x="691" y="242" key="NewPhpClassDialog" timestamp="1600898062125">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="691" y="242" key="NewPhpClassDialog/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600856513433" />
     <state x="2611" y="242" key="NewPhpClassDialog/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600776694643" />
+    <state x="691" y="242" key="NewPhpClassDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600898062125" />
     <state x="2381" y="164" key="SettingsEditor" timestamp="1600775084061">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="2381" y="164" key="SettingsEditor/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600775084061" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1600854424099">
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1600856085789">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="252" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600788473347" />
     <state x="2472" y="252" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600787377248" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1600854424099" />
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1600856085789" />
     <state x="814" y="407" width="316" height="247" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1600811467318">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
