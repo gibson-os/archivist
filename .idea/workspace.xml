@@ -2,13 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Service/RuleService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/6644c731-baf5-4148-b10c-2b50c51dab33.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/6644c731-baf5-4148-b10c-2b50c51dab33.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/6644c731-baf5-4148-b10c-2b50c51dab33/storage_v2/_src_/schema/gibson_os.cbOTTQ.zip" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/6644c731-baf5-4148-b10c-2b50c51dab33/storage_v2/_src_/schema/gibson_os.cbOTTQ.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Command/IndexerCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/IndexerCommand.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/Index.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Rule.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Rule.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Repository/IndexRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/IndexRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/RuleRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RuleRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/RuleService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/RuleService.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,6 +180,8 @@
       <workItem from="1600794271367" duration="707000" />
       <workItem from="1600798692700" duration="47000" />
       <workItem from="1600798761128" duration="3870000" />
+      <workItem from="1600805582114" duration="7026000" />
+      <workItem from="1600849596160" duration="1477000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
@@ -227,7 +231,8 @@
     <MESSAGE value="Add gitkeep" />
     <MESSAGE value="Change composer name to archivist" />
     <MESSAGE value="Fix namespace" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix namespace" />
+    <MESSAGE value="Change indexer command" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change indexer command" />
   </component>
   <component name="WindowStateProjectService">
     <state x="586" y="198" key="#Inspections" timestamp="1600783566752">
@@ -239,16 +244,26 @@
     </state>
     <state x="552" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600779231862" />
     <state x="2472" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600779191788" />
-    <state x="765" y="201" key="#com.intellij.ide.util.MemberChooser" timestamp="1600780267347">
+    <state x="765" y="201" key="#com.intellij.ide.util.MemberChooser" timestamp="1600808759442">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="201" key="#com.intellij.ide.util.MemberChooser/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600780267347" />
     <state x="2685" y="201" key="#com.intellij.ide.util.MemberChooser/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600777991570" />
-    <state x="577" y="106" key="CommitChangelistDialog2" timestamp="1600788463658">
+    <state x="765" y="201" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1600808759442" />
+    <state x="629" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1600811512040">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="629" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600811512040" />
+    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1600850760776">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600850760776" />
+    <state x="577" y="106" key="CommitChangelistDialog2" timestamp="1600812625104">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="577" y="106" key="CommitChangelistDialog2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600788463658" />
     <state x="2497" y="106" key="CommitChangelistDialog2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600787351963" />
+    <state x="577" y="106" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1600812625104" />
     <state width="1293" height="274" key="GridCell.Tab.0.bottom" timestamp="1600800946632">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -279,14 +294,20 @@
     </state>
     <state x="552" y="252" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600788473347" />
     <state x="2472" y="252" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600787377248" />
-    <state x="814" y="407" width="316" height="245" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1600800376465">
+    <state x="814" y="407" width="316" height="247" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1600811467318">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="814" y="407" width="316" height="245" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600800376465" />
-    <state x="666" y="224" width="587" height="592" key="find.popup" timestamp="1600788936344">
+    <state x="814" y="407" width="316" height="247" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/0.0.1920.1040@0.0.1920.1040" timestamp="1600811467318" />
+    <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600849861436">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1600849861436" />
+    <state x="666" y="224" width="587" height="592" key="find.popup" timestamp="1600809787840">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="666" y="224" width="587" height="592" key="find.popup/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600788936344" />
+    <state x="666" y="224" width="587" height="592" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1600809787840" />
     <state x="732" y="421" key="git4idea.remote.GitConfigureRemotesDialog" timestamp="1600774986579">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

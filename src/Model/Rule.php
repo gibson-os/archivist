@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Model;
 
+use GibsonOS\Core\Exception\DateTimeError;
+use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Model\User;
 
@@ -29,12 +31,12 @@ class Rule extends AbstractModel
     private $observeFilename;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $moveDirectory;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $moveFilename;
 
@@ -116,24 +118,24 @@ class Rule extends AbstractModel
         return $this;
     }
 
-    public function getMoveDirectory(): ?string
+    public function getMoveDirectory(): string
     {
         return $this->moveDirectory;
     }
 
-    public function setMoveDirectory(?string $moveDirectory): Rule
+    public function setMoveDirectory(string $moveDirectory): Rule
     {
         $this->moveDirectory = $moveDirectory;
 
         return $this;
     }
 
-    public function getMoveFilename(): ?string
+    public function getMoveFilename(): string
     {
         return $this->moveFilename;
     }
 
-    public function setMoveFilename(?string $moveFilename): Rule
+    public function setMoveFilename(string $moveFilename): Rule
     {
         $this->moveFilename = $moveFilename;
 
@@ -182,6 +184,29 @@ class Rule extends AbstractModel
         return $this;
     }
 
+    public function addIndex(Index $index): Rule
+    {
+        $this->indexed[] = $index;
+
+        return $this;
+    }
+
+    /**
+     * @throws DateTimeError
+     */
+    public function loadIndexed()
+    {
+        /** @var Index[] $indexed */
+        $indexed = $this->loadForeignRecords(
+            Index::class,
+            $this->getId(),
+            Index::getTableName(),
+            'rule_id'
+        );
+
+        $this->setIndexed($indexed);
+    }
+
     public function getUserId(): int
     {
         return $this->userId;
@@ -194,14 +219,21 @@ class Rule extends AbstractModel
         return $this;
     }
 
+    /**
+     * @throws DateTimeError
+     * @throws SelectError
+     */
     public function getUser(): User
     {
+        $this->loadForeignRecord($this->user, $this->getUserId());
+
         return $this->user;
     }
 
     public function setUser(User $user): Rule
     {
         $this->user = $user;
+        $this->setUserId((int) $user->getId());
 
         return $this;
     }

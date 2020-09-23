@@ -5,16 +5,20 @@ namespace GibsonOS\Module\Archivist\Command;
 
 use GibsonOS\Core\Command\AbstractCommand;
 use GibsonOS\Core\Exception\DateTimeError;
+use GibsonOS\Core\Exception\Flock\LockError;
 use GibsonOS\Core\Exception\GetError;
+use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Service\DirService;
-use GibsonOS\Module\Archivist\Model\Index;
+use GibsonOS\Core\Service\LockService;
 use GibsonOS\Module\Archivist\Repository\IndexRepository;
 use GibsonOS\Module\Archivist\Repository\RuleRepository;
 use GibsonOS\Module\Archivist\Service\RuleService;
 
 class IndexerCommand extends AbstractCommand
 {
+    private const LOCK_NAME = 'archivistIndexer';
+
     /**
      * @var RuleRepository
      */
@@ -35,60 +39,50 @@ class IndexerCommand extends AbstractCommand
      */
     private $ruleService;
 
+    /**
+     * @var LockService
+     */
+    private $lockService;
+
     public function __construct(
         RuleRepository $ruleRepository,
         IndexRepository $indexRepository,
         DirService $dirService,
-        RuleService $ruleService
+        RuleService $ruleService,
+        LockService $lockService
     ) {
         $this->ruleRepository = $ruleRepository;
         $this->dirService = $dirService;
         $this->indexRepository = $indexRepository;
         $this->ruleService = $ruleService;
+        $this->lockService = $lockService;
     }
 
     /**
      * @throws DateTimeError
      * @throws GetError
      * @throws SelectError
+     * @throws SaveError
      */
     protected function run(): int
     {
-        $scannedDirectories = [];
+        try {
+            $this->lockService->lock(self::LOCK_NAME);
+            $scannedDirectories = [];
 
-        foreach ($this->ruleRepository->getAll() as $rule) {
-            $directory = $this->dirService->addEndSlash($rule->getObserveDirectory());
+            foreach ($this->ruleRepository->getAll() as $rule) {
+                $directory = $this->dirService->addEndSlash($rule->getObserveDirectory());
 
-            if (isset($scannedDirectories[$directory . $rule->getObserveFilename()])) {
-                continue;
-            }
-
-            foreach ($this->dirService->getFiles($directory, $rule->getObserveFilename() ?? '*') as $filename) {
-                try {
-                    $indexedFile = $this->indexRepository->getByInputPath($filename);
-                } catch (DateTimeError | SelectError $e) {
-                    $indexedFile = (new Index())
-                        ->setRule($rule->isActive() ? $rule : null)
-                        ->setInputPath($filename)
-                    ;
-                    $indexedFile->setOutputPath($this->ruleService->getOutputPath($indexedFile));
+                if (isset($scannedDirectories[$directory . $rule->getObserveFilename()])) {
+                    continue;
                 }
 
-                $size = filesize($filename);
-
-                if (
-                    $size !== 0 &&
-                    $size === $indexedFile->getSize()
-                ) {
-                }
-
-                $indexedFile
-                    ->setSize($size)
-                    ->save()
-                ;
-
-                echo $indexedFile->getOutputPath() . PHP_EOL;
+                $this->ruleService->indexFiles($rule);
             }
+
+            $this->lockService->unlock(self::LOCK_NAME);
+        } catch (LockError $e) {
+            // Indexer in progress
         }
 
         return 0;

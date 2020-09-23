@@ -5,6 +5,8 @@ namespace GibsonOS\Module\Archivist\Model;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use GibsonOS\Core\Exception\DateTimeError;
+use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Model\AbstractModel;
 use mysqlDatabase;
 
@@ -21,7 +23,7 @@ class Index extends AbstractModel
     private $inputPath;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $outputPath;
 
@@ -31,16 +33,6 @@ class Index extends AbstractModel
     private $size = 0;
 
     /**
-     * @var bool
-     */
-    private $new = true;
-
-    /**
-     * @var bool
-     */
-    private $deleted = false;
-
-    /**
      * @var int|null
      */
     private $ruleId;
@@ -48,7 +40,7 @@ class Index extends AbstractModel
     /**
      * @var DateTimeInterface
      */
-    private $added;
+    private $changed;
 
     /**
      * @var Rule|null
@@ -57,7 +49,7 @@ class Index extends AbstractModel
 
     public function __construct(mysqlDatabase $database = null)
     {
-        $this->setAdded(new DateTimeImmutable());
+        $this->setChanged(new DateTimeImmutable());
 
         parent::__construct($database);
     }
@@ -91,12 +83,12 @@ class Index extends AbstractModel
         return $this;
     }
 
-    public function getOutputPath(): string
+    public function getOutputPath(): ?string
     {
         return $this->outputPath;
     }
 
-    public function setOutputPath(string $outputPath): Index
+    public function setOutputPath(?string $outputPath): Index
     {
         $this->outputPath = $outputPath;
 
@@ -115,30 +107,6 @@ class Index extends AbstractModel
         return $this;
     }
 
-    public function isNew(): bool
-    {
-        return $this->new;
-    }
-
-    public function setNew(bool $new): Index
-    {
-        $this->new = $new;
-
-        return $this;
-    }
-
-    public function isDeleted(): bool
-    {
-        return $this->deleted;
-    }
-
-    public function setDeleted(bool $deleted): Index
-    {
-        $this->deleted = $deleted;
-
-        return $this;
-    }
-
     public function getRuleId(): ?int
     {
         return $this->ruleId;
@@ -151,26 +119,41 @@ class Index extends AbstractModel
         return $this;
     }
 
-    public function getAdded(): DateTimeInterface
+    public function getChanged(): DateTimeInterface
     {
-        return $this->added;
+        return $this->changed;
     }
 
-    public function setAdded(DateTimeInterface $added): Index
+    public function setChanged(DateTimeInterface $changed): Index
     {
-        $this->added = $added;
+        $this->changed = $changed;
 
         return $this;
     }
 
+    /**
+     * @throws DateTimeError
+     * @throws SelectError
+     */
     public function getRule(): ?Rule
     {
+        $ruleId = $this->getRuleId();
+
+        if ($ruleId !== null) {
+            if ($this->rule === null) {
+                $this->rule = new Rule();
+            }
+
+            $this->loadForeignRecord($this->rule, $ruleId);
+        }
+
         return $this->rule;
     }
 
     public function setRule(?Rule $rule): Index
     {
         $this->rule = $rule;
+        $this->setRuleId($rule instanceof Rule ? $rule->getId() : null);
 
         return $this;
     }
