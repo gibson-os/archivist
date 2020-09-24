@@ -1,0 +1,21 @@
+Ext.define('GibsonOS.module.archivist.rule.Window', {
+    extend: 'GibsonOS.Window',
+    alias: ['widget.gosModuleArchivistRuleWindow'],
+    title: 'Regel',
+    width: 500,
+    height: 300,
+    requiredPermission: {
+        module: 'archivist',
+        task: 'rule'
+    },
+    initComponent: function() {
+        let me = this;
+
+        me.items = [{
+            xtype: 'gosModuleArchivistRuleForm',
+            gos: me.gos
+        }];
+
+        me.callParent();
+    }
+});

@@ -16,7 +16,7 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
             flex: 1
         },{
             dataIndex: 'observeDirectory',
-            text: 'Beobachtes Verzeichnis',
+            text: 'Beobachtetes Verzeichnis',
             flex: 1
         },{
             dataIndex: 'observeFilename',
@@ -44,11 +44,13 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
             dock: 'top',
             items: [{
                 iconCls: 'icon_system system_add',
-                handler: {}
+                handler: function() {
+                    new GibsonOS.module.archivist.rule.Window();
+                }
             },{
                 iconCls: 'icon_system system_delete',
                 disabled: true,
-                handler: {
+                handler: function() {
 
                 }
             }]
