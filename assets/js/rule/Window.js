@@ -3,7 +3,7 @@ Ext.define('GibsonOS.module.archivist.rule.Window', {
     alias: ['widget.gosModuleArchivistRuleWindow'],
     title: 'Regel',
     width: 500,
-    height: 300,
+    autoHeight: true,
     requiredPermission: {
         module: 'archivist',
         task: 'rule'
@@ -17,5 +17,9 @@ Ext.define('GibsonOS.module.archivist.rule.Window', {
         }];
 
         me.callParent();
+
+        me.down('gosModuleArchivistRuleForm').on('afterSaveForm', function(form, action) {
+            me.close();
+        });
     }
 });

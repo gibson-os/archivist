@@ -2,7 +2,8 @@
   "name": "gibson-os/archivist",
   "require": {
     "mdo/mdo": "dev-master",
-    "gibson-os/core": "dev-master"
+    "gibson-os/core": "dev-master",
+    "ext-json": "*"
   },
   "require-dev": {
     "codeception/codeception": "^3.1",

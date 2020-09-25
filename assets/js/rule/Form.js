@@ -17,29 +17,82 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
             fieldLabel: 'Name',
             name: 'name'
         },{
-            xtype: 'gosFormTextfield',
+            xtype: 'fieldcontainer',
             fieldLabel: 'Beobachtetes Verzeichnis',
-            name: 'observeDirectory'
+            layout: 'hbox',
+            defaults: {
+                hideLabel: true
+            },
+            items: [{
+                xtype: 'gosFormTextfield',
+                name: 'observeDirectory',
+                flex: 1,
+                margins: '0 5 0 0'
+            },{
+                xtype: 'gosButton',
+                text: '...',
+                handler: function() {
+                    GibsonOS.module.explorer.dir.fn.dialog(me.getForm().findField('observeDirectory'));
+                }
+            }]
         },{
             xtype: 'gosFormTextfield',
             fieldLabel: 'Beobachtete Dateinamen',
             name: 'observeFilename'
         },{
-            xtype: 'gosFormTextfield',
+            xtype: 'fieldcontainer',
             fieldLabel: 'Ziel Verzeichnis',
-            name: 'moveDirectory'
+            layout: 'hbox',
+            defaults: {
+                hideLabel: true
+            },
+            items: [{
+                xtype: 'gosFormTextfield',
+                name: 'moveDirectory',
+                flex: 1,
+                margins: '0 5 0 0'
+            },{
+                xtype: 'gosButton',
+                text: '...',
+                handler: function() {
+                    GibsonOS.module.explorer.dir.fn.dialog(me.getForm().findField('moveDirectory'));
+                }
+            }]
         },{
             xtype: 'gosFormTextfield',
             fieldLabel: 'Ziel Dateiname',
             name: 'moveFilename'
         },{
-            xtype: 'gosFormCheckbox',
-            name: 'active',
-            boxLabel: 'Aktiv'
-        },{
             xtype: 'gosFormNumberfield',
             fieldLabel: 'Anzahl',
             name: 'count'
+        },{
+            xtype: 'gosFormCheckbox',
+            name: 'active',
+            fieldLabel: '&nbsp;',
+            labelSeparator: '',
+            boxLabel: 'Aktiv'
+        }];
+
+        me.buttons = [{
+            text: 'Speichern',
+            itemId: 'archivistRuleFormSaveButton',
+            requiredPermission: {
+                action:'save',
+                permission: GibsonOS.Permission.WRITE
+            },
+            handler: function() {
+                me.getForm().submit({
+                    xtype: 'gosFormActionAction',
+                    url: baseDir + 'archivist/rule/save',
+                    success: function(form, action) {
+                        me.fireEvent('afterSaveForm', {
+                            form: me,
+                            action: action
+                        });
+                    }
+                });
+            }
         }];
 
         me.callParent();

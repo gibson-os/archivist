@@ -7,8 +7,9 @@ use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Model\User;
+use JsonSerializable;
 
-class Rule extends AbstractModel
+class Rule extends AbstractModel implements JsonSerializable
 {
     /**
      * @var int|null
@@ -236,5 +237,19 @@ class Rule extends AbstractModel
         $this->setUserId((int) $user->getId());
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'observeDirectory' => $this->getObserveDirectory(),
+            'observeFilename' => $this->getObserveFilename(),
+            'moveDirectory' => $this->getMoveDirectory(),
+            'moveFilename' => $this->getMoveFilename(),
+            'active' => $this->isActive(),
+            'count' => $this->getCount(),
+        ];
     }
 }
