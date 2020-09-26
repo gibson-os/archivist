@@ -25,20 +25,20 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
             },
             items: [{
                 xtype: 'gosFormTextfield',
-                name: 'observeDirectory',
+                name: 'observedDirectory',
                 flex: 1,
                 margins: '0 5 0 0'
             },{
                 xtype: 'gosButton',
                 text: '...',
                 handler: function() {
-                    GibsonOS.module.explorer.dir.fn.dialog(me.getForm().findField('observeDirectory'));
+                    GibsonOS.module.explorer.dir.fn.dialog(me.getForm().findField('observedDirectory'));
                 }
             }]
         },{
             xtype: 'gosFormTextfield',
             fieldLabel: 'Beobachtete Dateinamen',
-            name: 'observeFilename'
+            name: 'observedFilename'
         },{
             xtype: 'fieldcontainer',
             fieldLabel: 'Ziel Verzeichnis',
@@ -65,7 +65,8 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
         },{
             xtype: 'gosFormNumberfield',
             fieldLabel: 'Anzahl',
-            name: 'count'
+            name: 'count',
+            value: 0
         },{
             xtype: 'gosFormCheckbox',
             name: 'active',

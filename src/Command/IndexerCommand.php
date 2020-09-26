@@ -71,9 +71,9 @@ class IndexerCommand extends AbstractCommand
             $scannedDirectories = [];
 
             foreach ($this->ruleRepository->getAll() as $rule) {
-                $directory = $this->dirService->addEndSlash($rule->getObserveDirectory());
+                $directory = $this->dirService->addEndSlash($rule->getObservedDirectory());
 
-                if (isset($scannedDirectories[$directory . $rule->getObserveFilename()])) {
+                if (isset($scannedDirectories[$directory . $rule->getObservedFilename()])) {
                     continue;
                 }
 

@@ -34,20 +34,20 @@ class RuleRepository extends AbstractRepository
         } while ($table->next());
     }
 
-    public function hasActive(string $observeDirectory, string $observeFilename = null): bool
+    public function hasActive(string $observedDirectory, string $observedFilename = null): bool
     {
         $table = $this->getTable(Rule::getTableName());
         $table
             ->setWhere(
-                '`observe_directory`=?' .
-                ($observeFilename === null ? '' : ' AND `observe_filename`=?') .
-                '`active`=1'
+                '`observed_directory`=? AND ' .
+                '`active`=1' .
+                ($observedFilename === null ? '' : ' AND `observed_filename`=?')
             )
-            ->addParameter($observeDirectory)
+            ->addParameter($observedDirectory)
         ;
 
-        if ($observeFilename !== null) {
-            $table->addParameter($observeFilename);
+        if ($observedFilename !== null) {
+            $table->addParameter($observedFilename);
         }
 
         return (bool) $table->selectPrepared(false);

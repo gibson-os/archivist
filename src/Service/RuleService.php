@@ -100,9 +100,9 @@ class RuleService extends AbstractService
      */
     public function indexFiles(Rule $rule): void
     {
-        $directory = $this->dirService->addEndSlash($rule->getObserveDirectory());
+        $directory = $this->dirService->addEndSlash($rule->getObservedDirectory());
 
-        foreach ($this->dirService->getFiles($directory, $rule->getObserveFilename() ?? '*') as $filename) {
+        foreach ($this->dirService->getFiles($directory, $rule->getObservedFilename() ?? '*') as $filename) {
             try {
                 $indexedFile = $this->indexRepository->getByInputPath($filename);
             } catch (SelectError $e) {

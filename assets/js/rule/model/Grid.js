@@ -7,10 +7,10 @@ Ext.define('GibsonOS.module.archivist.rule.model.Grid', {
         name: 'name',
         type: 'string'
     },{
-        name: 'observeDirectory',
+        name: 'observedDirectory',
         type: 'string'
     },{
-        name: 'observeFilename',
+        name: 'observedFilename',
         type: 'string'
     },{
         name: 'moveDirectory',

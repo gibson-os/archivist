@@ -27,8 +27,8 @@ class RuleStore extends AbstractDatabaseStore
     {
         return [
             'name' => '`name`',
-            'observeDirector' => '`observer_directory`',
-            'observeFilename' => '`observer_filename`',
+            'observedDirector' => '`observed_directory`',
+            'observedFilename' => '`observed_filename`',
             'moveDirectory' => '`move_directory`',
             'moveFilename' => '`move_filename`',
         ];

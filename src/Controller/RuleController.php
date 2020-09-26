@@ -38,8 +38,8 @@ class RuleController extends AbstractController
      */
     public function save(
         string $name,
-        string $observeDirectory,
-        string $observeFilename,
+        string $observedDirectory,
+        string $observedFilename,
         string $moveDirectory,
         string $moveFilename,
         int $count,
@@ -51,8 +51,8 @@ class RuleController extends AbstractController
         $rule = (new Rule())
             ->setId($id)
             ->setName($name)
-            ->setObserveDirectory($observeDirectory)
-            ->setObserveFilename($observeFilename ?: null)
+            ->setObservedDirectory($observedDirectory)
+            ->setObservedFilename($observedFilename ?: null)
             ->setMoveDirectory($moveDirectory)
             ->setMoveFilename($moveFilename)
             ->setCount($count)

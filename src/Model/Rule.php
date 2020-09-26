@@ -24,12 +24,12 @@ class Rule extends AbstractModel implements JsonSerializable
     /**
      * @var string
      */
-    private $observeDirectory;
+    private $observedDirectory;
 
     /**
      * @var string|null
      */
-    private $observeFilename;
+    private $observedFilename;
 
     /**
      * @var string
@@ -95,26 +95,26 @@ class Rule extends AbstractModel implements JsonSerializable
         return $this;
     }
 
-    public function getObserveDirectory(): string
+    public function getObservedDirectory(): string
     {
-        return $this->observeDirectory;
+        return $this->observedDirectory;
     }
 
-    public function setObserveDirectory(string $observeDirectory): Rule
+    public function setObservedDirectory(string $observedDirectory): Rule
     {
-        $this->observeDirectory = $observeDirectory;
+        $this->observedDirectory = $observedDirectory;
 
         return $this;
     }
 
-    public function getObserveFilename(): ?string
+    public function getObservedFilename(): ?string
     {
-        return $this->observeFilename;
+        return $this->observedFilename;
     }
 
-    public function setObserveFilename(?string $observeFilename): Rule
+    public function setObservedFilename(?string $observedFilename): Rule
     {
-        $this->observeFilename = $observeFilename;
+        $this->observedFilename = $observedFilename;
 
         return $this;
     }
@@ -244,8 +244,8 @@ class Rule extends AbstractModel implements JsonSerializable
         return [
             'id' => $this->getId(),
             'name' => $this->getName(),
-            'observeDirectory' => $this->getObserveDirectory(),
-            'observeFilename' => $this->getObserveFilename(),
+            'observedDirectory' => $this->getObservedDirectory(),
+            'observedFilename' => $this->getObservedFilename(),
             'moveDirectory' => $this->getMoveDirectory(),
             'moveFilename' => $this->getMoveFilename(),
             'active' => $this->isActive(),

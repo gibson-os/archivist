@@ -15,11 +15,11 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
             text: 'Name',
             flex: 1
         },{
-            dataIndex: 'observeDirectory',
+            dataIndex: 'observedDirectory',
             text: 'Beobachtetes Verzeichnis',
             flex: 1
         },{
-            dataIndex: 'observeFilename',
+            dataIndex: 'observedFilename',
             text: 'Beobachtete Dateinamen',
             flex: 1
         },{
@@ -45,7 +45,11 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
             items: [{
                 iconCls: 'icon_system system_add',
                 handler: function() {
-                    new GibsonOS.module.archivist.rule.Window();
+                    let window = new GibsonOS.module.archivist.rule.Window();
+
+                    window.down('gosModuleArchivistRuleForm').on('afterSaveForm', function(form, action) {
+                        me.store.load();
+                    });
                 }
             },{
                 iconCls: 'icon_system system_delete',
