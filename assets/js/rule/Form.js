@@ -72,7 +72,9 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
             name: 'active',
             fieldLabel: '&nbsp;',
             labelSeparator: '',
-            boxLabel: 'Aktiv'
+            boxLabel: 'Aktiv',
+            uncheckedValue: false,
+            inputValue: true
         }];
 
         me.buttons = [{

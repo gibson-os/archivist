@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Change observe to observed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/js/rule/Form.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Form.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/js/rule/Grid.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Grid.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/js/rule/model/Grid.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/model/Grid.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Command/IndexerCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/IndexerCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/RuleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RuleController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Rule.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Rule.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/IndexRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/IndexRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/RuleRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RuleRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/RuleService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/RuleService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Store/RuleStore.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Store/RuleStore.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -152,6 +146,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.jetbrains.php.lang.actions.generation.PhpGenerateFieldAccessorHandlerBase$MyMemberChooser.fluent.setters.last.selected" value="true" />
+    <property name="js.last.introduce.type" value="CONST" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/tests/unit" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -198,7 +193,10 @@
       <workItem from="1600878426126" duration="1383000" />
       <workItem from="1600980511082" duration="2687000" />
       <workItem from="1601028420324" duration="3456000" />
-      <workItem from="1601114917290" duration="1177000" />
+      <workItem from="1601114917290" duration="1652000" />
+      <workItem from="1601116673597" duration="3137000" />
+      <workItem from="1601388917211" duration="593000" />
+      <workItem from="1601410025706" duration="356000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
@@ -284,7 +282,14 @@
       <option name="project" value="LOCAL" />
       <updated>1601031817159</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Change observe to observed">
+      <created>1601116216381</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1601116216381</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -303,13 +308,15 @@
     <MESSAGE value="Add rule store" />
     <MESSAGE value="Add rule form" />
     <MESSAGE value="Add rule save" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add rule save" />
+    <MESSAGE value="Change observe to observed" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change observe to observed" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="586" y="198" key="#Inspections" timestamp="1600783566752">
+    <state x="586" y="198" key="#Inspections" timestamp="1601140926797">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="586" y="198" key="#Inspections/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600783566752" />
+    <state x="586" y="198" key="#Inspections/0.0.1920.1040@0.0.1920.1040" timestamp="1601140926797" />
     <state x="552" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1600779231862">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -330,12 +337,12 @@
     </state>
     <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600856567236" />
     <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600898300775" />
-    <state x="242" y="106" width="1300" height="864" key="CommitChangelistDialog2" timestamp="1601031807608">
+    <state x="242" y="106" width="1300" height="864" key="CommitChangelistDialog2" timestamp="1601117936683">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="577" y="106" key="CommitChangelistDialog2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600893333169" />
     <state x="2497" y="106" key="CommitChangelistDialog2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600787351963" />
-    <state x="242" y="106" width="1300" height="864" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1601031807608" />
+    <state x="242" y="106" width="1300" height="864" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1601117936683" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1600896363408">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -366,12 +373,12 @@
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="2381" y="164" key="SettingsEditor/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600775084061" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1601031822504">
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1601116219083">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="252" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600788473347" />
     <state x="2472" y="252" key="Vcs.Push.Dialog.v2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600787377248" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1601031822504" />
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1601116219083" />
     <state x="814" y="407" width="316" height="247" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1600811467318">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

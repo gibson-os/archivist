@@ -49,11 +49,11 @@ class RuleStore extends AbstractDatabaseStore
             false,
             '`id`, ' .
             '`name`, ' .
-            '`observe_directory` AS `observeDirectory`, ' .
-            '`observe_filename` AS `observeFilename`, ' .
+            '`observed_directory` AS `observedDirectory`, ' .
+            '`observed_filename` AS `observedFilename`, ' .
             '`move_directory` AS `moveDirectory`, ' .
             '`move_filename` AS `moveFilename`, ' .
-            '`active` ' .
+            '`active`, ' .
             '`count`'
         );
 
