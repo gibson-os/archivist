@@ -26,7 +26,7 @@ class IndexRepository extends AbstractRepository
                 '`' . Index::getTableName() . '`.`rule_id`=`' . Rule::getTableName() . '`.`id`'
             )
             ->setWhere('`' . Index::getTableName() . '`.`input_path`=?')
-            ->addParameter($inputPath)
+            ->addWhereParameter($inputPath)
             ->setSelectString(
                 '`' . Index::getTableName() . '`.`id` AS `index_id`, ' .
                 '`' . Index::getTableName() . '`.`input_path`, ' .

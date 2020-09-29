@@ -43,11 +43,11 @@ class RuleRepository extends AbstractRepository
                 '`active`=1' .
                 ($observedFilename === null ? '' : ' AND `observed_filename`=?')
             )
-            ->addParameter($observedDirectory)
+            ->addWhereParameter($observedDirectory)
         ;
 
         if ($observedFilename !== null) {
-            $table->addParameter($observedFilename);
+            $table->addWhereParameter($observedFilename);
         }
 
         return (bool) $table->selectPrepared(false);

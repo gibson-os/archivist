@@ -41,7 +41,7 @@ class RuleStore extends AbstractDatabaseStore
         if ($this->userId !== null) {
             $this->table
                 ->setWhere('`user_id`=?')
-                ->addParameter($this->userId)
+                ->addWhereParameter($this->userId)
             ;
         }
 
