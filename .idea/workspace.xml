@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Update composer">
+      <change beforePath="$PROJECT_DIR$/.idea/Archivist.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Archivist.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/watcherTasks.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
     </list>
@@ -72,9 +75,7 @@
       <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php70" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php72" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php73" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
@@ -91,7 +92,6 @@
       <path value="$PROJECT_DIR$/vendor/doctrine/lexer" />
       <path value="$PROJECT_DIR$/vendor/facebook/webdriver" />
       <path value="$PROJECT_DIR$/vendor/gibson-os/core" />
-      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
       <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
       <path value="$PROJECT_DIR$/vendor/captainhook/captainhook" />
       <path value="$PROJECT_DIR$/vendor/captainhook/plugin-composer" />
@@ -121,11 +121,12 @@
       <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
       <path value="$PROJECT_DIR$/vendor/dnoegel/php-xdg-base-dir" />
       <path value="$PROJECT_DIR$/vendor/felixfbecker/advanced-json-rpc" />
-      <path value="$PROJECT_DIR$/vendor/felixfbecker/language-server-protocol" />
       <path value="$PROJECT_DIR$/vendor/netresearch/jsonmapper" />
       <path value="$PROJECT_DIR$/vendor/amphp/amp" />
       <path value="$PROJECT_DIR$/vendor/amphp/byte-stream" />
       <path value="$PROJECT_DIR$/vendor/vimeo/psalm" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/vendor/felixfbecker/language-server-protocol" />
     </include_path>
   </component>
   <component name="ProjectId" id="1hrh6tVvcFDRAl2uiMToeXP6ngm" />
@@ -140,6 +141,7 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="NewWatcherDialog.advanced.open" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.jetbrains.php.lang.actions.generation.PhpGenerateFieldAccessorHandlerBase$MyMemberChooser.fluent.setters.last.selected" value="true" />
@@ -149,7 +151,7 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="php.override.implement.member.chooser.php.doc" value="NONE" />
-    <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php" />
+    <property name="settings.editor.selected.configurable" value="watcher.settings" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -353,6 +355,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600896363408" />
+    <state x="628" y="297" width="664" height="641" key="EditFileWatcherDialog" timestamp="1604594534494">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="628" y="297" width="664" height="641" key="EditFileWatcherDialog/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604594534494" />
     <state width="1293" height="274" key="GridCell.Tab.0.bottom" timestamp="1600800946632">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -375,9 +381,10 @@
     <state x="691" y="242" key="NewPhpClassDialog/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600856513433" />
     <state x="2611" y="242" key="NewPhpClassDialog/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600776694643" />
     <state x="691" y="242" key="NewPhpClassDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600898062125" />
-    <state x="2381" y="164" key="SettingsEditor" timestamp="1600775084061">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state x="461" y="164" key="SettingsEditor" timestamp="1604594536171">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="461" y="164" key="SettingsEditor/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604594536171" />
     <state x="2381" y="164" key="SettingsEditor/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600775084061" />
     <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1601410550545">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -390,9 +397,10 @@
     </state>
     <state x="814" y="407" width="316" height="245" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1600800376465" />
     <state x="814" y="407" width="316" height="247" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/0.0.1920.1040@0.0.1920.1040" timestamp="1600811467318" />
-    <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600849861436">
+    <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604594588927">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1920.0.1920.1040/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604594588927" />
     <state x="777" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1600849861436" />
     <state x="666" y="224" width="587" height="592" key="find.popup" timestamp="1601413767891">
       <screen x="0" y="0" width="1920" height="1040" />
