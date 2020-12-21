@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Service;
 
 use DateTimeImmutable;
+use Exception;
 use GibsonOS\Core\Exception\CreateError;
 use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\DeleteError;
@@ -22,20 +23,11 @@ use GibsonOS\Module\Archivist\Repository\IndexRepository;
 
 class RuleService extends AbstractService
 {
-    /**
-     * @var FileService
-     */
-    private $fileService;
+    private FileService $fileService;
 
-    /**
-     * @var DirService
-     */
-    private $dirService;
+    private DirService $dirService;
 
-    /**
-     * @var IndexRepository
-     */
-    private $indexRepository;
+    private IndexRepository $indexRepository;
 
     public function __construct(FileService $fileService, DirService $dirService, IndexRepository $indexRepository)
     {
@@ -46,7 +38,6 @@ class RuleService extends AbstractService
 
     /**
      * @throws DateTimeError
-     * @throws SelectError
      */
     public function getOutputPath(Index $indexFile): ?string
     {
@@ -68,9 +59,8 @@ class RuleService extends AbstractService
      * @throws DeleteError
      * @throws FileNotFound
      * @throws GetError
-     * @throws SelectError
-     * @throws SetError
      * @throws SaveError
+     * @throws SetError
      */
     public function moveFile(Index $indexedFile): void
     {
@@ -96,7 +86,7 @@ class RuleService extends AbstractService
      * @throws DateTimeError
      * @throws GetError
      * @throws SaveError
-     * @throws SelectError
+     * @throws Exception
      */
     public function indexFiles(Rule $rule): void
     {

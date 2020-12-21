@@ -6,46 +6,24 @@ namespace GibsonOS\Module\Archivist\Model;
 use DateTimeImmutable;
 use DateTimeInterface;
 use GibsonOS\Core\Exception\DateTimeError;
-use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Model\AbstractModel;
 use mysqlDatabase;
 
 class Index extends AbstractModel
 {
-    /**
-     * @var int|null
-     */
-    private $id;
+    private ?int $id;
 
-    /**
-     * @var string
-     */
-    private $inputPath;
+    private string $inputPath;
 
-    /**
-     * @var string|null
-     */
-    private $outputPath;
+    private ?string $outputPath;
 
-    /**
-     * @var int
-     */
-    private $size = 0;
+    private int $size = 0;
 
-    /**
-     * @var int|null
-     */
-    private $ruleId;
+    private ?int $ruleId;
 
-    /**
-     * @var DateTimeInterface
-     */
-    private $changed;
+    private DateTimeInterface $changed;
 
-    /**
-     * @var Rule|null
-     */
-    private $rule;
+    private ?Rule $rule;
 
     public function __construct(mysqlDatabase $database = null)
     {
@@ -133,7 +111,6 @@ class Index extends AbstractModel
 
     /**
      * @throws DateTimeError
-     * @throws SelectError
      */
     public function getRule(): ?Rule
     {

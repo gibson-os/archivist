@@ -4,67 +4,36 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Model;
 
 use GibsonOS\Core\Exception\DateTimeError;
-use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Model\User;
 use JsonSerializable;
 
 class Rule extends AbstractModel implements JsonSerializable
 {
-    /**
-     * @var int|null
-     */
-    private $id;
+    private ?int $id;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $observedDirectory;
+    private string $observedDirectory;
 
-    /**
-     * @var string|null
-     */
-    private $observedFilename;
+    private ?string $observedFilename;
 
-    /**
-     * @var string
-     */
-    private $moveDirectory;
+    private string $moveDirectory;
 
-    /**
-     * @var string
-     */
-    private $moveFilename;
+    private string $moveFilename;
 
-    /**
-     * @var bool
-     */
-    private $active = false;
+    private bool $active = false;
 
-    /**
-     * @var int
-     */
-    private $count = 0;
+    private int $count = 0;
 
-    /**
-     * @var int
-     */
-    private $userId;
+    private int $userId;
 
-    /**
-     * @var User
-     */
-    private $user;
+    private User $user;
 
     /**
      * @var Index[]
      */
-    private $indexed = [];
+    private array $indexed = [];
 
     public static function getTableName(): string
     {
@@ -222,7 +191,6 @@ class Rule extends AbstractModel implements JsonSerializable
 
     /**
      * @throws DateTimeError
-     * @throws SelectError
      */
     public function getUser(): User
     {
@@ -239,7 +207,7 @@ class Rule extends AbstractModel implements JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->getId(),

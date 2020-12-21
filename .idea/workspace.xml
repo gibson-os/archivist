@@ -2,12 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Archivist.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Archivist.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/IndexerCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/IndexerCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Index.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Rule.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Rule.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/RuleRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RuleRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/RuleService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/RuleService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Store/RuleStore.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Store/RuleStore.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -192,7 +195,8 @@
       <workItem from="1601388917211" duration="593000" />
       <workItem from="1601410025706" duration="874000" />
       <workItem from="1601413666127" duration="698000" />
-      <workItem from="1608548515620" duration="480000" />
+      <workItem from="1608548515620" duration="653000" />
+      <workItem from="1608564162473" duration="447000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
@@ -299,7 +303,14 @@
       <option name="project" value="LOCAL" />
       <updated>1604594971221</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Update to php 7.4">
+      <created>1608549231626</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1608549231626</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -321,7 +332,8 @@
     <MESSAGE value="Change observe to observed" />
     <MESSAGE value="Add load form" />
     <MESSAGE value="Fix watcher tasks" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix watcher tasks" />
+    <MESSAGE value="Update to php 7.4" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update to php 7.4" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -5,14 +5,12 @@ namespace GibsonOS\Module\Archivist\Repository;
 
 use Generator;
 use GibsonOS\Core\Exception\DateTimeError;
-use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Repository\AbstractRepository;
 use GibsonOS\Module\Archivist\Model\Rule;
 
 class RuleRepository extends AbstractRepository
 {
     /**
-     * @throws SelectError
      * @throws DateTimeError
      *
      * @return Generator<Rule>|Rule[]
