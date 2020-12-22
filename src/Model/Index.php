@@ -11,19 +11,19 @@ use mysqlDatabase;
 
 class Index extends AbstractModel
 {
-    private ?int $id;
+    private ?int $id = null;
 
     private string $inputPath;
 
-    private ?string $outputPath;
+    private ?string $outputPath = null;
 
     private int $size = 0;
 
-    private ?int $ruleId;
+    private ?int $ruleId = null;
 
     private DateTimeInterface $changed;
 
-    private ?Rule $rule;
+    private ?Rule $rule = null;
 
     public function __construct(mysqlDatabase $database = null)
     {

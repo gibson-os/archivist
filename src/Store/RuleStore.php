@@ -8,7 +8,7 @@ use GibsonOS\Module\Archivist\Model\Rule;
 
 class RuleStore extends AbstractDatabaseStore
 {
-    private ?int $userId;
+    private ?int $userId = null;
 
     protected function getTableName(): string
     {

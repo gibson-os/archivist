@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Command/IndexerCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/IndexerCommand.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/Index.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Index.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/Rule.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Rule.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/RuleRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RuleRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/RuleService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/RuleService.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Store/RuleStore.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Store/RuleStore.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -196,7 +192,8 @@
       <workItem from="1601410025706" duration="874000" />
       <workItem from="1601413666127" duration="698000" />
       <workItem from="1608548515620" duration="653000" />
-      <workItem from="1608564162473" duration="447000" />
+      <workItem from="1608564162473" duration="507000" />
+      <workItem from="1608627955030" duration="114000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
@@ -310,7 +307,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608549231626</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Update to php 7.4 code style">
+      <created>1608564669282</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1608564669282</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -333,7 +337,8 @@
     <MESSAGE value="Add load form" />
     <MESSAGE value="Fix watcher tasks" />
     <MESSAGE value="Update to php 7.4" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update to php 7.4" />
+    <MESSAGE value="Update to php 7.4 code style" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update to php 7.4 code style" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

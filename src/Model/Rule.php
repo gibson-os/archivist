@@ -10,13 +10,13 @@ use JsonSerializable;
 
 class Rule extends AbstractModel implements JsonSerializable
 {
-    private ?int $id;
+    private ?int $id = null;
 
     private string $name;
 
     private string $observedDirectory;
 
-    private ?string $observedFilename;
+    private ?string $observedFilename = null;
 
     private string $moveDirectory;
 
