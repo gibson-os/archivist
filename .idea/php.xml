@@ -61,8 +61,6 @@
       <path value="$PROJECT_DIR$/vendor/gibson-os/core" />
       <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
       <path value="$PROJECT_DIR$/vendor/captainhook/captainhook" />
-      <path value="$PROJECT_DIR$/vendor/captainhook/plugin-composer" />
-      <path value="$PROJECT_DIR$/vendor/codeception/codeception" />
       <path value="$PROJECT_DIR$/vendor/codeception/phpunit-wrapper" />
       <path value="$PROJECT_DIR$/vendor/codeception/stub" />
       <path value="$PROJECT_DIR$/vendor/friendsofphp/php-cs-fixer" />
@@ -104,6 +102,8 @@
       <path value="$PROJECT_DIR$/vendor/sebastian/complexity" />
       <path value="$PROJECT_DIR$/vendor/symfony/console" />
       <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/vendor/captainhook/plugin-composer" />
+      <path value="$PROJECT_DIR$/vendor/codeception/codeception" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

@@ -2,6 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Dto/File.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Dto/Strategy.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Exception/StrategyException.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Strategy/AllianzStrategy.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Strategy/CommerzbankStrategy.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Strategy/DeutscheBankStrategy.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Strategy/ScanStrategy.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Strategy/StrategyInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Archivist.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Archivist.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
     </list>
@@ -75,8 +86,6 @@
       <path value="$PROJECT_DIR$/vendor/gibson-os/core" />
       <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
       <path value="$PROJECT_DIR$/vendor/captainhook/captainhook" />
-      <path value="$PROJECT_DIR$/vendor/captainhook/plugin-composer" />
-      <path value="$PROJECT_DIR$/vendor/codeception/codeception" />
       <path value="$PROJECT_DIR$/vendor/codeception/phpunit-wrapper" />
       <path value="$PROJECT_DIR$/vendor/codeception/stub" />
       <path value="$PROJECT_DIR$/vendor/friendsofphp/php-cs-fixer" />
@@ -118,6 +127,8 @@
       <path value="$PROJECT_DIR$/vendor/sebastian/complexity" />
       <path value="$PROJECT_DIR$/vendor/symfony/console" />
       <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/vendor/captainhook/plugin-composer" />
+      <path value="$PROJECT_DIR$/vendor/codeception/codeception" />
     </include_path>
   </component>
   <component name="ProjectId" id="1hrh6tVvcFDRAl2uiMToeXP6ngm" />
@@ -197,6 +208,9 @@
       <workItem from="1609761044546" duration="587000" />
       <workItem from="1610282465495" duration="57000" />
       <workItem from="1612173026592" duration="292000" />
+      <workItem from="1612253671833" duration="172000" />
+      <workItem from="1615628445827" duration="636000" />
+      <workItem from="1615726596100" duration="12200000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
