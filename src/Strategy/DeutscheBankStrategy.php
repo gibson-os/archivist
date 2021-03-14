@@ -12,7 +12,6 @@ use GibsonOS\Core\Service\WebService;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
-use Psr\Log\LoggerInterface;
 
 class DeutscheBankStrategy implements StrategyInterface
 {
@@ -20,12 +19,9 @@ class DeutscheBankStrategy implements StrategyInterface
 
     private WebService $webService;
 
-    private LoggerInterface $logger;
-
-    public function __construct(WebService $webService, LoggerInterface $logger)
+    public function __construct(WebService $webService)
     {
         $this->webService = $webService;
-        $this->logger = $logger;
     }
 
     /**
@@ -59,7 +55,7 @@ class DeutscheBankStrategy implements StrategyInterface
         $photoTanGraphic = [];
         preg_match('/id="photoTANGraphic".+?src="([^"]*)"/', $responseBody, $photoTanGraphic);
         $challengeMessage = [];
-        preg_match('/id="photoTANGraphic".+?src="([^"]*)"/', $responseBody, $challengeMessage);
+        preg_match('/id="challengeMessage".+?value="([^"]*)"/', $responseBody, $challengeMessage);
 
         if (
             !isset($photoTanAction[1]) ||
@@ -69,9 +65,13 @@ class DeutscheBankStrategy implements StrategyInterface
             throw new StrategyException('No photo TAN found!');
         }
 
-        $strategy->setConfigValue('photoTanAction', $photoTanAction[1]);
-        $imageResponse = $this->webService->get(new Request($photoTanGraphic[1]));
-        $strategy->setConfigValue('photoTanImage', $imageResponse->getBody()->getContent());
+        $cookieFile = $response->getCookieFile();
+        $imageResponse = $this->webService->get((new Request($photoTanGraphic[1]))->setCookieFile($cookieFile));
+        $strategy
+            ->setConfigValue('photoTanAction', $photoTanAction[1])
+            ->setConfigValue('cookieFile', $cookieFile)
+            ->setConfigValue('photoTanImage', $imageResponse->getBody()->getContent())
+        ;
     }
 
     /**
@@ -85,19 +85,21 @@ class DeutscheBankStrategy implements StrategyInterface
     }
 
     /**
-     * @param AbstractParameter[] $parameters
+     * @param array<string, string> $parameters
      */
     public function authenticate2Factor(Strategy $strategy, array $parameters): void
     {
         $response = $this->webService->post(
             (new Request($strategy->getConfigValue('photoTanAction')))
-                ->setParameters($parameters)
+                ->setParameter('challengeMessage', $strategy->getConfigValue('challengeMessage'))
+                ->setParameter('tan', $strategy->getConfigValue($parameters['photoTan']))
+                ->setCookieFile($strategy->getConfigValue('cookieFile'))
         );
     }
 
     public function getFiles(Strategy $strategy): array
     {
-        // TODO: Implement getFiles() method.
+        return [];
     }
 
     /**

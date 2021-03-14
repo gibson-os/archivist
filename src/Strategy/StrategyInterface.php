@@ -15,7 +15,7 @@ interface StrategyInterface
     public function getAuthenticationParameters(): ?array;
 
     /**
-     * @param AbstractParameter[] $parameters
+     * @param array<string, string> $parameters
      */
     public function authenticate(Strategy $strategy, array $parameters): void;
 
@@ -25,7 +25,7 @@ interface StrategyInterface
     public function get2FactorAuthenticationParameters(Strategy $strategy): ?array;
 
     /**
-     * @param AbstractParameter[] $parameters
+     * @param array<string, string> $parameters
      */
     public function authenticate2Factor(Strategy $strategy, array $parameters): void;
 

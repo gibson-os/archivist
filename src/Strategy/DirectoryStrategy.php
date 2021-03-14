@@ -6,7 +6,7 @@ namespace GibsonOS\Module\Archivist\Strategy;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 
-class CommerzbankStrategy implements StrategyInterface
+class DirectoryStrategy implements StrategyInterface
 {
     public function getAuthenticationParameters(): ?array
     {

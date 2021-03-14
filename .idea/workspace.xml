@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Dto/File.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Dto/Strategy.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Exception/StrategyException.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Strategy/AllianzStrategy.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Strategy/CommerzbankStrategy.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Strategy/DeutscheBankStrategy.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Strategy/ScanStrategy.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Strategy/StrategyInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Archivist.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Archivist.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Add first steps for dkb">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Strategy/AllianzStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/AllianzStrategy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Strategy/CommerzbankStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/CommerzbankStrategy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Strategy/DeutscheBankStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DeutscheBankStrategy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Strategy/ScanStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DirectoryStrategy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Strategy/StrategyInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/StrategyInterface.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -345,7 +340,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608628482446</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Update composer">
+      <created>1615585191953</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1615585191953</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -359,7 +361,6 @@
     <MESSAGE value="Change composer name to archivist" />
     <MESSAGE value="Fix namespace" />
     <MESSAGE value="Change indexer command" />
-    <MESSAGE value="Update composer" />
     <MESSAGE value="Change workspace" />
     <MESSAGE value="Add rule store" />
     <MESSAGE value="Add rule form" />
@@ -370,7 +371,9 @@
     <MESSAGE value="Update to php 7.4" />
     <MESSAGE value="Update to php 7.4 code style" />
     <MESSAGE value="Fix default initialization" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix default initialization" />
+    <MESSAGE value="Update composer" />
+    <MESSAGE value="Add first steps for dkb" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add first steps for dkb" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
