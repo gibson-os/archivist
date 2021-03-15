@@ -8,21 +8,13 @@ use GibsonOS\Core\Dto\Parameter\IntParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Dto\Web\Request;
 use GibsonOS\Core\Exception\WebException;
-use GibsonOS\Core\Service\WebService;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 
-class DeutscheBankStrategy implements StrategyInterface
+class DeutscheBankStrategy extends AbstractWebStrategy
 {
     private const URL = 'https://meine.deutsche-bank.de/';
-
-    private WebService $webService;
-
-    public function __construct(WebService $webService)
-    {
-        $this->webService = $webService;
-    }
 
     /**
      * @return AbstractParameter[]
@@ -50,27 +42,22 @@ class DeutscheBankStrategy implements StrategyInterface
                 ->setParameters($parameters)
         );
         $responseBody = $response->getBody()->getContent();
-        $photoTanAction = [];
-        preg_match('/id="photoTANForm".+?action="([^"]*)"/', $responseBody, $photoTanAction);
-        $photoTanGraphic = [];
-        preg_match('/id="photoTANGraphic".+?src="([^"]*)"/', $responseBody, $photoTanGraphic);
-        $challengeMessage = [];
-        preg_match('/id="challengeMessage".+?value="([^"]*)"/', $responseBody, $challengeMessage);
-
-        if (
-            !isset($photoTanAction[1]) ||
-            !isset($photoTanGraphic[1]) ||
-            !isset($challengeMessage[1])
-        ) {
-            throw new StrategyException('No photo TAN found!');
-        }
-
         $cookieFile = $response->getCookieFile();
-        $imageResponse = $this->webService->get((new Request($photoTanGraphic[1]))->setCookieFile($cookieFile));
+        $imageResponse = $this->webService->get(
+            (new Request($this->getResponseValue($responseBody, 'id', 'photoTANGraphic', 'src')))
+                ->setCookieFile($cookieFile)
+        );
         $strategy
-            ->setConfigValue('photoTanAction', $photoTanAction[1])
-            ->setConfigValue('cookieFile', $cookieFile)
+            ->setConfigValue(
+                'photoTanAction',
+                $this->getResponseValue($responseBody, 'id', 'photoTANForm', 'action')
+            )
+            ->setConfigValue(
+                'challengeMessage',
+                $this->getResponseValue($responseBody, 'id', 'challengeMessage', 'value')
+            )
             ->setConfigValue('photoTanImage', $imageResponse->getBody()->getContent())
+            ->setConfigValue('cookieFile', $cookieFile)
         ;
     }
 
