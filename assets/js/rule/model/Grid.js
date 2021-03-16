@@ -7,8 +7,11 @@ Ext.define('GibsonOS.module.archivist.rule.model.Grid', {
         name: 'name',
         type: 'string'
     },{
-        name: 'observedDirectory',
+        name: 'strategy',
         type: 'string'
+    },{
+        name: 'configuration',
+        type: 'object'
     },{
         name: 'observedFilename',
         type: 'string'
@@ -22,7 +25,7 @@ Ext.define('GibsonOS.module.archivist.rule.model.Grid', {
         name: 'active',
         type: 'bool'
     },{
-        name: 'count',
-        type: 'int'
+        name: 'lastRun',
+        type: 'date'
     }]
 });

@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Add first steps for dkb">
-      <change afterPath="$PROJECT_DIR$/src/Command/TestCommand.php" afterDir="false" />
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/6644c731-baf5-4148-b10c-2b50c51dab33.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/6644c731-baf5-4148-b10c-2b50c51dab33.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rule/Form.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rule/Grid.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Grid.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rule/Window.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Window.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rule/model/Grid.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/model/Grid.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -383,7 +389,8 @@
     <MESSAGE value="Update composer" />
     <MESSAGE value="Add first steps for dkb" />
     <MESSAGE value="Add dkb authentication" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add dkb authentication" />
+    <MESSAGE value="Refactor js" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor js" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

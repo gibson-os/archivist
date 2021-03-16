@@ -12,14 +12,9 @@ Ext.define('GibsonOS.module.archivist.rule.Window', {
         let me = this;
 
         me.items = [{
-            xtype: 'gosModuleArchivistRuleForm',
-            gos: me.gos
+            xtype: 'gosModuleArchivistRuleForm'
         }];
 
         me.callParent();
-
-        me.down('gosModuleArchivistRuleForm').on('afterSaveForm', function(form, action) {
-            me.close();
-        });
     }
 });

@@ -1,26 +1,26 @@
 Ext.define('GibsonOS.module.archivist.rule.Grid', {
-    extend: 'GibsonOS.grid.Panel',
+    extend: 'GibsonOS.module.core.component.grid.Panel',
     alias: ['widget.gosModuleArchivistRuleGrid'],
-    itemId: 'archivistRuleGrid',
     requiredPermission: {
         module: 'archivist',
         task: 'rule'
     },
-    initComponent: function() {
+    initComponent() {
         let me = this;
 
-        let openFormWindow = function() {
-            let window = new GibsonOS.module.archivist.rule.Window();
-
-            window.down('gosModuleArchivistRuleForm').on('afterSaveForm', function(form, action) {
-                me.store.load();
-            });
-
-            return window;
-        };
-
         me.store = new GibsonOS.module.archivist.rule.store.Grid();
-        me.columns = [{
+
+        me.callParent();
+    },
+    addFunction: function() {
+        new GibsonOS.module.archivist.rule.Window();
+    },
+    enterFunction: function(record) {
+        const window =new GibsonOS.module.archivist.rule.Window();
+        window.down('gosModuleArchivistRuleForm').loadRecord(record);
+    },
+    getColumns() {
+        return [{
             dataIndex: 'name',
             text: 'Name',
             flex: 1
@@ -49,35 +49,5 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
             text: 'Aktiv',
             width: 50
         }];
-        me.dockedItems = [{
-            xtype: 'gosToolbar',
-            dock: 'top',
-            items: [{
-                iconCls: 'icon_system system_add',
-                handler: function() {
-                    openFormWindow();
-                }
-            },{
-                iconCls: 'icon_system system_delete',
-                disabled: true,
-                handler: function() {
-
-                }
-            }]
-        },{
-            xtype: 'gosToolbarPaging',
-            itemId: 'explorerHtml5Paging',
-            store: me.store,
-            displayMsg: 'Regeln {0} - {1} von {2}',
-            emptyMsg: 'Keine Regeln vorhanden'
-        }];
-
-        me.callParent();
-
-        me.on('itemdblclick', function(grid, record) {
-            let window = openFormWindow();
-
-            window.down('gosModuleArchivistRuleForm').loadRecord(record);
-        });
     }
 });

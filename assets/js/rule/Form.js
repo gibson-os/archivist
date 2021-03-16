@@ -1,14 +1,6 @@
 Ext.define('GibsonOS.module.archivist.rule.Form', {
-    extend: 'GibsonOS.form.Panel',
+    extend: 'GibsonOS.module.core.component.form.Panel',
     alias: ['widget.gosModuleArchivistRuleForm'],
-    itemId: 'archivistRuleForm',
-    defaults: {
-        border: false,
-        xtype: 'panel',
-        flex: 1,
-        layout: 'anchor'
-    },
-    border: false,
     initComponent: function () {
         let me = this;
 
@@ -17,12 +9,8 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
             fieldLabel: 'Name',
             name: 'name'
         },{
-            xtype: 'fieldcontainer',
+            xtype: 'gosCoreComponentFormFieldContainer',
             fieldLabel: 'Beobachtetes Verzeichnis',
-            layout: 'hbox',
-            defaults: {
-                hideLabel: true
-            },
             items: [{
                 xtype: 'gosFormTextfield',
                 name: 'observedDirectory',
