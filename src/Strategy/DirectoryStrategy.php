@@ -8,6 +8,11 @@ use GibsonOS\Module\Archivist\Dto\Strategy;
 
 class DirectoryStrategy implements StrategyInterface
 {
+    public function getName(): string
+    {
+        return 'Ordner';
+    }
+
     public function getAuthenticationParameters(): ?array
     {
         return null;

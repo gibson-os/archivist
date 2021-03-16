@@ -16,6 +16,11 @@ class DeutscheBankStrategy extends AbstractWebStrategy
 {
     private const URL = 'https://meine.deutsche-bank.de/';
 
+    public function getName(): string
+    {
+        return 'Deutsche Bank';
+    }
+
     /**
      * @return AbstractParameter[]
      */

@@ -8,6 +8,11 @@ use GibsonOS\Module\Archivist\Dto\Strategy;
 
 class AllianzStrategy implements StrategyInterface
 {
+    public function getName(): string
+    {
+        return 'Allianz';
+    }
+
     public function getAuthenticationParameters(): ?array
     {
         return null;

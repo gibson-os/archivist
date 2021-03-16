@@ -1,5 +1,5 @@
 Ext.define('GibsonOS.module.archivist.rule.Form', {
-    extend: 'GibsonOS.module.core.component.form.Panel',
+    extend: 'GibsonOS.module.core.parameter.Form',
     alias: ['widget.gosModuleArchivistRuleForm'],
     initComponent: function () {
         let me = this;
@@ -9,80 +9,15 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
             fieldLabel: 'Name',
             name: 'name'
         },{
-            xtype: 'gosCoreComponentFormFieldContainer',
-            fieldLabel: 'Beobachtetes Verzeichnis',
-            items: [{
-                xtype: 'gosFormTextfield',
-                name: 'observedDirectory',
-                flex: 1,
-                margins: '0 5 0 0'
-            },{
-                xtype: 'gosButton',
-                text: '...',
-                handler: function() {
-                    GibsonOS.module.explorer.dir.fn.dialog(me.getForm().findField('observedDirectory'));
+            xtype: 'gosModuleCoreParameterTypeAutoComplete',
+            name: 'strategy',
+            fieldLabel: 'Strategy',
+            parameterObject: {
+                config: {
+                    model: 'GibsonOS.module.archivist.rule.model.Strategy',
+                    parameters: {},
+                    autoCompleteClassname: 'GibsonOS\\Module\\Archivist\\AutoComplete\\StrategyAutoComplete'
                 }
-            }]
-        },{
-            xtype: 'gosFormTextfield',
-            fieldLabel: 'Beobachtete Dateinamen',
-            name: 'observedFilename'
-        },{
-            xtype: 'fieldcontainer',
-            fieldLabel: 'Ziel Verzeichnis',
-            layout: 'hbox',
-            defaults: {
-                hideLabel: true
-            },
-            items: [{
-                xtype: 'gosFormTextfield',
-                name: 'moveDirectory',
-                flex: 1,
-                margins: '0 5 0 0'
-            },{
-                xtype: 'gosButton',
-                text: '...',
-                handler: function() {
-                    GibsonOS.module.explorer.dir.fn.dialog(me.getForm().findField('moveDirectory'));
-                }
-            }]
-        },{
-            xtype: 'gosFormTextfield',
-            fieldLabel: 'Ziel Dateiname',
-            name: 'moveFilename'
-        },{
-            xtype: 'gosFormNumberfield',
-            fieldLabel: 'Anzahl',
-            name: 'count',
-            value: 0
-        },{
-            xtype: 'gosFormCheckbox',
-            name: 'active',
-            fieldLabel: '&nbsp;',
-            labelSeparator: '',
-            boxLabel: 'Aktiv',
-            uncheckedValue: false,
-            inputValue: true
-        }];
-
-        me.buttons = [{
-            text: 'Speichern',
-            itemId: 'archivistRuleFormSaveButton',
-            requiredPermission: {
-                action:'save',
-                permission: GibsonOS.Permission.WRITE
-            },
-            handler: function() {
-                me.getForm().submit({
-                    xtype: 'gosFormActionAction',
-                    url: baseDir + 'archivist/rule/save',
-                    success: function(form, action) {
-                        me.fireEvent('afterSaveForm', {
-                            form: me,
-                            action: action
-                        });
-                    }
-                });
             }
         }];
 

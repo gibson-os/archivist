@@ -9,6 +9,8 @@ use GibsonOS\Module\Archivist\Dto\Strategy;
 
 interface StrategyInterface
 {
+    public function getName(): string;
+
     /**
      * @return AbstractParameter[]|null
      */

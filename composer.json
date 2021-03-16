@@ -3,7 +3,8 @@
   "require": {
     "mdo/mdo": "dev-master",
     "gibson-os/core": "dev-master",
-    "ext-json": "*"
+    "ext-json": "*",
+    "gibson-os/explorer": "dev-master"
   },
   "require-dev": {
     "codeception/codeception": "^4.0",
@@ -23,6 +24,10 @@
     {
       "type": "vcs",
       "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Core.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Explorer.git"
     }
   ],
   "autoload": {

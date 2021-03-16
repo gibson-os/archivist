@@ -16,6 +16,11 @@ class DkbStrategy extends AbstractWebStrategy
 {
     private const URL = 'https://www.dkb.de/';
 
+    public function getName(): string
+    {
+        return 'DKB';
+    }
+
     /**
      * @return AbstractParameter[]
      */

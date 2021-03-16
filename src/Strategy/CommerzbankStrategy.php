@@ -8,6 +8,11 @@ use GibsonOS\Module\Archivist\Dto\Strategy;
 
 class CommerzbankStrategy implements StrategyInterface
 {
+    public function getName(): string
+    {
+        return 'Commerzbank';
+    }
+
     public function getAuthenticationParameters(): ?array
     {
         return null;
