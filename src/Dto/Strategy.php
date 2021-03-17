@@ -5,7 +5,7 @@ namespace GibsonOS\Module\Archivist\Dto;
 
 use GibsonOS\Core\Model\AutoCompleteModelInterface;
 
-class Strategy implements AutoCompleteModelInterface
+class Strategy implements \JsonSerializable, AutoCompleteModelInterface
 {
     private string $name;
 
@@ -65,6 +65,14 @@ class Strategy implements AutoCompleteModelInterface
         $this->config[$name] = $value;
 
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->getClassName(),
+            'name' => $this->getName(),
+        ];
     }
 
     public function getAutoCompleteId(): string
