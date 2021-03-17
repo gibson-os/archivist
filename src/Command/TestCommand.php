@@ -20,7 +20,7 @@ class TestCommand extends AbstractCommand
 
     protected function run(): int
     {
-        $strategy = new Strategy(DkbStrategy::class);
+        $strategy = new Strategy('DKB', DkbStrategy::class);
         $this->dkbStrategy->authenticate($strategy, ['j_username' => '1035603636_p', 'j_password' => 'R0nj4']);
 
         return 0;

@@ -4,10 +4,8 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\AutoComplete;
 
 use GibsonOS\Core\AutoComplete\AutoCompleteInterface;
-use GibsonOS\Core\Exception\AutoCompleteException;
-use GibsonOS\Core\Model\ModelInterface;
 use GibsonOS\Core\Service\ServiceManagerService;
-use GibsonOS\Module\Archivist\Model\Strategy;
+use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 
 class StrategyAutoComplete implements AutoCompleteInterface
@@ -25,27 +23,16 @@ class StrategyAutoComplete implements AutoCompleteInterface
         return [];
     }
 
-    public function getById($id, array $parameters): ModelInterface
+    public function getById($id, array $parameters): Strategy
     {
         /** @var StrategyInterface $strategy */
         $strategy = $this->serviceManagerService->get($id);
 
-        return (new Strategy())
-            ->setId($id)
-            ->setName($strategy->getName())
-        ;
+        return new Strategy($strategy->getName(), $id);
     }
 
     public function getModel(): string
     {
         return 'GibsonOS.module.archivist.rule.model.Strategy';
-    }
-
-    /**
-     * @throws AutoCompleteException
-     */
-    public function getIdFromModel(ModelInterface $model)
-    {
-        throw new AutoCompleteException('Strategy has no model!');
     }
 }

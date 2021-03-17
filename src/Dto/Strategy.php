@@ -3,15 +3,32 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Dto;
 
-class Strategy
+use GibsonOS\Core\Model\AutoCompleteModelInterface;
+
+class Strategy implements AutoCompleteModelInterface
 {
+    private string $name;
+
     private string $className;
 
     private array $config = [];
 
-    public function __construct(string $className)
+    public function __construct(string $name, string $className)
     {
+        $this->name = $name;
         $this->className = $className;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): Strategy
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     public function getClassName(): string
@@ -48,5 +65,10 @@ class Strategy
         $this->config[$name] = $value;
 
         return $this;
+    }
+
+    public function getAutoCompleteId(): string
+    {
+        return $this->getClassName();
     }
 }
