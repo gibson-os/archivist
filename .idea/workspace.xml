@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Refactor js">
-      <change afterPath="$PROJECT_DIR$/src/Dto/Parameter/StrategyParameter.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AutoComplete/StrategyAutoComplete.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/AutoComplete/StrategyAutoComplete.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Dto/Strategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Dto/Strategy.php" afterDir="false" />
-    </list>
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -363,7 +357,14 @@
       <option name="project" value="LOCAL" />
       <updated>1615849739887</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Add strategy auto complete">
+      <created>1616021347469</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1616021347470</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -391,7 +392,8 @@
     <MESSAGE value="Add first steps for dkb" />
     <MESSAGE value="Add dkb authentication" />
     <MESSAGE value="Refactor js" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor js" />
+    <MESSAGE value="Add strategy auto complete" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add strategy auto complete" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
