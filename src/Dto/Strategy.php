@@ -3,15 +3,22 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Dto;
 
+use GibsonOS\Core\Dto\Parameter\AbstractParameter;
 use GibsonOS\Core\Model\AutoCompleteModelInterface;
+use JsonSerializable;
 
-class Strategy implements \JsonSerializable, AutoCompleteModelInterface
+class Strategy implements JsonSerializable, AutoCompleteModelInterface
 {
     private string $name;
 
     private string $className;
 
     private array $config = [];
+
+    /**
+     * @var AbstractParameter[]
+     */
+    private array $parameters = [];
 
     public function __construct(string $name, string $className)
     {
@@ -67,11 +74,30 @@ class Strategy implements \JsonSerializable, AutoCompleteModelInterface
         return $this;
     }
 
+    /**
+     * @return AbstractParameter[]
+     */
+    public function getParameters(): array
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param AbstractParameter[] $parameters
+     */
+    public function setParameters(array $parameters): Strategy
+    {
+        $this->parameters = $parameters;
+
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
         return [
             'id' => $this->getClassName(),
             'name' => $this->getName(),
+            'parameters' => $this->getParameters(),
         ];
     }
 

@@ -13,9 +13,9 @@ class DirectoryStrategy implements StrategyInterface
         return 'Ordner';
     }
 
-    public function getAuthenticationParameters(): ?array
+    public function getAuthenticationParameters(): array
     {
-        return null;
+        return [];
     }
 
     public function authenticate(Strategy $strategy, array $parameters): void
@@ -23,9 +23,9 @@ class DirectoryStrategy implements StrategyInterface
         // TODO: Implement authenticate() method.
     }
 
-    public function get2FactorAuthenticationParameters(Strategy $strategy): ?array
+    public function get2FactorAuthenticationParameters(Strategy $strategy): array
     {
-        return null;
+        return [];
     }
 
     public function authenticate2Factor(Strategy $strategy, array $parameters): void

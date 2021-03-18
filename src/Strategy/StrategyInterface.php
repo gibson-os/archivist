@@ -12,9 +12,9 @@ interface StrategyInterface
     public function getName(): string;
 
     /**
-     * @return AbstractParameter[]|null
+     * @return AbstractParameter[]
      */
-    public function getAuthenticationParameters(): ?array;
+    public function getAuthenticationParameters(): array;
 
     /**
      * @param array<string, string> $parameters
@@ -22,9 +22,9 @@ interface StrategyInterface
     public function authenticate(Strategy $strategy, array $parameters): void;
 
     /**
-     * @return AbstractParameter[]|null
+     * @return AbstractParameter[]
      */
-    public function get2FactorAuthenticationParameters(Strategy $strategy): ?array;
+    public function get2FactorAuthenticationParameters(Strategy $strategy): array;
 
     /**
      * @param array<string, string> $parameters

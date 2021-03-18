@@ -57,7 +57,9 @@ class StrategyAutoComplete implements AutoCompleteInterface
                 continue;
             }
 
-            $strategies[$name] = new Strategy($name, $namespace . $className);
+            $strategies[$name] = (new Strategy($name, $namespace . $className))
+                ->setParameters($strategyService->getAuthenticationParameters())
+            ;
         }
 
         ksort($strategies);

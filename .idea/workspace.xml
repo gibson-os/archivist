@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/AutoComplete/StrategyAutoComplete.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/AutoComplete/StrategyAutoComplete.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Dto/Strategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Dto/Strategy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Strategy/AllianzStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/AllianzStrategy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Strategy/CommerzbankStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/CommerzbankStrategy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Strategy/DirectoryStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DirectoryStrategy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Strategy/StrategyInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/StrategyInterface.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,7 +211,7 @@
       <workItem from="1615840272552" duration="8050000" />
       <workItem from="1615929233912" duration="7263000" />
       <workItem from="1616002405699" duration="1932000" />
-      <workItem from="1616094849523" duration="211000" />
+      <workItem from="1616094849523" duration="1832000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
@@ -367,7 +374,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616021347470</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Fix empty name part">
+      <created>1616095157454</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1616095157454</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -396,7 +410,9 @@
     <MESSAGE value="Add dkb authentication" />
     <MESSAGE value="Refactor js" />
     <MESSAGE value="Add strategy auto complete" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add strategy auto complete" />
+    <MESSAGE value="Fix empty name part" />
+    <MESSAGE value="Add parameters to strategy auto complete" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add parameters to strategy auto complete" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
