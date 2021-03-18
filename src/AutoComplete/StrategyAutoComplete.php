@@ -53,7 +53,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
 
             $name = $strategyService->getName();
 
-            if (strpos($name, $namePart) !== 0) {
+            if ($namePart !== '' && strpos($name, $namePart) !== 0) {
                 continue;
             }
 
