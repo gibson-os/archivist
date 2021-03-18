@@ -56,6 +56,15 @@ class DkbStrategy extends AbstractWebStrategy
 
     public function getFiles(Strategy $strategy): array
     {
+        $response = $this->webService->post(
+            (new Request(self::URL . 'banking/postfach'))
+                ->setCookieFile($strategy->getConfigValue('cookieFile'))
+        );
+        $responseBody = $response->getBody()->getContent();
+
+        $links = [];
+        preg_match_all('/href="([^"]*)".+?class="evt-gotoFolder"[^>]*>([^<]*)/', $responseBody, $links);
+
         return [];
     }
 
@@ -138,7 +147,6 @@ class DkbStrategy extends AbstractWebStrategy
                 ->setParameter('$event', 'next')
         );
         $responseBody = $response->getBody()->getContent();
-        errlog($responseBody);
         $this->logger->debug('Response: ' . $responseBody);
     }
 }

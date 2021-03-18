@@ -1,23 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/6644c731-baf5-4148-b10c-2b50c51dab33.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/6644c731-baf5-4148-b10c-2b50c51dab33.xml" afterDir="false" />
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Add postbox link extraction">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/js/rule/Form.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Form.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AutoComplete/StrategyAutoComplete.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/AutoComplete/StrategyAutoComplete.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Command/IndexerCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/IndexerCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Command/TestCommand.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/RuleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RuleController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Dto/Strategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Dto/Strategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Rule.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Rule.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/RuleService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/RuleService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/AllianzStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/AllianzStrategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/CommerzbankStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/CommerzbankStrategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/DeutscheBankStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DeutscheBankStrategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/DirectoryStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DirectoryStrategy.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/StrategyInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/StrategyInterface.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -404,7 +390,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616102011146</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Add add rule">
+      <created>1616110121760</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1616110121760</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -412,7 +405,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Change to archivist" />
     <MESSAGE value="Add index command" />
     <MESSAGE value="Add gitkeep" />
     <MESSAGE value="Change composer name to archivist" />
@@ -437,7 +429,8 @@
     <MESSAGE value="Add parameters to strategy auto complete" />
     <MESSAGE value="Add parameters to form" />
     <MESSAGE value="Add add rule" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add add rule" />
+    <MESSAGE value="Add postbox link extraction" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add postbox link extraction" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
