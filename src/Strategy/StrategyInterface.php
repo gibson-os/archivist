@@ -14,22 +14,12 @@ interface StrategyInterface
     /**
      * @return AbstractParameter[]
      */
-    public function getAuthenticationParameters(): array;
+    public function getConfigurationParameters(Strategy $strategy): array;
 
     /**
      * @param array<string, string> $parameters
      */
-    public function authenticate(Strategy $strategy, array $parameters): void;
-
-    /**
-     * @return AbstractParameter[]
-     */
-    public function get2FactorAuthenticationParameters(Strategy $strategy): array;
-
-    /**
-     * @param array<string, string> $parameters
-     */
-    public function authenticate2Factor(Strategy $strategy, array $parameters): void;
+    public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool;
 
     /**
      * @return File[]

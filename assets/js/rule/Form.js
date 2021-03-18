@@ -5,10 +5,6 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
         let me = this;
 
         me.items = [{
-            xtype: 'gosFormTextfield',
-            fieldLabel: 'Name',
-            name: 'name'
-        },{
             xtype: 'gosModuleCoreParameterTypeAutoComplete',
             name: 'strategy',
             fieldLabel: 'Strategy',
@@ -22,7 +18,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
             listeners: {
                 change(combo, value) {
                     me.items.each(field => {
-                        if (field.getName() === 'name' || field.getName() === 'strategy') {
+                        if (field.getName() === 'strategy') {
                             return true;
                         }
 
@@ -36,5 +32,43 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
         }];
 
         me.callParent();
+
+        let responseData = {};
+
+        me.down('#coreEventElementParameterSaveButton').on('click', () => {
+            let parameters = {};
+
+            me.items.each(field => {
+                if (field.getName() === 'strategy') {
+                    return true;
+                }
+
+                parameters[field.getName()] = field.getValue();
+            });
+
+            GibsonOS.Ajax.request({
+                url: baseDir + 'archivist/rule/save',
+                params: {
+                    strategy: !me.getForm().findField('strategy')
+                        ? responseData.id
+                        : me.getForm().findField('strategy').getValue(),
+                    configuration: !responseData.config ? '[]' : Ext.encode(responseData.config),
+                    parameters: Ext.encode(parameters)
+                },
+                success(response) {
+                    responseData = Ext.decode(response.responseText).data;
+
+                    if (responseData.parameters) {
+                        me.removeAll();
+                        me.addFields(responseData.parameters);
+                    }
+                },
+                callback() {
+                    me.setLoading(false);
+                }
+            });
+        }, this, {
+            priority: -999
+        });
     }
 });

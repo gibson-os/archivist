@@ -24,18 +24,69 @@ class DkbStrategy extends AbstractWebStrategy
     /**
      * @return AbstractParameter[]
      */
-    public function getAuthenticationParameters(): array
+    public function getConfigurationParameters(Strategy $strategy): array
+    {
+        if ($strategy->hasConfigValue('cookieFile')) {
+            return $this->getTanParameters();
+        }
+
+        return $this->getLoginParameters();
+    }
+
+    /**
+     * @throws StrategyException
+     * @throws WebException
+     */
+    public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
+    {
+        if (isset($parameters['j_username'], $parameters['j_password'])) {
+            $this->login($strategy, $parameters);
+
+            return false;
+        }
+
+        if (!$strategy->hasConfigValue('cookieFile')) {
+            throw new StrategyException('Login required!');
+        }
+
+        $this->validateTan($strategy, $parameters);
+
+        return true;
+    }
+
+    public function getFiles(Strategy $strategy): array
+    {
+        return [];
+    }
+
+    public function setFileResource(File $file): File
+    {
+        return $file;
+    }
+
+    /**
+     * @return AbstractParameter[]
+     */
+    private function getLoginParameters(): array
     {
         return [
             'j_username' => new StringParameter('Anmeldename'),
-            'j_password' => new StringParameter('Passwort'),
+            'j_password' => (new StringParameter('Passwort'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
+        ];
+    }
+
+    private function getTanParameters(): array
+    {
+        return [
+            'tan' => (new IntParameter('TAN'))->setRange(0, 999999),
         ];
     }
 
     /**
+     * @throws StrategyException
      * @throws WebException
      */
-    public function authenticate(Strategy $strategy, array $parameters): void
+    private function login(Strategy $strategy, array $parameters): void
     {
         $initResponse = $this->webService->get(new Request(self::URL . 'banking'));
         $initResponseBody = $initResponse->getBody()->getContent();
@@ -74,36 +125,20 @@ class DkbStrategy extends AbstractWebStrategy
     }
 
     /**
-     * @return AbstractParameter[]
+     * @throws WebException
      */
-    public function get2FactorAuthenticationParameters(Strategy $strategy): array
-    {
-        return [
-            'tan' => (new IntParameter('TAN'))->setRange(0, 999999),
-        ];
-    }
-
-    public function authenticate2Factor(Strategy $strategy, array $parameters): void
+    private function validateTan(Strategy $strategy, array $parameters): void
     {
         $response = $this->webService->post(
             (new Request(
                 self::URL . 'DkbTransactionBanking/content/LoginWithTan/LoginWithTanProcess/LoginWithTanSubmit.xhtm'
             ))
                 ->setCookieFile($strategy->getConfigValue('cookieFile'))
-                ->setParameter('tan', $parameters['tan'])
+                ->setParameter('tan', (string) $parameters['tan'])
                 ->setParameter('$event', 'next')
         );
         $responseBody = $response->getBody()->getContent();
+        errlog($responseBody);
         $this->logger->debug('Response: ' . $responseBody);
-    }
-
-    public function getFiles(Strategy $strategy): array
-    {
-        return [];
-    }
-
-    public function setFileResource(File $file): File
-    {
-        return $file;
     }
 }

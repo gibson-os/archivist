@@ -24,7 +24,7 @@ class DeutscheBankStrategy extends AbstractWebStrategy
     /**
      * @return AbstractParameter[]
      */
-    public function getAuthenticationParameters(): array
+    public function getConfigurationParameters(Strategy $strategy): array
     {
         return [
             'branch' => (new IntParameter('Filiale'))->setRange(1, 999),
@@ -40,7 +40,7 @@ class DeutscheBankStrategy extends AbstractWebStrategy
      * @throws StrategyException
      * @throws WebException
      */
-    public function authenticate(Strategy $strategy, array $parameters): void
+    public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
         $response = $this->webService->post(
             (new Request(self::URL . 'trxm/db/gvo/login/login.do'))
@@ -64,6 +64,8 @@ class DeutscheBankStrategy extends AbstractWebStrategy
             ->setConfigValue('photoTanImage', $imageResponse->getBody()->getContent())
             ->setConfigValue('cookieFile', $cookieFile)
         ;
+
+        return true;
     }
 
     /**

@@ -13,24 +13,14 @@ class CommerzbankStrategy implements StrategyInterface
         return 'Commerzbank';
     }
 
-    public function getAuthenticationParameters(): array
+    public function getConfigurationParameters(Strategy $strategy): array
     {
         return [];
     }
 
-    public function authenticate(Strategy $strategy, array $parameters): void
+    public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
-        // TODO: Implement authenticate() method.
-    }
-
-    public function get2FactorAuthenticationParameters(Strategy $strategy): array
-    {
-        return [];
-    }
-
-    public function authenticate2Factor(Strategy $strategy, array $parameters): void
-    {
-        // TODO: Implement authenticate2Factor() method.
+        return true;
     }
 
     public function getFiles(Strategy $strategy): array

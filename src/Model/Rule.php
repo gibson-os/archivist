@@ -6,6 +6,7 @@ namespace GibsonOS\Module\Archivist\Model;
 use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Model\User;
+use GibsonOS\Core\Utility\JsonUtility;
 use JsonSerializable;
 
 class Rule extends AbstractModel implements JsonSerializable
@@ -14,17 +15,17 @@ class Rule extends AbstractModel implements JsonSerializable
 
     private string $name;
 
-    private string $observedDirectory;
+    private string $strategy;
+
+    private string $configuration = '[]';
 
     private ?string $observedFilename = null;
 
-    private string $moveDirectory;
+    private string $moveDirectory = '';
 
-    private string $moveFilename;
+    private string $moveFilename = '';
 
     private bool $active = false;
-
-    private int $count = 0;
 
     private int $userId;
 
@@ -64,14 +65,26 @@ class Rule extends AbstractModel implements JsonSerializable
         return $this;
     }
 
-    public function getObservedDirectory(): string
+    public function getStrategy(): string
     {
-        return $this->observedDirectory;
+        return $this->strategy;
     }
 
-    public function setObservedDirectory(string $observedDirectory): Rule
+    public function setStrategy(string $strategy): Rule
     {
-        $this->observedDirectory = $observedDirectory;
+        $this->strategy = $strategy;
+
+        return $this;
+    }
+
+    public function getConfiguration(): string
+    {
+        return $this->configuration;
+    }
+
+    public function setConfiguration(string $configuration): Rule
+    {
+        $this->configuration = $configuration;
 
         return $this;
     }
@@ -120,18 +133,6 @@ class Rule extends AbstractModel implements JsonSerializable
     public function setActive(bool $active): Rule
     {
         $this->active = $active;
-
-        return $this;
-    }
-
-    public function getCount(): int
-    {
-        return $this->count;
-    }
-
-    public function setCount(int $count): Rule
-    {
-        $this->count = $count;
 
         return $this;
     }
@@ -212,12 +213,12 @@ class Rule extends AbstractModel implements JsonSerializable
         return [
             'id' => $this->getId(),
             'name' => $this->getName(),
-            'observedDirectory' => $this->getObservedDirectory(),
+            'strategy' => $this->getStrategy(),
+            'configuration' => JsonUtility::encode($this->getConfiguration()),
             'observedFilename' => $this->getObservedFilename(),
             'moveDirectory' => $this->getMoveDirectory(),
             'moveFilename' => $this->getMoveFilename(),
             'active' => $this->isActive(),
-            'count' => $this->getCount(),
         ];
     }
 }

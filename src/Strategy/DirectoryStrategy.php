@@ -13,14 +13,14 @@ class DirectoryStrategy implements StrategyInterface
         return 'Ordner';
     }
 
-    public function getAuthenticationParameters(): array
+    public function getConfigurationParameters(Strategy $strategy): array
     {
         return [];
     }
 
-    public function authenticate(Strategy $strategy, array $parameters): void
+    public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
-        // TODO: Implement authenticate() method.
+        return true;
     }
 
     public function get2FactorAuthenticationParameters(Strategy $strategy): array

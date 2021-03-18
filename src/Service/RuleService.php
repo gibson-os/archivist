@@ -37,23 +37,6 @@ class RuleService extends AbstractService
     }
 
     /**
-     * @throws DateTimeError
-     */
-    public function getOutputPath(Index $indexFile): ?string
-    {
-        $rule = $indexFile->getRule();
-
-        if (!$rule instanceof Rule) {
-            return null;
-        }
-
-        return $this->dirService->addEndSlash($rule->getMoveDirectory()) . $this->replaceCount(
-            $rule,
-            $this->replaceFileEnding($indexFile, $rule->getMoveFilename())
-        );
-    }
-
-    /**
      * @throws CreateError
      * @throws DateTimeError
      * @throws DeleteError
@@ -73,10 +56,7 @@ class RuleService extends AbstractService
         $rule = $indexedFile->getRule();
 
         if ($rule instanceof Rule) {
-            $rule
-                ->setCount($rule->getCount() + 1)
-                ->save()
-            ;
+            $rule->save();
         }
 
         $this->fileService->move($indexedFile->getInputPath(), $outputPath);
@@ -90,56 +70,40 @@ class RuleService extends AbstractService
      */
     public function indexFiles(Rule $rule): void
     {
-        $directory = $this->dirService->addEndSlash($rule->getObservedDirectory());
-
-        foreach ($this->dirService->getFiles($directory, $rule->getObservedFilename() ?? '*') as $filename) {
-            try {
-                $indexedFile = $this->indexRepository->getByInputPath($filename);
-            } catch (SelectError $e) {
-                $indexedFile = (new Index())
-                    ->setRule($rule->isActive() ? $rule : null)
-                    ->setInputPath($filename)
-                ;
-                $indexedFile->setOutputPath($this->getOutputPath($indexedFile));
-            }
-
-            $size = filesize($filename);
-
-            if ($size !== 0) {
-                if ($size === $indexedFile->getSize()) {
-                    if ($indexedFile->getChanged()->format('U') < time() - 30) {
-                        try {
-                            $this->moveFile($indexedFile);
-                            $indexedFile->delete();
-                        } catch (CreateError | DeleteError | FileNotFound | GetError | SetError | DateTimeError | ModelDeleteError $e) {
-                            // Error
-                        }
-                    }
-
-                    continue;
-                }
-
-                $indexedFile->setChanged(new DateTimeImmutable());
-            }
-
-            $indexedFile
-                ->setSize($size)
-                ->save()
-            ;
-        }
-    }
-
-    private function replaceCount(Rule $rule, string $filename): string
-    {
-        return str_replace('{COUNT}', (string) $rule->getCount(), $filename);
-    }
-
-    private function replaceFileEnding(Index $indexFile, string $filename): string
-    {
-        return str_replace(
-            '{FILE_ENDING}',
-            $this->fileService->getFileEnding($indexFile->getInputPath()),
-            $filename
-        );
+//        foreach ($this->dirService->getFiles($directory, $rule->getObservedFilename() ?? '*') as $filename) {
+//            try {
+//                $indexedFile = $this->indexRepository->getByInputPath($filename);
+//            } catch (SelectError $e) {
+//                $indexedFile = (new Index())
+//                    ->setRule($rule->isActive() ? $rule : null)
+//                    ->setInputPath($filename)
+//                ;
+//                $indexedFile->setOutputPath($this->getOutputPath($indexedFile));
+//            }
+//
+//            $size = filesize($filename);
+//
+//            if ($size !== 0) {
+//                if ($size === $indexedFile->getSize()) {
+//                    if ($indexedFile->getChanged()->format('U') < time() - 30) {
+//                        try {
+//                            $this->moveFile($indexedFile);
+//                            $indexedFile->delete();
+//                        } catch (CreateError | DeleteError | FileNotFound | GetError | SetError | DateTimeError | ModelDeleteError $e) {
+//                            // Error
+//                        }
+//                    }
+//
+//                    continue;
+//                }
+//
+//                $indexedFile->setChanged(new DateTimeImmutable());
+//            }
+//
+//            $indexedFile
+//                ->setSize($size)
+//                ->save()
+//            ;
+//        }
     }
 }
