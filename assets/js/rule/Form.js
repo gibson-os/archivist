@@ -18,6 +18,20 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
                     parameters: {},
                     autoCompleteClassname: 'GibsonOS\\Module\\Archivist\\AutoComplete\\StrategyAutoComplete'
                 }
+            },
+            listeners: {
+                change(combo, value) {
+                    me.items.each(field => {
+                        if (field.getName() === 'name' || field.getName() === 'strategy') {
+                            return true;
+                        }
+
+                        me.remove(field);
+                    });
+
+                    const strategy = combo.getStore().getById(value);
+                    me.addFields(strategy.get('parameters'));
+                }
             }
         }];
 

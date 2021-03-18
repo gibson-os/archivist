@@ -3,13 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AutoComplete/StrategyAutoComplete.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/AutoComplete/StrategyAutoComplete.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Dto/Strategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Dto/Strategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/AllianzStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/AllianzStrategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/CommerzbankStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/CommerzbankStrategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/DirectoryStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DirectoryStrategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/StrategyInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/StrategyInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rule/Form.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rule/model/Strategy.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/model/Strategy.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
