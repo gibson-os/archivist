@@ -33,7 +33,7 @@ class DirectoryStrategy implements StrategyInterface
         // TODO: Implement authenticate2Factor() method.
     }
 
-    public function getFiles(Strategy $strategy): array
+    public function getFiles(Strategy $strategy, array $parameters): array
     {
         return [];
     }

@@ -23,7 +23,7 @@ class CommerzbankStrategy implements StrategyInterface
         return true;
     }
 
-    public function getFiles(Strategy $strategy): array
+    public function getFiles(Strategy $strategy, array $parameters): array
     {
         return [];
     }

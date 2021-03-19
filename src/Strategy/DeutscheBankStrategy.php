@@ -91,7 +91,7 @@ class DeutscheBankStrategy extends AbstractWebStrategy
         );
     }
 
-    public function getFiles(Strategy $strategy): array
+    public function getFiles(Strategy $strategy, array $parameters): array
     {
         return [];
     }
