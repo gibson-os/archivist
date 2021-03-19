@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/IndexRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/IndexRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/AbstractWebStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/AbstractWebStrategy.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -411,7 +408,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616110121760</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Add save postbox links">
+      <created>1616176567637</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1616176567637</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

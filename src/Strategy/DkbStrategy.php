@@ -5,6 +5,7 @@ namespace GibsonOS\Module\Archivist\Strategy;
 
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
 use GibsonOS\Core\Dto\Parameter\IntParameter;
+use GibsonOS\Core\Dto\Parameter\OptionParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Dto\Web\Request;
 use GibsonOS\Core\Exception\WebException;
@@ -39,11 +40,15 @@ class DkbStrategy extends AbstractWebStrategy
             ]);
         }
 
-        if (!$strategy->hasConfigValue('cookieFile')) {
+        if (!$strategy->hasConfigValue('step')) {
             return $this->getLoginParameters();
         }
 
-        return $this->getTanParameters();
+        switch ($strategy->getConfigValue('step')) {
+            case 'tan': return $this->getTanParameters();
+            case 'path': return $this->getPathParameters($strategy);
+            default: return $this->getLoginParameters();
+        }
     }
 
     /**
@@ -52,19 +57,25 @@ class DkbStrategy extends AbstractWebStrategy
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
-        if ($strategy->hasConfigValue('cookieFile')) {
-            $this->validateTan($strategy, $parameters);
-
-            return false;
-        }
-
-        if (isset($parameters['j_username'], $parameters['j_password'])) {
+        if (!$strategy->hasConfigValue('step')) {
             $this->login($strategy, $parameters);
 
             return false;
         }
 
-        throw new StrategyException('Login required!');
+        switch ($strategy->getConfigValue('step')) {
+            case 'tan':
+                $this->validateTan($strategy, $parameters);
+
+                return false;
+            case 'path':
+                // @todo was machste hier?
+                return true;
+            default:
+                $this->login($strategy, $parameters);
+
+                return false;
+        }
     }
 
     public function getFiles(Strategy $strategy): array
@@ -92,6 +103,13 @@ class DkbStrategy extends AbstractWebStrategy
     {
         return [
             'tan' => (new IntParameter('TAN'))->setRange(0, 999999),
+        ];
+    }
+
+    private function getPathParameters(Strategy $strategy): array
+    {
+        return [
+            'path' => new OptionParameter('Verzeichnis', $strategy->getConfigValue('directories')),
         ];
     }
 
@@ -138,6 +156,7 @@ class DkbStrategy extends AbstractWebStrategy
             ->setConfigValue('cookieFile', $response->getCookieFile())
             ->setConfigValue('username', $this->cryptService->encrypt($parameters['j_username']))
             ->setConfigValue('password', $this->cryptService->encrypt($parameters['j_password']))
+            ->setConfigValue('next', 'tan')
         ;
     }
 
@@ -170,9 +189,11 @@ class DkbStrategy extends AbstractWebStrategy
 
         foreach ($links[1] as $key => $link) {
             $directories[$links[2][$key]] = $link;
-            // @todo Hier bekommste jetzt die Links. Man könnte damit einem Paramter füttern und die Auswahl möglich machen
         }
 
-        $strategy->setConfigValue('directories', $directories);
+        $strategy
+            ->setConfigValue('directories', $directories)
+            ->setConfigValue('next', 'path')
+        ;
     }
 }
