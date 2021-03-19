@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Strategy;
 
+use GibsonOS\Core\Service\CryptService;
 use GibsonOS\Core\Service\WebService;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 use Psr\Log\LoggerInterface;
@@ -13,10 +14,13 @@ abstract class AbstractWebStrategy implements StrategyInterface
 
     protected LoggerInterface $logger;
 
-    public function __construct(WebService $webService, LoggerInterface $logger)
+    protected CryptService $cryptService;
+
+    public function __construct(WebService $webService, LoggerInterface $logger, CryptService $cryptService)
     {
         $this->webService = $webService;
         $this->logger = $logger;
+        $this->cryptService = $cryptService;
     }
 
     /**

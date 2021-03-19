@@ -35,12 +35,10 @@ class IndexRepository extends AbstractRepository
                 '`' . Index::getTableName() . '`.`rule_id`, ' .
                 '`' . Index::getTableName() . '`.`changed`, ' .
                 '`' . Rule::getTableName() . '`.`name`, ' .
-                '`' . Rule::getTableName() . '`.`observed_directory`, ' .
                 '`' . Rule::getTableName() . '`.`observed_filename`, ' .
                 '`' . Rule::getTableName() . '`.`move_directory`, ' .
                 '`' . Rule::getTableName() . '`.`move_filename`, ' .
                 '`' . Rule::getTableName() . '`.`active`, ' .
-                '`' . Rule::getTableName() . '`.`count`, ' .
                 '`' . Rule::getTableName() . '`.`user_id`'
             )
         ;
@@ -68,12 +66,10 @@ class IndexRepository extends AbstractRepository
                 (new Rule())
                     ->setId($record->rule_id)
                     ->setName($record->name)
-                    ->setObservedDirectory($record->observe_directory)
                     ->setObservedFilename($record->observe_filename)
                     ->setMoveDirectory($record->move_directory)
                     ->setMoveFilename($record->move_filename)
                     ->setActive((bool) $record->active)
-                    ->setCount((int) $record->count)
                     ->setUserId((int) $record->user_id)
             );
         }

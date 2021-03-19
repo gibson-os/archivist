@@ -22,15 +22,28 @@ class DkbStrategy extends AbstractWebStrategy
     }
 
     /**
+     * @throws StrategyException
+     * @throws WebException
+     *
      * @return AbstractParameter[]
      */
     public function getConfigurationParameters(Strategy $strategy): array
     {
-        if ($strategy->hasConfigValue('cookieFile')) {
-            return $this->getTanParameters();
+        if (
+            $strategy->hasConfigValue('username') &&
+            $strategy->hasConfigValue('password')
+        ) {
+            $this->login($strategy, [
+                'j_username' => $this->cryptService->decrypt($strategy->getConfigValue('username')),
+                'j_password' => $this->cryptService->decrypt($strategy->getConfigValue('password')),
+            ]);
         }
 
-        return $this->getLoginParameters();
+        if (!$strategy->hasConfigValue('cookieFile')) {
+            return $this->getLoginParameters();
+        }
+
+        return $this->getTanParameters();
     }
 
     /**
@@ -39,32 +52,23 @@ class DkbStrategy extends AbstractWebStrategy
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
+        if ($strategy->hasConfigValue('cookieFile')) {
+            $this->validateTan($strategy, $parameters);
+
+            return false;
+        }
+
         if (isset($parameters['j_username'], $parameters['j_password'])) {
             $this->login($strategy, $parameters);
 
             return false;
         }
 
-        if (!$strategy->hasConfigValue('cookieFile')) {
-            throw new StrategyException('Login required!');
-        }
-
-        $this->validateTan($strategy, $parameters);
-
-        return true;
+        throw new StrategyException('Login required!');
     }
 
     public function getFiles(Strategy $strategy): array
     {
-        $response = $this->webService->post(
-            (new Request(self::URL . 'banking/postfach'))
-                ->setCookieFile($strategy->getConfigValue('cookieFile'))
-        );
-        $responseBody = $response->getBody()->getContent();
-
-        $links = [];
-        preg_match_all('/href="([^"]*)".+?class="evt-gotoFolder"[^>]*>([^<]*)/', $responseBody, $links);
-
         return [];
     }
 
@@ -130,7 +134,11 @@ class DkbStrategy extends AbstractWebStrategy
         }
 
         $this->logger->debug('Authenticate response: ' . $responseBody);
-        $strategy->setConfigValue('cookieFile', $response->getCookieFile());
+        $strategy
+            ->setConfigValue('cookieFile', $response->getCookieFile())
+            ->setConfigValue('username', $this->cryptService->encrypt($parameters['j_username']))
+            ->setConfigValue('password', $this->cryptService->encrypt($parameters['j_password']))
+        ;
     }
 
     /**
@@ -148,5 +156,23 @@ class DkbStrategy extends AbstractWebStrategy
         );
         $responseBody = $response->getBody()->getContent();
         $this->logger->debug('Response: ' . $responseBody);
+
+        $response = $this->webService->post(
+            (new Request(self::URL . 'banking/postfach'))
+                ->setCookieFile($strategy->getConfigValue('cookieFile'))
+        );
+        $responseBody = $response->getBody()->getContent();
+
+        $links = [0 => [], 1 => [], 2 => []];
+        preg_match_all('/href="([^"]*)".+?class="evt-gotoFolder"[^>]*>([^<]*)/', $responseBody, $links);
+
+        $directories = [];
+
+        foreach ($links[1] as $key => $link) {
+            $directories[$links[2][$key]] = $link;
+            // @todo Hier bekommste jetzt die Links. Man könnte damit einem Paramter füttern und die Auswahl möglich machen
+        }
+
+        $strategy->setConfigValue('directories', $directories);
     }
 }

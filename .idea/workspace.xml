@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Add postbox link extraction">
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/IndexRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/IndexRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Strategy/AbstractWebStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/AbstractWebStrategy.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -165,11 +171,19 @@
       <recent name="C:\Users\ich\Documents\Projekte\GibsonOs\Archivist\src\Controller" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="PHP Script.scratch_1.php">
     <configuration name="codeception.yml" type="CodeceptionConfigurationType" factoryName="Codeception">
       <PhpTestRunnerSettings scope="ConfigurationFile" />
       <method v="2" />
     </configuration>
+    <configuration name="scratch_1.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$APPLICATION_CONFIG_DIR$/scratches/scratch_1.php">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="PHP Script.scratch_1.php" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
@@ -405,7 +419,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Add index command" />
     <MESSAGE value="Add gitkeep" />
     <MESSAGE value="Change composer name to archivist" />
     <MESSAGE value="Fix namespace" />
@@ -430,7 +443,8 @@
     <MESSAGE value="Add parameters to form" />
     <MESSAGE value="Add add rule" />
     <MESSAGE value="Add postbox link extraction" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add postbox link extraction" />
+    <MESSAGE value="Add save postbox links" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add save postbox links" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
