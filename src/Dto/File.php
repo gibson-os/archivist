@@ -5,7 +5,7 @@ namespace GibsonOS\Module\Archivist\Dto;
 
 use DateTimeInterface;
 
-class File
+class File implements \JsonSerializable
 {
     private string $name;
 
@@ -100,5 +100,15 @@ class File
     public function getResource()
     {
         return $this->resource;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'path' => $this->getPath(),
+            'name' => $this->getName(),
+            'createDate' => $this->getCreateDate()->format('Y-m-d H:i:s'),
+            'strategy' => $this->getStrategy()->getName(),
+        ];
     }
 }

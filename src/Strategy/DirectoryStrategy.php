@@ -48,6 +48,10 @@ class DirectoryStrategy implements StrategyInterface
         $directory = $strategy->getConfigValue('directory');
 
         foreach ($this->dirService->getFiles($directory) as $file) {
+            if (is_dir($file)) {
+                continue;
+            }
+
             $files[] = new File(
                 $this->fileService->getFilename($file),
                 $directory,

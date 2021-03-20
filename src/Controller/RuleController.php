@@ -79,7 +79,7 @@ class RuleController extends AbstractController
             );
         }
 
-        return $this->returnSuccess();
+        return $this->returnSuccess($strategyService->getFiles($strategyDto, $parameters));
         $rule = (new Rule())
             ->setId($id)
             ->setName($name ?? '')
