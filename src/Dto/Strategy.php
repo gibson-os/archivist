@@ -15,6 +15,8 @@ class Strategy implements JsonSerializable, AutoCompleteModelInterface
 
     private array $config = [];
 
+    private int $configStep = 0;
+
     /**
      * @var AbstractParameter[]
      */
@@ -75,6 +77,25 @@ class Strategy implements JsonSerializable, AutoCompleteModelInterface
     public function setConfigValue(string $name, $value): Strategy
     {
         $this->config[$name] = $value;
+
+        return $this;
+    }
+
+    public function getConfigStep(): int
+    {
+        return $this->configStep;
+    }
+
+    public function setConfigStep(int $configStep): Strategy
+    {
+        $this->configStep = $configStep;
+
+        return $this;
+    }
+
+    public function setNextConfigStep(): Strategy
+    {
+        ++$this->configStep;
 
         return $this;
     }

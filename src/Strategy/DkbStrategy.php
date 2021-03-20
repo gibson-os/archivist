@@ -21,6 +21,12 @@ class DkbStrategy extends AbstractWebStrategy
 {
     private const URL = 'https://www.dkb.de/';
 
+    private const STEP_LOGIN = 0;
+
+    private const STEP_TAN = 1;
+
+    private const STEP_PATH = 2;
+
     private DateTimeService $dateTimeService;
 
     public function __construct(
@@ -56,13 +62,9 @@ class DkbStrategy extends AbstractWebStrategy
             ]);
         }
 
-        if (!$strategy->hasConfigValue('step')) {
-            return $this->getLoginParameters();
-        }
-
-        switch ($strategy->getConfigValue('step')) {
-            case 'tan': return $this->getTanParameters();
-            case 'path': return $this->getPathParameters($strategy);
+        switch ($strategy->getConfigStep()) {
+            case self::STEP_TAN: return $this->getTanParameters();
+            case self::STEP_PATH: return $this->getPathParameters($strategy);
             default: return $this->getLoginParameters();
         }
     }
@@ -73,18 +75,12 @@ class DkbStrategy extends AbstractWebStrategy
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
-        if (!$strategy->hasConfigValue('step')) {
-            $this->login($strategy, $parameters);
-
-            return false;
-        }
-
-        switch ($strategy->getConfigValue('step')) {
-            case 'tan':
+        switch ($strategy->getConfigStep()) {
+            case self::STEP_TAN:
                 $this->validateTan($strategy, $parameters);
 
                 return false;
-            case 'path':
+            case self::STEP_PATH:
                 // @todo was machste hier?
                 return true;
             default:
@@ -144,8 +140,33 @@ class DkbStrategy extends AbstractWebStrategy
         return $files;
     }
 
+    /**
+     * @throws StrategyException
+     * @throws WebException
+     */
     public function setFileResource(File $file): File
     {
+        if ($file->getStrategy()->getClassName() !== self::class) {
+            throw new StrategyException(sprintf(
+                'Class name %s is not equal with %s',
+                $file->getStrategy()->getClassName(),
+                self::class
+            ));
+        }
+
+        $response = $this->webService->get(
+            (new Request($file->getPath()))
+                ->setCookieFile($file->getStrategy()->getConfigValue('cookieFile'))
+        );
+
+        $resource = $response->getBody()->getResource();
+
+        if ($resource === null) {
+            throw new StrategyException('File is empty!');
+        }
+
+        $file->setResource($resource, $response->getBody()->getLength());
+
         return $file;
     }
 
@@ -217,7 +238,7 @@ class DkbStrategy extends AbstractWebStrategy
             ->setConfigValue('cookieFile', $response->getCookieFile())
             ->setConfigValue('username', $this->cryptService->encrypt($parameters['j_username']))
             ->setConfigValue('password', $this->cryptService->encrypt($parameters['j_password']))
-            ->setConfigValue('next', 'tan')
+            ->setNextConfigStep()
         ;
     }
 
@@ -254,7 +275,7 @@ class DkbStrategy extends AbstractWebStrategy
 
         $strategy
             ->setConfigValue('directories', $directories)
-            ->setConfigValue('next', 'path')
+            ->setNextConfigStep()
         ;
     }
 }
