@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Controller;
 
 use GibsonOS\Core\Controller\AbstractController;
+use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\GetError;
@@ -19,6 +20,7 @@ use GibsonOS\Module\Archivist\Exception\StrategyException;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Store\RuleStore;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
+use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 use JsonException;
 
 class RuleController extends AbstractController
@@ -47,7 +49,7 @@ class RuleController extends AbstractController
      * @throws FactoryError
      * @throws JsonException
      */
-    public function save(
+    public function add(
         ServiceManagerService $serviceManagerService,
         string $strategy,
         array $configuration,
@@ -79,15 +81,45 @@ class RuleController extends AbstractController
             );
         }
 
-        return $this->returnSuccess($strategyService->getFiles($strategyDto, $parameters));
+        return $this->returnSuccess([
+            'parameters' => [
+                'name' => new StringParameter('Name'),
+                'observedFilename' => new StringParameter('Beobachtungsregel'),
+                'moveDirectory' => new DirectoryParameter('Ablage Verzeichnis'),
+                'moveFilename' => new StringParameter('Ablage Dateiname'),
+            ],
+            'files' => $strategyService->getFiles($strategyDto, $parameters),
+        ]);
+    }
+
+    /**
+     * @throws DateTimeError
+     * @throws LoginRequired
+     * @throws PermissionDenied
+     * @throws SaveError
+     * @throws StrategyException
+     * @throws FactoryError
+     * @throws JsonException
+     */
+    public function save(
+        string $strategy,
+        array $configuration,
+        string $name,
+        string $observedFilename,
+        string $moveDirectory,
+        string $moveFilename,
+        bool $active = true,
+        int $id = null
+    ): AjaxResponse {
+        $this->checkPermission(PermissionService::WRITE);
         $rule = (new Rule())
             ->setId($id)
-            ->setName($name ?? '')
+            ->setName($name)
             ->setStrategy($strategy)
             ->setConfiguration(JsonUtility::encode($configuration))
-            ->setObservedFilename($observedFilename ?: null)
-            ->setMoveDirectory($moveDirectory ?? '')
-            ->setMoveFilename($moveFilename ?? '')
+            ->setObservedFilename($observedFilename)
+            ->setMoveDirectory($moveDirectory)
+            ->setMoveFilename($moveFilename)
             ->setActive($active)
             ->setUserId($this->sessionService->getUserId() ?? 0)
         ;

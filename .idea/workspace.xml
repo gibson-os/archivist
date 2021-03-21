@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Add get files">
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rule/Form.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/RuleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RuleController.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -226,6 +228,7 @@
       <workItem from="1616094849523" duration="1832000" />
       <workItem from="1616232463868" duration="3844000" />
       <workItem from="1616264488083" duration="2136000" />
+      <workItem from="1616353929781" duration="4703000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
@@ -430,7 +433,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616280733798</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Update composer">
+      <created>1616285622467</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1616285622467</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -450,7 +460,6 @@
     <MESSAGE value="Update to php 7.4" />
     <MESSAGE value="Update to php 7.4 code style" />
     <MESSAGE value="Fix default initialization" />
-    <MESSAGE value="Update composer" />
     <MESSAGE value="Add first steps for dkb" />
     <MESSAGE value="Add dkb authentication" />
     <MESSAGE value="Refactor js" />
@@ -463,7 +472,8 @@
     <MESSAGE value="Add save postbox links" />
     <MESSAGE value="Refactor strategy" />
     <MESSAGE value="Add get files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add get files" />
+    <MESSAGE value="Update composer" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update composer" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

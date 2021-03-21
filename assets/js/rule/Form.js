@@ -34,6 +34,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
         me.callParent();
 
         let responseData = {};
+        let save = false;
 
         me.down('#coreEventElementParameterSaveButton').on('click', () => {
             let parameters = {};
@@ -46,15 +47,19 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
                 parameters[field.getName()] = field.getValue();
             });
 
+            if (!save) {
+                parameters = {parameters: Ext.encode(parameters)};
+            }
+
+            parameters.strategy = !me.getForm().findField('strategy')
+                ? responseData.id
+                : me.getForm().findField('strategy').getValue()
+            ;
+            parameters.configuration = !responseData.config ? '[]' : Ext.encode(responseData.config);
+
             GibsonOS.Ajax.request({
-                url: baseDir + 'archivist/rule/save',
-                params: {
-                    strategy: !me.getForm().findField('strategy')
-                        ? responseData.id
-                        : me.getForm().findField('strategy').getValue(),
-                    configuration: !responseData.config ? '[]' : Ext.encode(responseData.config),
-                    parameters: Ext.encode(parameters)
-                },
+                url: baseDir + 'archivist/rule/' + (save ? 'save' : 'add'),
+                params: parameters,
                 success(response) {
                     responseData = Ext.decode(response.responseText).data;
 
@@ -62,6 +67,8 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
                         me.removeAll();
                         me.addFields(responseData.parameters);
                     }
+
+                    save = !!responseData.files;
                 },
                 callback() {
                     me.setLoading(false);
