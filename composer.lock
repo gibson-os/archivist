@@ -79,7 +79,7 @@
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Explorer.git",
-                "reference": "77440d876db0ad7ea787e152786f96de7086dce7"
+                "reference": "dd34610109f9393fbbb7efafb900da6f938510fa"
             },
             "require": {
                 "ext-exif": "*",
@@ -126,7 +126,7 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2021-03-20T22:22:08+00:00"
+            "time": "2021-03-21T00:12:10+00:00"
         },
         {
             "name": "mdo/mdo",

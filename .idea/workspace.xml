@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Add postbox link extraction">
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Add get files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/RuleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RuleController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Dto/File.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Dto/File.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/DirectoryStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DirectoryStrategy.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -427,7 +423,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616185747798</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Add get files">
+      <created>1616280733798</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1616280733798</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -435,7 +438,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Change composer name to archivist" />
     <MESSAGE value="Fix namespace" />
     <MESSAGE value="Change indexer command" />
     <MESSAGE value="Change workspace" />
@@ -460,7 +462,8 @@
     <MESSAGE value="Add postbox link extraction" />
     <MESSAGE value="Add save postbox links" />
     <MESSAGE value="Refactor strategy" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor strategy" />
+    <MESSAGE value="Add get files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add get files" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
