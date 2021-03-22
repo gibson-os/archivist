@@ -4,17 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Add execute action">
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/RuleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RuleController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/RuleRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RuleRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/AllianzStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/AllianzStrategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/CommerzbankStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/CommerzbankStrategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/DeutscheBankStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DeutscheBankStrategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/DirectoryStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DirectoryStrategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Strategy/StrategyInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/StrategyInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Rule.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Rule.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -237,7 +230,7 @@
       <workItem from="1616264488083" duration="2136000" />
       <workItem from="1616353929781" duration="7834000" />
       <workItem from="1616425746235" duration="164000" />
-      <workItem from="1616448026695" duration="4770000" />
+      <workItem from="1616448026695" duration="5985000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
@@ -456,7 +449,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616365808731</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Add execute action">
+      <created>1616452880432</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1616452880432</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

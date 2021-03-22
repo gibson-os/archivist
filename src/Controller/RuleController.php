@@ -79,6 +79,7 @@ class RuleController extends AbstractController
                 'moveFilename' => new StringParameter('Ablage Dateiname'),
             ],
             'files' => $strategyService->getFiles($strategyDto),
+            'config' => $strategyDto->getConfig(),
             'id' => $strategy,
         ]);
     }
