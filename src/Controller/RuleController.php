@@ -49,16 +49,11 @@ class RuleController extends AbstractController
      * @throws FactoryError
      * @throws JsonException
      */
-    public function add(
+    public function edit(
         ServiceManagerService $serviceManagerService,
         string $strategy,
         array $configuration,
         array $parameters,
-        string $name = null,
-        string $observedFilename = null,
-        string $moveDirectory = null,
-        string $moveFilename = null,
-        bool $active = false,
         int $id = null
     ): AjaxResponse {
         $this->checkPermission(PermissionService::WRITE);
@@ -126,5 +121,10 @@ class RuleController extends AbstractController
         $rule->save();
 
         return $this->returnSuccess($rule);
+    }
+
+    public function execute(int $id): AjaxResponse
+    {
+        return $this->returnSuccess();
     }
 }

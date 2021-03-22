@@ -58,7 +58,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
             parameters.configuration = !responseData.config ? '[]' : Ext.encode(responseData.config);
 
             GibsonOS.Ajax.request({
-                url: baseDir + 'archivist/rule/' + (save ? 'save' : 'add'),
+                url: baseDir + 'archivist/rule/' + (save ? 'save' : 'edit'),
                 params: parameters,
                 success(response) {
                     responseData = Ext.decode(response.responseText).data;
@@ -69,6 +69,20 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
                     }
 
                     save = !!responseData.files;
+
+                    if (responseData.id) {
+                        me.down('#coreEventElementParameterSaveButton').up().add({
+                            text: 'Ausführen',
+                            handler() {
+                                GibsonOS.Ajax.request({
+                                    url: baseDir + 'archivist/rule/execute',
+                                    params: {
+                                        id: responseData.id
+                                    }
+                                });
+                            }
+                        });
+                    }
                 },
                 callback() {
                     me.setLoading(false);

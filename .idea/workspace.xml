@@ -7,6 +7,7 @@
     <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/js/rule/Form.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/RuleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RuleController.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -228,7 +229,8 @@
       <workItem from="1616094849523" duration="1832000" />
       <workItem from="1616232463868" duration="3844000" />
       <workItem from="1616264488083" duration="2136000" />
-      <workItem from="1616353929781" duration="4703000" />
+      <workItem from="1616353929781" duration="7834000" />
+      <workItem from="1616425746235" duration="164000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
@@ -440,7 +442,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616285622467</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Add save logic">
+      <created>1616365808731</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1616365808731</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -448,8 +457,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fix namespace" />
-    <MESSAGE value="Change indexer command" />
     <MESSAGE value="Change workspace" />
     <MESSAGE value="Add rule store" />
     <MESSAGE value="Add rule form" />
@@ -473,7 +480,9 @@
     <MESSAGE value="Refactor strategy" />
     <MESSAGE value="Add get files" />
     <MESSAGE value="Update composer" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update composer" />
+    <MESSAGE value="Add save logic" />
+    <MESSAGE value="Add execute button" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add execute button" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
