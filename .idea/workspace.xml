@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/RuleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RuleController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Rule.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Rule.php" afterDir="false" />
-    </list>
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -230,7 +226,7 @@
       <workItem from="1616264488083" duration="2136000" />
       <workItem from="1616353929781" duration="7834000" />
       <workItem from="1616425746235" duration="164000" />
-      <workItem from="1616448026695" duration="5985000" />
+      <workItem from="1616448026695" duration="6412000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
@@ -456,7 +452,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616452880432</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Fix configuration">
+      <created>1616454240021</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1616454240021</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -464,7 +467,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Add rule store" />
     <MESSAGE value="Add rule form" />
     <MESSAGE value="Add rule save" />
     <MESSAGE value="Change observe to observed" />
@@ -489,7 +491,8 @@
     <MESSAGE value="Add save logic" />
     <MESSAGE value="Add execute button" />
     <MESSAGE value="Add execute action" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add execute action" />
+    <MESSAGE value="Fix configuration" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix configuration" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
