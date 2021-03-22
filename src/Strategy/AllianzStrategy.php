@@ -23,7 +23,7 @@ class AllianzStrategy implements StrategyInterface
         return true;
     }
 
-    public function getFiles(Strategy $strategy, array $parameters): array
+    public function getFiles(Strategy $strategy): array
     {
         return [];
     }

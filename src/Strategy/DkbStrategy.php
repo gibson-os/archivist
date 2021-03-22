@@ -81,7 +81,8 @@ class DkbStrategy extends AbstractWebStrategy
 
                 return false;
             case self::STEP_PATH:
-                // @todo was machste hier?
+                $strategy->setConfigValue('path', $parameters['path']);
+
                 return true;
             default:
                 $this->login($strategy, $parameters);
@@ -93,9 +94,9 @@ class DkbStrategy extends AbstractWebStrategy
     /**
      * @throws WebException
      */
-    public function getFiles(Strategy $strategy, array $parameters): array
+    public function getFiles(Strategy $strategy): array
     {
-        return $this->getFilesFromPage($strategy, $parameters['path']);
+        return $this->getFilesFromPage($strategy, $strategy->getConfigValue('path'));
     }
 
     /**

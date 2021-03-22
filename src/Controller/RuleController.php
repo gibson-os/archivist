@@ -11,6 +11,8 @@ use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\LoginRequired;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\PermissionDenied;
+use GibsonOS\Core\Exception\Repository\SelectError;
+use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\PermissionService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Core\Service\ServiceManagerService;
@@ -18,6 +20,7 @@ use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 use GibsonOS\Module\Archivist\Model\Rule;
+use GibsonOS\Module\Archivist\Repository\RuleRepository;
 use GibsonOS\Module\Archivist\Store\RuleStore;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
@@ -58,16 +61,8 @@ class RuleController extends AbstractController
     ): AjaxResponse {
         $this->checkPermission(PermissionService::WRITE);
 
-        $strategyService = $serviceManagerService->get($strategy);
-
-        if (!$strategyService instanceof StrategyInterface) {
-            throw new StrategyException(sprintf(
-                '%d is no instanceof of %d',
-                get_class($strategyService),
-                StrategyInterface::class
-            ));
-        }
-
+        /** @var StrategyInterface $strategyService */
+        $strategyService = $serviceManagerService->get($strategy, StrategyInterface::class);
         $strategyDto = (new Strategy($strategyService->getName(), $strategy))->setConfig($configuration);
 
         if (!$strategyService->saveConfigurationParameters($strategyDto, $parameters)) {
@@ -83,18 +78,17 @@ class RuleController extends AbstractController
                 'moveDirectory' => new DirectoryParameter('Ablage Verzeichnis'),
                 'moveFilename' => new StringParameter('Ablage Dateiname'),
             ],
-            'files' => $strategyService->getFiles($strategyDto, $parameters),
+            'files' => $strategyService->getFiles($strategyDto),
+            'id' => $strategy,
         ]);
     }
 
     /**
      * @throws DateTimeError
+     * @throws JsonException
      * @throws LoginRequired
      * @throws PermissionDenied
      * @throws SaveError
-     * @throws StrategyException
-     * @throws FactoryError
-     * @throws JsonException
      */
     public function save(
         string $strategy,
@@ -103,10 +97,10 @@ class RuleController extends AbstractController
         string $observedFilename,
         string $moveDirectory,
         string $moveFilename,
-        bool $active = true,
         int $id = null
     ): AjaxResponse {
         $this->checkPermission(PermissionService::WRITE);
+
         $rule = (new Rule())
             ->setId($id)
             ->setName($name)
@@ -115,7 +109,6 @@ class RuleController extends AbstractController
             ->setObservedFilename($observedFilename)
             ->setMoveDirectory($moveDirectory)
             ->setMoveFilename($moveFilename)
-            ->setActive($active)
             ->setUserId($this->sessionService->getUserId() ?? 0)
         ;
         $rule->save();
@@ -123,8 +116,49 @@ class RuleController extends AbstractController
         return $this->returnSuccess($rule);
     }
 
-    public function execute(int $id): AjaxResponse
-    {
+    /**
+     * @throws DateTimeError
+     * @throws FactoryError
+     * @throws JsonException
+     * @throws LoginRequired
+     * @throws PermissionDenied
+     * @throws SelectError
+     */
+    public function execute(
+        ServiceManagerService $serviceManagerService,
+        RuleRepository $ruleRepository,
+        DirService $dirService,
+        int $id
+    ): AjaxResponse {
+        $this->checkPermission(PermissionService::WRITE);
+
+        $rule = $ruleRepository->getById($id);
+        /** @var StrategyInterface $strategyService */
+        $strategyService = $serviceManagerService->get($rule->getStrategy(), StrategyInterface::class);
+        $strategy = (new Strategy($strategyService->getName(), $rule->getStrategy()))
+            ->setConfig(JsonUtility::decode($rule->getConfiguration()))
+        ;
+        $files = $strategyService->getFiles($strategy);
+
+        foreach ($files as $file) {
+            $fileName = $dirService->addEndSlash($rule->getMoveDirectory()) . $rule->getMoveFilename();
+
+            if (!file_exists($fileName)) {
+                continue;
+            }
+
+            $strategyService->setFileResource($file);
+            $resource = $file->getResource();
+
+            if ($resource === null) {
+                continue;
+            }
+
+            $newFile = fopen($fileName, 'w');
+            stream_copy_to_stream($resource, $newFile);
+            fclose($newFile);
+        }
+
         return $this->returnSuccess();
     }
 }

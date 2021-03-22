@@ -5,11 +5,33 @@ namespace GibsonOS\Module\Archivist\Repository;
 
 use Generator;
 use GibsonOS\Core\Exception\DateTimeError;
+use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Repository\AbstractRepository;
 use GibsonOS\Module\Archivist\Model\Rule;
 
 class RuleRepository extends AbstractRepository
 {
+    /**
+     * @throws DateTimeError
+     * @throws SelectError
+     */
+    public function getById(int $id): Rule
+    {
+        $table = $this->getTable(Rule::getTableName())
+            ->setWhere('`id`=?')
+            ->addWhereParameter($id)
+        ;
+
+        if (!$table->selectPrepared()) {
+            throw (new SelectError($table->connection->error()))->setTable($table);
+        }
+
+        $rule = new Rule();
+        $rule->loadFromMysqlTable($table);
+
+        return $rule;
+    }
+
     /**
      * @throws DateTimeError
      *
