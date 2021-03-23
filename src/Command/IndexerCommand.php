@@ -61,15 +61,15 @@ class IndexerCommand extends AbstractCommand
             $this->lockService->lock(self::LOCK_NAME);
             $scannedDirectories = [];
 
-            foreach ($this->ruleRepository->getAll() as $rule) {
+//            foreach ($this->ruleRepository->getAll() as $rule) {
 //                $directory = $this->dirService->addEndSlash($rule->getObservedDirectory());
 //
 //                if (isset($scannedDirectories[$directory . $rule->getObservedFilename()])) {
 //                    continue;
 //                }
-
-                $this->ruleService->indexFiles($rule);
-            }
+//
+//                $this->ruleService->indexFiles($rule);
+//            }
 
             $this->lockService->unlock(self::LOCK_NAME);
         } catch (LockError $e) {

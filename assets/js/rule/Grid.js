@@ -12,10 +12,43 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
 
         me.callParent();
     },
-    addFunction: function() {
+    addFunction() {
         new GibsonOS.module.archivist.rule.Window();
     },
-    enterFunction: function(record) {
+    deleteFunction(records) {
+        const me = this;
+
+        Ext.MessageBox.confirm(
+            'Wirklich löschen?',
+            'Möchtest du die ' + records.length + ' Regel' + (records.length === 0 ? '' : 'n') + ' wirklich löschen?', buttonId => {
+                if (buttonId === 'no') {
+                    return false;
+                }
+
+                me.setLoading(true);
+
+                ruleIds = [];
+
+                Ext.iterate(records, record => {
+                    ruleIds.push(record.get('id'));
+                });
+
+                GibsonOS.Ajax.request({
+                    url: baseDir + 'archivist/rule/delete',
+                    params: {
+                        'ruleIds[]': ruleIds
+                    },
+                    success() {
+                        me.getStore().load();
+                    },
+                    callback() {
+                        me.setLoading(false);
+                    }
+                });
+            }
+        );
+    },
+    enterFunction(record) {
         const window =new GibsonOS.module.archivist.rule.Window();
         window.down('gosModuleArchivistRuleForm').loadRecord(record);
     },
@@ -24,27 +57,23 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
             dataIndex: 'name',
             text: 'Name',
             flex: 1
-        }, {
-            dataIndex: 'observedDirectory',
-            text: 'Beobachtetes Verzeichnis',
+        },{
+            dataIndex: 'strategy',
+            text: 'Strategy',
             flex: 1
-        }, {
+        },{
             dataIndex: 'observedFilename',
             text: 'Beobachtete Dateinamen',
             flex: 1
-        }, {
+        },{
             dataIndex: 'moveDirectory',
             text: 'Ziel Verzeichnis',
             flex: 1
-        }, {
+        },{
             dataIndex: 'moveFilename',
             text: 'Ziel Dateiname',
             flex: 1
-        }, {
-            dataIndex: 'count',
-            text: 'Anzahl',
-            width: 50
-        }, {
+        },{
             dataIndex: 'active',
             text: 'Aktiv',
             width: 50

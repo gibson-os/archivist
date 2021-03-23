@@ -72,4 +72,18 @@ class RuleRepository extends AbstractRepository
 
         return (bool) $table->selectPrepared(false);
     }
+
+    /**
+     * @param int[] $ids
+     */
+    public function deleteByIds(array $ids): void
+    {
+        $table = $this->getTable(Rule::getTableName());
+
+        $table
+            ->setWhere('`id` IN (' . implode(', ', array_map(fn ($id) => '?', $ids)) . ')')
+            ->setWhereParameters($ids)
+            ->deletePrepared()
+        ;
+    }
 }

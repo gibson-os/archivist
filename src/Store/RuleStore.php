@@ -3,12 +3,24 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Store;
 
+use GibsonOS\Core\Exception\DateTimeError;
+use GibsonOS\Core\Service\ServiceManagerService;
 use GibsonOS\Core\Store\AbstractDatabaseStore;
 use GibsonOS\Module\Archivist\Model\Rule;
+use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
+use mysqlDatabase;
 
 class RuleStore extends AbstractDatabaseStore
 {
     private ?int $userId = null;
+
+    private ServiceManagerService $serviceManagerService;
+
+    public function __construct(ServiceManagerService $serviceManagerService, mysqlDatabase $database = null)
+    {
+        parent::__construct($database);
+        $this->serviceManagerService = $serviceManagerService;
+    }
 
     protected function getTableName(): string
     {
@@ -31,6 +43,11 @@ class RuleStore extends AbstractDatabaseStore
         ];
     }
 
+    /**
+     * @throws DateTimeError
+     *
+     * @return Rule[]
+     */
     public function getList(): array
     {
         $this->table->setOrderBy($this->getOrderBy());
@@ -42,19 +59,22 @@ class RuleStore extends AbstractDatabaseStore
             ;
         }
 
-        $this->table->select(
-            false,
-            '`id`, ' .
-            '`name`, ' .
-            '`observed_directory` AS `observedDirectory`, ' .
-            '`observed_filename` AS `observedFilename`, ' .
-            '`move_directory` AS `moveDirectory`, ' .
-            '`move_filename` AS `moveFilename`, ' .
-            '`active`, ' .
-            '`count`'
-        );
+        if (!$this->table->selectPrepared()) {
+            return [];
+        }
 
-        return $this->table->connection->fetchAssocList();
+        $rules = [];
+
+        do {
+            $rule = new Rule();
+            $rule->loadFromMysqlTable($this->table);
+            /** @var StrategyInterface $ruleStrategy */
+            $ruleStrategy = $this->serviceManagerService->get($rule->getStrategy(), StrategyInterface::class);
+            $rule->setStrategy($ruleStrategy->getName());
+            $rules[] = $rule;
+        } while ($this->table->next());
+
+        return $rules;
     }
 
     public function setUserId(?int $userId): RuleStore

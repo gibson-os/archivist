@@ -12,15 +12,14 @@ use GibsonOS\Core\Exception\LoginRequired;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\PermissionDenied;
 use GibsonOS\Core\Exception\Repository\SelectError;
-use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\PermissionService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Core\Service\ServiceManagerService;
 use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Dto\Strategy;
-use GibsonOS\Module\Archivist\Exception\StrategyException;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Repository\RuleRepository;
+use GibsonOS\Module\Archivist\Service\RuleService;
 use GibsonOS\Module\Archivist\Store\RuleStore;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
@@ -44,13 +43,9 @@ class RuleController extends AbstractController
     }
 
     /**
-     * @throws DateTimeError
+     * @throws FactoryError
      * @throws LoginRequired
      * @throws PermissionDenied
-     * @throws SaveError
-     * @throws StrategyException
-     * @throws FactoryError
-     * @throws JsonException
      */
     public function edit(
         ServiceManagerService $serviceManagerService,
@@ -80,7 +75,7 @@ class RuleController extends AbstractController
             ],
             'files' => $strategyService->getFiles($strategyDto),
             'config' => $strategyDto->getConfig(),
-            'id' => $strategy,
+            'strategy' => $strategy,
         ]);
     }
 
@@ -118,6 +113,16 @@ class RuleController extends AbstractController
     }
 
     /**
+     * @param int[] $ruleIds
+     */
+    public function delete(RuleRepository $ruleRepository, array $ruleIds): AjaxResponse
+    {
+        $ruleRepository->deleteByIds($ruleIds);
+
+        return $this->returnSuccess();
+    }
+
+    /**
      * @throws DateTimeError
      * @throws FactoryError
      * @throws JsonException
@@ -126,39 +131,13 @@ class RuleController extends AbstractController
      * @throws SelectError
      */
     public function execute(
-        ServiceManagerService $serviceManagerService,
+        RuleService $ruleService,
         RuleRepository $ruleRepository,
-        DirService $dirService,
         int $id
     ): AjaxResponse {
         $this->checkPermission(PermissionService::WRITE);
 
-        $rule = $ruleRepository->getById($id);
-        /** @var StrategyInterface $strategyService */
-        $strategyService = $serviceManagerService->get($rule->getStrategy(), StrategyInterface::class);
-        $strategy = (new Strategy($strategyService->getName(), $rule->getStrategy()))
-            ->setConfig(JsonUtility::decode($rule->getConfiguration()))
-        ;
-        $files = $strategyService->getFiles($strategy);
-
-        foreach ($files as $file) {
-            $fileName = $dirService->addEndSlash($rule->getMoveDirectory()) . $rule->getMoveFilename();
-
-            if (!file_exists($fileName)) {
-                continue;
-            }
-
-            $strategyService->setFileResource($file);
-            $resource = $file->getResource();
-
-            if ($resource === null) {
-                continue;
-            }
-
-            $newFile = fopen($fileName, 'w');
-            stream_copy_to_stream($resource, $newFile);
-            fclose($newFile);
-        }
+        $ruleService->executeRule($ruleRepository->getById($id));
 
         return $this->returnSuccess();
     }
