@@ -6,12 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/js/rule/Grid.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Grid.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Command/IndexerCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/IndexerCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/RuleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RuleController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/RuleRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RuleRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/RuleService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/RuleService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Store/RuleStore.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Store/RuleStore.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rule/Form.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Form.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -467,7 +462,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616454240021</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Add delete rule">
+      <created>1616503423927</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1616503423927</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
