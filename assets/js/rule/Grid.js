@@ -49,8 +49,17 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
         );
     },
     enterFunction(record) {
-        const window =new GibsonOS.module.archivist.rule.Window();
-        window.down('gosModuleArchivistRuleForm').loadRecord(record);
+        const window = new GibsonOS.module.archivist.rule.Window({ruleId: record.get('id')});
+        const form = window.down('gosModuleArchivistRuleForm').getForm();
+
+        form.findField('strategy').setValue(record.get('strategy'));
+        console.log(form.getFields());
+        console.log(form.getFields().findBy(function(f) {
+            console.log(f);
+            return f.id === 'directory' || f.getName() === 'directory';
+        }));
+        console.log(form.findField('directory'));
+        form.setValues(record.get('configuration'));
     },
     getColumns() {
         return [{

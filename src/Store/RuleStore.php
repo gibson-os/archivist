@@ -4,23 +4,12 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Store;
 
 use GibsonOS\Core\Exception\DateTimeError;
-use GibsonOS\Core\Service\ServiceManagerService;
 use GibsonOS\Core\Store\AbstractDatabaseStore;
 use GibsonOS\Module\Archivist\Model\Rule;
-use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
-use mysqlDatabase;
 
 class RuleStore extends AbstractDatabaseStore
 {
     private ?int $userId = null;
-
-    private ServiceManagerService $serviceManagerService;
-
-    public function __construct(ServiceManagerService $serviceManagerService, mysqlDatabase $database = null)
-    {
-        parent::__construct($database);
-        $this->serviceManagerService = $serviceManagerService;
-    }
 
     protected function getTableName(): string
     {
@@ -68,9 +57,6 @@ class RuleStore extends AbstractDatabaseStore
         do {
             $rule = new Rule();
             $rule->loadFromMysqlTable($this->table);
-            /** @var StrategyInterface $ruleStrategy */
-            $ruleStrategy = $this->serviceManagerService->get($rule->getStrategy(), StrategyInterface::class);
-            $rule->setStrategy($ruleStrategy->getName());
             $rules[] = $rule;
         } while ($this->table->next());
 

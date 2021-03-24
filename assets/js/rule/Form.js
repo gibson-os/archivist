@@ -1,6 +1,7 @@
 Ext.define('GibsonOS.module.archivist.rule.Form', {
     extend: 'GibsonOS.module.core.parameter.Form',
     alias: ['widget.gosModuleArchivistRuleForm'],
+    ruleId: null,
     initComponent: function () {
         let me = this;
 
@@ -56,6 +57,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
                 : me.getForm().findField('strategy').getValue()
             ;
             parameters.configuration = !responseData.config ? '[]' : Ext.encode(responseData.config);
+            parameters.id = me.ruleId;
 
             GibsonOS.Ajax.request({
                 url: baseDir + 'archivist/rule/' + (save ? 'save' : 'edit'),

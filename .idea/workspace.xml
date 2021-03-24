@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Exception/RuleException.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/template/fileName.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/RuleService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/RuleService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rule/Form.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rule/Grid.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Grid.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AutoComplete/StrategyAutoComplete.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/AutoComplete/StrategyAutoComplete.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Store/RuleStore.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Store/RuleStore.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -233,6 +235,7 @@
       <workItem from="1616353929781" duration="7834000" />
       <workItem from="1616425746235" duration="164000" />
       <workItem from="1616448026695" duration="6412000" />
+      <workItem from="1616574205557" duration="8904000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>

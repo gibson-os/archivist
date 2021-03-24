@@ -53,7 +53,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
 
             $name = $strategyService->getName();
 
-            if ($namePart !== '' && strpos($name, $namePart) !== 0) {
+            if ($namePart !== '' && stripos($name, $namePart) !== 0) {
                 continue;
             }
 
@@ -66,12 +66,13 @@ class StrategyAutoComplete implements AutoCompleteInterface
         return array_values($strategies);
     }
 
-    public function getById($id, array $parameters): Strategy
+    public function getById(string $id, array $parameters): Strategy
     {
-        /** @var StrategyInterface $strategy */
-        $strategy = $this->serviceManagerService->get($id);
+        /** @var StrategyInterface $strategyService */
+        $strategyService = $this->serviceManagerService->get($id);
+        $strategy = new Strategy($strategyService->getName(), $id);
 
-        return new Strategy($strategy->getName(), $id);
+        return $strategy->setParameters($strategyService->getConfigurationParameters($strategy));
     }
 
     public function getModel(): string
