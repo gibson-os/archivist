@@ -49,33 +49,53 @@ class RuleController extends AbstractController
      */
     public function edit(
         ServiceManagerService $serviceManagerService,
+        RuleRepository $ruleRepository,
         string $strategy,
         array $configuration,
         array $parameters,
         int $id = null
     ): AjaxResponse {
         $this->checkPermission(PermissionService::WRITE);
+        $rule = null;
+
+        if ($id !== null) {
+            $rule = $ruleRepository->getById($id);
+            $configuration = array_merge(JsonUtility::decode($rule->getConfiguration()), $configuration);
+        }
 
         /** @var StrategyInterface $strategyService */
         $strategyService = $serviceManagerService->get($strategy, StrategyInterface::class);
         $strategyDto = (new Strategy($strategyService->getName(), $strategy))->setConfig($configuration);
 
         if (!$strategyService->saveConfigurationParameters($strategyDto, $parameters)) {
+            $configurationParameters = $strategyService->getConfigurationParameters($strategyDto);
+
+            if ($rule !== null) {
+                foreach ($configurationParameters as $parameterName => $configurationParameter) {
+                    $configurationParameter->setValue($configuration[$parameterName]);
+                }
+            }
+
             return $this->returnSuccess(
-                $strategyDto->setParameters($strategyService->getConfigurationParameters($strategyDto))
+                $strategyDto->setParameters($configurationParameters)
             );
         }
 
         return $this->returnSuccess([
             'parameters' => [
-                'name' => new StringParameter('Name'),
-                'observedFilename' => new StringParameter('Beobachtungsregel'),
-                'moveDirectory' => new DirectoryParameter('Ablage Verzeichnis'),
-                'moveFilename' => new StringParameter('Ablage Dateiname'),
+                'name' => (new StringParameter('Name'))
+                    ->setValue($rule === null ? null : $rule->getName()),
+                'observedFilename' => (new StringParameter('Beobachtungsregel'))
+                    ->setValue($rule === null ? null : $rule->getObservedFilename()),
+                'moveDirectory' => (new DirectoryParameter('Ablage Verzeichnis'))
+                    ->setValue($rule === null ? null : $rule->getMoveDirectory()),
+                'moveFilename' => (new StringParameter('Ablage Dateiname'))
+                    ->setValue($rule === null ? null : $rule->getMoveFilename()),
             ],
             'files' => $strategyService->getFiles($strategyDto),
             'config' => $strategyDto->getConfig(),
             'strategy' => $strategy,
+            'id' => $rule === null ? null : $rule->getId(),
         ]);
     }
 
@@ -87,6 +107,7 @@ class RuleController extends AbstractController
      * @throws SaveError
      */
     public function save(
+        RuleRepository $ruleRepository,
         string $strategy,
         array $configuration,
         string $name,
@@ -97,7 +118,13 @@ class RuleController extends AbstractController
     ): AjaxResponse {
         $this->checkPermission(PermissionService::WRITE);
 
-        $rule = (new Rule())
+        $rule = (new Rule());
+
+        if ($id !== null) {
+            $rule = $ruleRepository->getById($id);
+        }
+
+        $rule
             ->setId($id)
             ->setName($name)
             ->setStrategy($strategy)

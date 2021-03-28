@@ -50,15 +50,19 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
     },
     enterFunction(record) {
         const window = new GibsonOS.module.archivist.rule.Window({ruleId: record.get('id')});
-        const form = window.down('gosModuleArchivistRuleForm').getForm();
+        const formPanel = window.down('gosModuleArchivistRuleForm');
+        const form = formPanel.getForm();
+        const configuration = record.get('configuration');
 
+        const beforeAddFieldsFunctions = (parameters) => {
+            formPanel.un('beforeAddFields', beforeAddFieldsFunctions);
+
+            Ext.iterate(parameters, (name, parameter) => {
+                parameter.value = configuration[name] ?? null;
+            });
+        };
+        formPanel.on('beforeAddFields', beforeAddFieldsFunctions);
         form.findField('strategy').setValue(record.get('strategy'));
-        console.log(form.getFields());
-        console.log(form.getFields().findBy(function(f) {
-            console.log(f);
-            return f.id === 'directory' || f.getName() === 'directory';
-        }));
-        console.log(form.findField('directory'));
         form.setValues(record.get('configuration'));
     },
     getColumns() {
