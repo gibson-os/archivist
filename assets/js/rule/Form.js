@@ -9,6 +9,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
             xtype: 'gosModuleCoreParameterTypeAutoComplete',
             name: 'strategy',
             fieldLabel: 'Strategy',
+            valueField: 'className',
             parameterObject: {
                 config: {
                     model: 'GibsonOS.module.archivist.rule.model.Strategy',

@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="Add edit rule">
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/js/rule/Grid.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Grid.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/js/rule/Window.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Window.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rule/Form.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/Form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/rule/model/Strategy.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/rule/model/Strategy.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/RuleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RuleController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Dto/Strategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Dto/Strategy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DkbStrategy.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -235,7 +236,7 @@
       <workItem from="1616425746235" duration="164000" />
       <workItem from="1616448026695" duration="6412000" />
       <workItem from="1616574205557" duration="8904000" />
-      <workItem from="1616960989561" duration="5375000" />
+      <workItem from="1616960989561" duration="8498000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
@@ -475,7 +476,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616503423927</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="Add edit rule">
+      <created>1616966446326</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1616966446326</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -483,7 +491,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Add rule save" />
     <MESSAGE value="Change observe to observed" />
     <MESSAGE value="Add load form" />
     <MESSAGE value="Fix watcher tasks" />
@@ -508,7 +515,8 @@
     <MESSAGE value="Add execute action" />
     <MESSAGE value="Fix configuration" />
     <MESSAGE value="Add delete rule" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add delete rule" />
+    <MESSAGE value="Add edit rule" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add edit rule" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

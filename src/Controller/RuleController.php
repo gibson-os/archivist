@@ -43,9 +43,12 @@ class RuleController extends AbstractController
     }
 
     /**
+     * @throws DateTimeError
      * @throws FactoryError
+     * @throws JsonException
      * @throws LoginRequired
      * @throws PermissionDenied
+     * @throws SelectError
      */
     public function edit(
         ServiceManagerService $serviceManagerService,
@@ -105,6 +108,7 @@ class RuleController extends AbstractController
      * @throws LoginRequired
      * @throws PermissionDenied
      * @throws SaveError
+     * @throws SelectError
      */
     public function save(
         RuleRepository $ruleRepository,

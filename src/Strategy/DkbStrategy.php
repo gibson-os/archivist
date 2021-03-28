@@ -53,6 +53,7 @@ class DkbStrategy extends AbstractWebStrategy
     public function getConfigurationParameters(Strategy $strategy): array
     {
         if (
+            $strategy->getConfigStep() === self::STEP_LOGIN &&
             $strategy->hasConfigValue('username') &&
             $strategy->hasConfigValue('password')
         ) {

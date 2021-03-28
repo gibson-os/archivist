@@ -121,7 +121,7 @@ class Strategy implements JsonSerializable, AutoCompleteModelInterface
     public function jsonSerialize(): array
     {
         return [
-            'id' => $this->getClassName(),
+            'className' => $this->getClassName(),
             'name' => $this->getName(),
             'config' => $this->getConfig(),
             'parameters' => $this->getParameters(),
