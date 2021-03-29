@@ -231,6 +231,7 @@ class DkbStrategy extends AbstractWebStrategy
                     self::URL . 'DkbTransactionBanking/content/LoginWithTan/LoginWithTanProcess/InfoOpenLoginRequest.xhtml'
                 ))
                     ->setCookieFile($initResponse->getCookieFile())
+                    ->setParameter('$event', 'next')
             );
             $responseBody = $response->getBody()->getContent();
         }
