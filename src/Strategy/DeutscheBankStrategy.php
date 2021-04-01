@@ -16,6 +16,10 @@ class DeutscheBankStrategy extends AbstractWebStrategy
 {
     private const URL = 'https://meine.deutsche-bank.de/';
 
+    private const STEP_LOGIN = 0;
+
+    private const STEP_TAN = 0;
+
     public function getName(): string
     {
         return 'Deutsche Bank';
@@ -26,12 +30,11 @@ class DeutscheBankStrategy extends AbstractWebStrategy
      */
     public function getConfigurationParameters(Strategy $strategy): array
     {
-        return [
-            'branch' => (new IntParameter('Filiale'))->setRange(1, 999),
-            'account' => (new IntParameter('Konto'))->setRange(1, 9999999),
-            'subAccount' => (new IntParameter('Unterkonto'))->setRange(0, 99),
-            'pin' => (new StringParameter('PIN'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
-        ];
+        switch ($strategy->getConfigStep()) {
+            case self::STEP_TAN: return $this->getTanParameters();
+            //case self::STEP_PATH: return $this->getPathParameters($strategy);
+            default: return $this->getLoginParameters();
+        }
     }
 
     /**
@@ -42,6 +45,21 @@ class DeutscheBankStrategy extends AbstractWebStrategy
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
+        switch ($strategy->getConfigStep()) {
+            case self::STEP_TAN:
+                $this->validateTan($strategy, $parameters);
+
+                return false;
+//            case self::STEP_PATH:
+//                $strategy->setConfigValue('path', $parameters['path']);
+//
+//                return true;
+            default:
+                $this->login($strategy, $parameters);
+
+                return false;
+        }
+
         $response = $this->webService->post(
             (new Request(self::URL . 'trxm/db/gvo/login/login.do'))
                 ->setParameters($parameters)
@@ -66,16 +84,6 @@ class DeutscheBankStrategy extends AbstractWebStrategy
         ;
 
         return true;
-    }
-
-    /**
-     * @return AbstractParameter[]
-     */
-    public function get2FactorAuthenticationParameters(Strategy $strategy): array
-    {
-        return [
-            'photoTan' => new IntParameter('Photo TAN'),
-        ];
     }
 
     /**
@@ -113,6 +121,68 @@ class DeutscheBankStrategy extends AbstractWebStrategy
     }
 
     public function unload(): void
+    {
+    }
+
+    private function getLoginParameters(): array
+    {
+        return [
+            'branch' => (new IntParameter('Filiale'))->setRange(1, 999),
+            'account' => (new IntParameter('Konto'))->setRange(1, 9999999),
+            'subAccount' => (new IntParameter('Unterkonto'))->setRange(0, 99),
+            'pin' => (new StringParameter('PIN'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
+        ];
+    }
+
+    private function getTanParameters(): array
+    {
+        return [
+            'photoTan' => new IntParameter('Photo TAN'),
+        ];
+    }
+
+    private function login(Strategy $strategy, array $parameters): void
+    {
+        $response = $this->webService->post(
+            (new Request(self::URL . 'trxm/db/gvo/login/login.do'))
+                ->setParameters($parameters)
+                ->setParameter('gvo', 'DisplayFinancialOverview')
+                ->setParameter('process', 'DisplayFinancialOverview')
+                ->setParameter('wknOrIsin', '')
+                ->setParameter('quantity', '')
+                ->setParameter('fingerprintToken', '')
+                ->setParameter('fingerprintTokenVersion', '')
+                ->setParameter('updateFingerprintToken', 'false')
+                ->setParameter('javascriptEnabled', 'false')
+                ->setParameter('quickLink', 'setupNachrichtenbox')
+        );
+        $responseBody = $response->getBody()->getContent();
+
+//        try {
+        $this->getResponseValue($responseBody, 'name', 'tan', 'id');
+//        } catch (StrategyException $e) {
+//            $response = $this->webService->post(
+//                (new Request(
+//                    self::URL . 'DkbTransactionBanking/content/LoginWithTan/LoginWithTanProcess/InfoOpenLoginRequest.xhtml'
+//                ))
+//                    ->setCookieFile($response->getCookieFile())
+//                    ->setParameter('$event', 'next')
+//            );
+//            $responseBody = $response->getBody()->getContent();
+//        }
+
+        $this->logger->debug('Authenticate response: ' . $responseBody);
+        $strategy
+            ->setConfigValue('cookieFile', $response->getCookieFile())
+            ->setConfigValue('branch', $this->cryptService->encrypt($parameters['branch']))
+            ->setConfigValue('account', $this->cryptService->encrypt($parameters['account']))
+            ->setConfigValue('subAccount', $this->cryptService->encrypt($parameters['subAccount']))
+            ->setConfigValue('pin', $this->cryptService->encrypt($parameters['pin']))
+            ->setNextConfigStep()
+        ;
+    }
+
+    private function validateTan(Strategy $strategy, array $parameters): void
     {
     }
 }

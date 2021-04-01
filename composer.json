@@ -4,7 +4,9 @@
     "mdo/mdo": "dev-master",
     "gibson-os/core": "dev-master",
     "ext-json": "*",
-    "gibson-os/explorer": "dev-master"
+    "gibson-os/explorer": "dev-master",
+    "behat/mink": "^1.8",
+    "dmore/chrome-mink-driver": "^2.7"
   },
   "require-dev": {
     "codeception/codeception": "^4.0",

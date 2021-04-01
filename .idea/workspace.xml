@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="" />
+    <list default="true" id="a6455041-5dea-404a-8d49-827a18fed919" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Service/BrowserService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Archivist.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Archivist.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Strategy/DeutscheBankStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Strategy/DeutscheBankStrategy.php" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -127,6 +135,9 @@
       <path value="$PROJECT_DIR$/vendor/captainhook/plugin-composer" />
       <path value="$PROJECT_DIR$/vendor/codeception/codeception" />
       <path value="$PROJECT_DIR$/vendor/gibson-os/explorer" />
+      <path value="$PROJECT_DIR$/vendor/behat/mink" />
+      <path value="$PROJECT_DIR$/vendor/textalk/websocket" />
+      <path value="$PROJECT_DIR$/vendor/dmore/chrome-mink-driver" />
     </include_path>
   </component>
   <component name="ProjectId" id="1hrh6tVvcFDRAl2uiMToeXP6ngm" />
@@ -232,7 +243,7 @@
       <workItem from="1616960989561" duration="8498000" />
       <workItem from="1617050624944" duration="3204000" />
       <workItem from="1617223255096" duration="4377000" />
-      <workItem from="1617307243409" duration="2541000" />
+      <workItem from="1617307243409" duration="6486000" />
     </task>
     <task id="LOCAL-00001" summary="Change to archivist">
       <created>1600774999625</created>
@@ -500,7 +511,14 @@
       <option name="project" value="LOCAL" />
       <updated>1617310983227</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Update composer">
+      <created>1617311128871</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1617311128871</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -523,7 +541,6 @@
     <MESSAGE value="Add save postbox links" />
     <MESSAGE value="Refactor strategy" />
     <MESSAGE value="Add get files" />
-    <MESSAGE value="Update composer" />
     <MESSAGE value="Add save logic" />
     <MESSAGE value="Add execute button" />
     <MESSAGE value="Add execute action" />
@@ -533,7 +550,8 @@
     <MESSAGE value="Add config step" />
     <MESSAGE value="Add tessa cloud strategy" />
     <MESSAGE value="Add unload method" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add unload method" />
+    <MESSAGE value="Update composer" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update composer" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

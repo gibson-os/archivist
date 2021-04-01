@@ -99,6 +99,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/captainhook/plugin-composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/codeception/codeception" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/gibson-os/explorer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/behat/mink" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/textalk/websocket" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dmore/chrome-mink-driver" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
