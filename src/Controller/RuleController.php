@@ -168,11 +168,12 @@ class RuleController extends AbstractController
     public function execute(
         RuleService $ruleService,
         RuleRepository $ruleRepository,
-        int $id
+        int $id,
+        array $configuration
     ): AjaxResponse {
         $this->checkPermission(PermissionService::WRITE);
 
-        $ruleService->executeRule($ruleRepository->getById($id));
+        $ruleService->executeRule($ruleRepository->getById($id), $configuration);
 
         return $this->returnSuccess();
     }

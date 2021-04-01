@@ -9,7 +9,6 @@ use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
 use GibsonOS\Core\Service\ServiceManagerService;
 use GibsonOS\Core\Service\TwigService;
-use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\RuleException;
 use GibsonOS\Module\Archivist\Model\Rule;
@@ -49,13 +48,11 @@ class RuleService extends AbstractService
      * @throws FactoryError
      * @throws JsonException
      */
-    public function executeRule(Rule $rule): void
+    public function executeRule(Rule $rule, array $configuration): void
     {
         /** @var StrategyInterface $strategyService */
         $strategyService = $this->serviceManagerService->get($rule->getStrategy(), StrategyInterface::class);
-        $strategy = (new Strategy($strategyService->getName(), $rule->getStrategy()))
-            ->setConfig(JsonUtility::decode($rule->getConfiguration()))
-        ;
+        $strategy = (new Strategy($strategyService->getName(), $rule->getStrategy()))->setConfig($configuration);
         $files = $strategyService->getFiles($strategy);
 
         foreach ($files as $file) {
@@ -92,5 +89,7 @@ class RuleService extends AbstractService
             stream_copy_to_stream($resource, $newFile);
             fclose($newFile);
         }
+
+        $strategyService->unload();
     }
 }

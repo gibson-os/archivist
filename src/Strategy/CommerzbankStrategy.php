@@ -32,4 +32,8 @@ class CommerzbankStrategy implements StrategyInterface
     {
         return $file;
     }
+
+    public function unload(): void
+    {
+    }
 }

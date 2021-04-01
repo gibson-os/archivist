@@ -245,6 +245,11 @@ class DkbStrategy extends AbstractWebStrategy
         ;
     }
 
+    public function unload(): void
+    {
+        $this->webService->get(new Request(self::URL . 'DkbTransactionBanking/banner.xhtml?$event=logout'));
+    }
+
     /**
      * @throws WebException
      */

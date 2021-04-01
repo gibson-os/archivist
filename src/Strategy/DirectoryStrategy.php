@@ -70,4 +70,8 @@ class DirectoryStrategy implements StrategyInterface
 
         return $file;
     }
+
+    public function unload(): void
+    {
+    }
 }

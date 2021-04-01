@@ -81,7 +81,8 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
                                 GibsonOS.Ajax.request({
                                     url: baseDir + 'archivist/rule/execute',
                                     params: {
-                                        id: responseData.id
+                                        id: responseData.id,
+                                        configuration: parameters.configuration
                                     }
                                 });
                             }

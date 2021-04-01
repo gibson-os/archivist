@@ -32,4 +32,8 @@ class AllianzStrategy implements StrategyInterface
     {
         return $file;
     }
+
+    public function unload(): void
+    {
+    }
 }

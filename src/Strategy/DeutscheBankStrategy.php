@@ -111,4 +111,8 @@ class DeutscheBankStrategy extends AbstractWebStrategy
 
         return $file->setResource($resource, $responseBody->getLength());
     }
+
+    public function unload(): void
+    {
+    }
 }
