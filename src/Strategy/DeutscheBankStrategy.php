@@ -60,13 +60,13 @@ class DeutscheBankStrategy extends AbstractWebStrategy
                 return false;
         }
 
-        $response = $this->webService->post(
+        $response = $this->browserService->post(
             (new Request(self::URL . 'trxm/db/gvo/login/login.do'))
                 ->setParameters($parameters)
         );
         $responseBody = $response->getBody()->getContent();
         $cookieFile = $response->getCookieFile();
-        $imageResponse = $this->webService->get(
+        $imageResponse = $this->browserService->get(
             (new Request($this->getResponseValue($responseBody, 'id', 'photoTANGraphic', 'src')))
                 ->setCookieFile($cookieFile)
         );
@@ -91,7 +91,7 @@ class DeutscheBankStrategy extends AbstractWebStrategy
      */
     public function authenticate2Factor(Strategy $strategy, array $parameters): void
     {
-        $response = $this->webService->post(
+        $response = $this->browserService->post(
             (new Request($strategy->getConfigValue('photoTanAction')))
                 ->setParameter('challengeMessage', $strategy->getConfigValue('challengeMessage'))
                 ->setParameter('tan', $strategy->getConfigValue($parameters['photoTan']))
@@ -110,7 +110,7 @@ class DeutscheBankStrategy extends AbstractWebStrategy
      */
     public function setFileResource(File $file): File
     {
-        $responseBody = $this->webService->get(new Request($file->getPath()))->getBody();
+        $responseBody = $this->browserService->get(new Request($file->getPath()))->getBody();
         $resource = $responseBody->getResource();
 
         if ($resource === null) {
@@ -143,7 +143,7 @@ class DeutscheBankStrategy extends AbstractWebStrategy
 
     private function login(Strategy $strategy, array $parameters): void
     {
-        $response = $this->webService->post(
+        $response = $this->browserService->post(
             (new Request(self::URL . 'trxm/db/gvo/login/login.do'))
                 ->setParameters($parameters)
                 ->setParameter('gvo', 'DisplayFinancialOverview')

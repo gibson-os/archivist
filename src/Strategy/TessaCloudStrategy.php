@@ -35,8 +35,8 @@ class TessaCloudStrategy extends AbstractWebStrategy
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
-        $initResponse = $this->webService->post(new Request(self::URL));
-        $response = $this->webService->post(
+        $page = $this->browserService->getPage(new Request(self::URL));
+        $response = $this->browserService->post(
             (new Request(self::URL))
                 ->setParameters($parameters)
                 ->setCookieFile($initResponse->getCookieFile())
@@ -53,7 +53,7 @@ class TessaCloudStrategy extends AbstractWebStrategy
 
     public function getFiles(Strategy $strategy): array
     {
-        $response = $this->webService->get(
+        $response = $this->browserService->get(
             (new Request(self::URL . 'api/documents'))
                 ->setCookieFile($strategy->getConfigValue('cookieFile'))
         );

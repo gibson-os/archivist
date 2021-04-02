@@ -11,9 +11,9 @@ class BrowserService
 {
     private Session $session;
 
-    public function __construct(ChromeDriver $chromeDriver)
+    public function __construct()
     {
-        $this->session = new Session($chromeDriver);
+        $this->session = new Session(new ChromeDriver('http://localhost:9222', null, ''));
         $this->session->start();
     }
 

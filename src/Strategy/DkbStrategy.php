@@ -30,12 +30,12 @@ class DkbStrategy extends AbstractWebStrategy
     private DateTimeService $dateTimeService;
 
     public function __construct(
-        WebService $webService,
+        WebService $browserService,
         LoggerInterface $logger,
         CryptService $cryptService,
         DateTimeService $dateTimeService
     ) {
-        parent::__construct($webService, $logger, $cryptService);
+        parent::__construct($browserService, $logger, $cryptService);
         $this->dateTimeService = $dateTimeService;
     }
 
@@ -105,7 +105,7 @@ class DkbStrategy extends AbstractWebStrategy
      */
     private function getFilesFromPage(Strategy $strategy, string $url): array
     {
-        $response = $this->webService->get(
+        $response = $this->browserService->get(
             (new Request($url))
                 ->setCookieFile($strategy->getConfigValue('cookieFile'))
         );
@@ -156,7 +156,7 @@ class DkbStrategy extends AbstractWebStrategy
             ));
         }
 
-        $response = $this->webService->get(
+        $response = $this->browserService->get(
             (new Request($file->getPath()))
                 ->setCookieFile($file->getStrategy()->getConfigValue('cookieFile'))
         );
@@ -203,11 +203,11 @@ class DkbStrategy extends AbstractWebStrategy
      */
     private function login(Strategy $strategy, array $parameters): void
     {
-        $initResponse = $this->webService->get(new Request(self::URL . 'banking'));
+        $initResponse = $this->browserService->get(new Request(self::URL . 'banking'));
         $initResponseBody = $initResponse->getBody()->getContent();
         $this->logger->debug('Authenticate init response: ' . $initResponseBody);
 
-        $response = $this->webService->post(
+        $response = $this->browserService->post(
             (new Request(self::URL . 'banking'))
                 ->setCookieFile($initResponse->getCookieFile())
                 ->setParameters($parameters)
@@ -226,7 +226,7 @@ class DkbStrategy extends AbstractWebStrategy
         try {
             $this->getResponseValue($responseBody, 'name', 'tan', 'id');
         } catch (StrategyException $e) {
-            $response = $this->webService->post(
+            $response = $this->browserService->post(
                 (new Request(
                     self::URL . 'DkbTransactionBanking/content/LoginWithTan/LoginWithTanProcess/InfoOpenLoginRequest.xhtml'
                 ))
@@ -247,7 +247,7 @@ class DkbStrategy extends AbstractWebStrategy
 
     public function unload(): void
     {
-        $this->webService->get(new Request(self::URL . 'DkbTransactionBanking/banner.xhtml?$event=logout'));
+        $this->browserService->get(new Request(self::URL . 'DkbTransactionBanking/banner.xhtml?$event=logout'));
     }
 
     /**
@@ -255,7 +255,7 @@ class DkbStrategy extends AbstractWebStrategy
      */
     private function validateTan(Strategy $strategy, array $parameters): void
     {
-        $response = $this->webService->post(
+        $response = $this->browserService->post(
             (new Request(
                 self::URL . 'DkbTransactionBanking/content/LoginWithTan/LoginWithTanProcess/LoginWithTanSubmit.xhtm'
             ))
@@ -266,7 +266,7 @@ class DkbStrategy extends AbstractWebStrategy
         $responseBody = $response->getBody()->getContent();
         $this->logger->debug('Response: ' . $responseBody);
 
-        $response = $this->webService->post(
+        $response = $this->browserService->post(
             (new Request(self::URL . 'banking/postfach'))
                 ->setCookieFile($strategy->getConfigValue('cookieFile'))
         );
