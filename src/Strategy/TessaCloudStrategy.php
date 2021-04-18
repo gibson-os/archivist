@@ -5,9 +5,9 @@ namespace GibsonOS\Module\Archivist\Strategy;
 
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Dto\Web\Request;
-use GibsonOS\Core\Exception\WebException;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
+use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 
 class TessaCloudStrategy extends AbstractWebStrategy
@@ -24,18 +24,27 @@ class TessaCloudStrategy extends AbstractWebStrategy
         return [
             'userName' => (new StringParameter('E-Mail'))
                 ->setInputType(StringParameter::INPUT_TYPE_EMAIL),
-            'password' => (new StringParameter('E-Mail'))
+            'password' => (new StringParameter('Passwort'))
                 ->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
         ];
     }
 
     /**
      * @throws StrategyException
-     * @throws WebException
+     * @throws BrowserException
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
-        $page = $this->browserService->getPage(new Request(self::URL));
+        $session = $this->browserService->getSession();
+        $page = $this->browserService->loadPage($session, self::URL);
+        $this->browserService->fillFormFields($page, $parameters);
+        $page->pressButton('ext-element-107');
+        $element = $this->browserService->waitForElementById($page, 'ext-element-211');
+
+        if (trim($element->getText()) !== 'Neueste Dokumente') {
+            throw new StrategyException('Login failed!');
+        }
+
         $response = $this->browserService->post(
             (new Request(self::URL))
                 ->setParameters($parameters)

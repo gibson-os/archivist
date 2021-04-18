@@ -19,13 +19,17 @@ class TestCommand extends AbstractCommand
 
     protected function run(): int
     {
-        $page = $this->browserService->getPage('https://wolli.dyndns.tv');
+        $session = $this->browserService->getSession();
+        $page = $this->browserService->loadPage($session, 'https://wolli.dyndns.tv');
 
         $page->findField('username')->setValue('wolli');
         $page->findField('password')->setValue('qgABUQbB');
-        $page->findField('password')->keyPress(13);
+        $page->pressButton('Login');
+
+        $this->browserService->waitForElementById($page, 'desktopContainer');
 
         errlog($page->getContent());
+        $session->stop();
 
         return 0;
     }
