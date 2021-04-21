@@ -102,7 +102,7 @@ class RuleController extends AbstractController
                     ->setValue($rule === null ? null : $rule->getMoveFilename()),
             ],
             'config' => $strategyDto->getConfig(),
-            'strategy' => $strategy,
+            'className' => $strategy,
             'lastStep' => true,
             'id' => $rule === null ? null : $rule->getId(),
         ]);

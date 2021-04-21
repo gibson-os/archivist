@@ -22,7 +22,8 @@ use Psr\Log\LoggerInterface;
 
 class DkbStrategy extends AbstractWebStrategy
 {
-    private const URL = 'https://www.dkb.de/';
+//    private const URL = 'https://www.dkb.de/banking';
+    private const URL = 'http://localhost/img/page/dkb/';
 
     private const STEP_LOGIN = 0;
 
@@ -206,7 +207,7 @@ class DkbStrategy extends AbstractWebStrategy
     private function login(Strategy $strategy, array $parameters): void
     {
         $session = $this->getSession($strategy);
-        $page = $this->browserService->loadPage($session, self::URL . 'banking');
+        $page = $this->browserService->loadPage($session, self::URL);
         $this->logger->debug('Init page: ' . $page->getContent());
         $this->browserService->fillFormFields($page, $parameters);
         $page->pressButton('Anmelden');
@@ -220,7 +221,7 @@ class DkbStrategy extends AbstractWebStrategy
 
         $this->logger->debug('Authenticate page: ' . $page->getContent());
         $strategy
-            ->setConfigValue('session', $session)
+            ->setConfigValue('session', serialize($session))
             ->setConfigValue('username', $this->cryptService->encrypt($parameters['j_username']))
             ->setConfigValue('password', $this->cryptService->encrypt($parameters['j_password']))
             ->setNextConfigStep()

@@ -56,7 +56,7 @@ abstract class AbstractWebStrategy implements StrategyInterface
             $strategy !== null &&
             $strategy->hasConfigValue('session')
         ) {
-            return $strategy->getConfigValue('session');
+            return unserialize($strategy->getConfigValue('session'));
         }
 
         return $this->browserService->getSession();
