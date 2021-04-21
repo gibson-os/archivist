@@ -12,14 +12,15 @@ use GibsonOS\Core\Exception\LoginRequired;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\PermissionDenied;
 use GibsonOS\Core\Exception\Repository\SelectError;
+use GibsonOS\Core\Service\CommandService;
 use GibsonOS\Core\Service\PermissionService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Core\Service\ServiceManagerService;
 use GibsonOS\Core\Utility\JsonUtility;
+use GibsonOS\Module\Archivist\Command\IndexerCommand;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Repository\RuleRepository;
-use GibsonOS\Module\Archivist\Service\RuleService;
 use GibsonOS\Module\Archivist\Store\RuleStore;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
@@ -28,6 +29,7 @@ use JsonException;
 class RuleController extends AbstractController
 {
     /**
+     * @throws DateTimeError
      * @throws GetError
      * @throws LoginRequired
      * @throws PermissionDenied
@@ -158,22 +160,13 @@ class RuleController extends AbstractController
     }
 
     /**
-     * @throws DateTimeError
-     * @throws FactoryError
-     * @throws JsonException
      * @throws LoginRequired
      * @throws PermissionDenied
-     * @throws SelectError
      */
-    public function execute(
-        RuleService $ruleService,
-        RuleRepository $ruleRepository,
-        int $id,
-        array $configuration
-    ): AjaxResponse {
+    public function execute(CommandService $commandService, int $id): AjaxResponse
+    {
         $this->checkPermission(PermissionService::WRITE);
-
-        $ruleService->executeRule($ruleRepository->getById($id), $configuration);
+        $commandService->executeAsync(IndexerCommand::class, ['ruleId' => $id]);
 
         return $this->returnSuccess();
     }

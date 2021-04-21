@@ -21,6 +21,8 @@ class Index extends AbstractModel
 
     private ?int $ruleId = null;
 
+    private ?string $error = null;
+
     private DateTimeInterface $changed;
 
     private ?Rule $rule = null;
@@ -93,6 +95,18 @@ class Index extends AbstractModel
     public function setRuleId(?int $ruleId): Index
     {
         $this->ruleId = $ruleId;
+
+        return $this;
+    }
+
+    public function getError(): ?string
+    {
+        return $this->error;
+    }
+
+    public function setError(?string $error): Index
+    {
+        $this->error = $error;
 
         return $this;
     }

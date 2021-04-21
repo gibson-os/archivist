@@ -66,7 +66,7 @@ class TessaCloudStrategy extends AbstractWebStrategy
         return $file;
     }
 
-    public function unload(): void
+    public function unload(Strategy $strategy): void
     {
     }
 }

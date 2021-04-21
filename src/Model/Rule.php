@@ -27,6 +27,8 @@ class Rule extends AbstractModel implements JsonSerializable
 
     private bool $active = false;
 
+    private ?string $message = null;
+
     private int $userId;
 
     private User $user;
@@ -178,6 +180,18 @@ class Rule extends AbstractModel implements JsonSerializable
         $this->setIndexed($indexed);
     }
 
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): Rule
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
     public function getUserId(): int
     {
         return $this->userId;
@@ -219,6 +233,7 @@ class Rule extends AbstractModel implements JsonSerializable
             'moveDirectory' => $this->getMoveDirectory(),
             'moveFilename' => $this->getMoveFilename(),
             'active' => $this->isActive(),
+            'message' => $this->getMessage(),
         ];
     }
 }

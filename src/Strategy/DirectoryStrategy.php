@@ -12,6 +12,10 @@ use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 
 class DirectoryStrategy implements StrategyInterface
 {
+    private const MAX_WAIT_SECONDS = 900;
+
+    private const WAIT_PER_LOOP_SECONDS = 3;
+
     private DirService $dirService;
 
     private FileService $fileService;
@@ -46,8 +50,24 @@ class DirectoryStrategy implements StrategyInterface
     {
         $files = [];
         $directory = $strategy->getConfigValue('directory');
+        $foundFiles = $this->dirService->getFiles($directory);
 
-        foreach ($this->dirService->getFiles($directory) as $file) {
+        if (empty($foundFiles)) {
+            $waitTime = ((int) $strategy->getConfigValue('waitTime')) + self::WAIT_PER_LOOP_SECONDS;
+            sleep(self::WAIT_PER_LOOP_SECONDS);
+
+            if ($waitTime >= self::MAX_WAIT_SECONDS) {
+                return $files;
+            }
+
+            $strategy->setConfigValue('waitTime', $waitTime);
+
+            return $this->getFiles($strategy);
+        }
+
+        $strategy->setConfigValue('waitTime', 0);
+
+        foreach ($foundFiles as $file) {
             if (is_dir($file)) {
                 continue;
             }
@@ -71,7 +91,7 @@ class DirectoryStrategy implements StrategyInterface
         return $file;
     }
 
-    public function unload(): void
+    public function unload(Strategy $strategy): void
     {
     }
 }
