@@ -35,26 +35,28 @@ class BrowserService
     /**
      * @throws BrowserException
      */
-    public function waitForElementById(DocumentElement $page, string $id, int $maxWait = 10000): NodeElement
+    public function waitForElementById(DocumentElement $page, string $id, int $maxWait = 10000000): NodeElement
     {
         if ($maxWait <= 0) {
             throw new BrowserException(sprintf('Element %s not found!', $id));
         }
 
-        $waitTime = 100;
+        $waitTime = 100000;
 
         try {
             $element = $page->findById($id);
 
             if ($element === null) {
                 usleep($waitTime);
-                $this->waitForElementById($page, $id, $maxWait - $waitTime);
+
+                $element = $this->waitForElementById($page, $id, $maxWait - $waitTime);
             }
 
             return $element;
         } catch (DriverException $exception) {
             usleep($waitTime);
-            $this->waitForElementById($page, $id, $maxWait - $waitTime);
+
+            return $this->waitForElementById($page, $id, $maxWait - $waitTime);
         }
     }
 
@@ -68,8 +70,24 @@ class BrowserService
         }
     }
 
-    public function getCookieFile(Session $session): void
+    /**
+     * @throws DriverException
+     */
+    public function getCookies(Session $session): array
     {
-//        $session->getDriver()->getClie
+        /** @var ChromeDriver $driver */
+        $driver = $session->getDriver();
+
+        return $driver->getCookies();
+    }
+
+    public function setCookies(Session $session, array $cookies): void
+    {
+        /** @var ChromeDriver $driver */
+        $driver = $session->getDriver();
+
+        foreach ($cookies as $cookie) {
+            $driver->setCookie($cookie['name'], $cookie['value']);
+        }
     }
 }

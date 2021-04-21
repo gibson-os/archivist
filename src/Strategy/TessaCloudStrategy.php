@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Strategy;
 
+use Behat\Mink\Exception\ElementNotFoundException;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
-use GibsonOS\Core\Dto\Web\Request;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
@@ -30,8 +30,9 @@ class TessaCloudStrategy extends AbstractWebStrategy
     }
 
     /**
-     * @throws StrategyException
      * @throws BrowserException
+     * @throws StrategyException
+     * @throws ElementNotFoundException
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
@@ -45,27 +46,17 @@ class TessaCloudStrategy extends AbstractWebStrategy
             throw new StrategyException('Login failed!');
         }
 
-        $response = $this->browserService->post(
-            (new Request(self::URL))
-                ->setParameters($parameters)
-                ->setCookieFile($initResponse->getCookieFile())
-        );
-
-        if ($response->getStatusCode() !== 200) {
-            throw new StrategyException('Login failed!');
-        }
-
-        $strategy->setConfigValue('cookieFile', $response->getCookieFile());
+        $strategy->setConfigValue('session', $session);
 
         return true;
     }
 
     public function getFiles(Strategy $strategy): array
     {
-        $response = $this->browserService->get(
-            (new Request(self::URL . 'api/documents'))
-                ->setCookieFile($strategy->getConfigValue('cookieFile'))
-        );
+//        $response = $this->browserService->get(
+//            (new Request(self::URL . 'api/documents'))
+//                ->setCookieFile($strategy->getConfigValue('cookieFile'))
+//        );
 
         return [];
     }

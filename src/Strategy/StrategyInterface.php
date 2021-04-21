@@ -28,5 +28,5 @@ interface StrategyInterface
 
     public function setFileResource(File $file): File;
 
-    public function unload(): void;
+    public function unload(Strategy $strategy): void;
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Strategy;
 
+use Behat\Mink\Exception\ElementNotFoundException;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
 use GibsonOS\Core\Dto\Parameter\IntParameter;
 use GibsonOS\Core\Dto\Parameter\OptionParameter;
@@ -11,10 +12,11 @@ use GibsonOS\Core\Dto\Web\Request;
 use GibsonOS\Core\Exception\WebException;
 use GibsonOS\Core\Service\CryptService;
 use GibsonOS\Core\Service\DateTimeService;
-use GibsonOS\Core\Service\WebService;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
+use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
+use GibsonOS\Module\Archivist\Service\BrowserService;
 use Psr\Log\LoggerInterface;
 
 class DkbStrategy extends AbstractWebStrategy
@@ -30,7 +32,7 @@ class DkbStrategy extends AbstractWebStrategy
     private DateTimeService $dateTimeService;
 
     public function __construct(
-        WebService $browserService,
+        BrowserService $browserService,
         LoggerInterface $logger,
         CryptService $cryptService,
         DateTimeService $dateTimeService
@@ -45,8 +47,8 @@ class DkbStrategy extends AbstractWebStrategy
     }
 
     /**
-     * @throws StrategyException
-     * @throws WebException
+     * @throws BrowserException
+     * @throws ElementNotFoundException
      *
      * @return AbstractParameter[]
      */
@@ -71,8 +73,8 @@ class DkbStrategy extends AbstractWebStrategy
     }
 
     /**
-     * @throws StrategyException
-     * @throws WebException
+     * @throws BrowserException
+     * @throws ElementNotFoundException
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
@@ -93,6 +95,7 @@ class DkbStrategy extends AbstractWebStrategy
     }
 
     /**
+     * @throws BrowserException
      * @throws WebException
      */
     public function getFiles(Strategy $strategy): array
@@ -102,14 +105,13 @@ class DkbStrategy extends AbstractWebStrategy
 
     /**
      * @throws WebException
+     * @throws BrowserException
      */
     private function getFilesFromPage(Strategy $strategy, string $url): array
     {
-        $response = $this->browserService->get(
-            (new Request($url))
-                ->setCookieFile($strategy->getConfigValue('cookieFile'))
-        );
-        $responseBody = $response->getBody()->getContent();
+        $session = $this->getSession($strategy);
+        $page = $session->getPage();
+        $responseBody = $page->getContent();
 
         $fileMatches = [[], [], [], [], [], []];
         preg_match_all(
@@ -144,7 +146,6 @@ class DkbStrategy extends AbstractWebStrategy
 
     /**
      * @throws StrategyException
-     * @throws WebException
      */
     public function setFileResource(File $file): File
     {
@@ -198,82 +199,59 @@ class DkbStrategy extends AbstractWebStrategy
     }
 
     /**
-     * @throws StrategyException
-     * @throws WebException
+     * @throws BrowserException
+     * @throws ElementNotFoundException
      */
     private function login(Strategy $strategy, array $parameters): void
     {
-        $initResponse = $this->browserService->get(new Request(self::URL . 'banking'));
-        $initResponseBody = $initResponse->getBody()->getContent();
-        $this->logger->debug('Authenticate init response: ' . $initResponseBody);
-
-        $response = $this->browserService->post(
-            (new Request(self::URL . 'banking'))
-                ->setCookieFile($initResponse->getCookieFile())
-                ->setParameters($parameters)
-                ->setParameter('$event', 'login')
-                ->setParameter(
-                    '$sID$',
-                    $this->getResponseValue($initResponseBody, 'name', '$sID$', 'value')
-                )
-                ->setParameter(
-                    'token',
-                    $this->getResponseValue($initResponseBody, 'name', 'token', 'value')
-                )
-        );
-        $responseBody = $response->getBody()->getContent();
+        $session = $this->getSession($strategy);
+        $page = $this->browserService->loadPage($session, self::URL . 'banking');
+        $this->logger->debug('Init page: ' . $page->getContent());
+        $this->browserService->fillFormFields($page, $parameters);
+        $page->pressButton('Anmelden');
 
         try {
-            $this->getResponseValue($responseBody, 'name', 'tan', 'id');
-        } catch (StrategyException $e) {
-            $response = $this->browserService->post(
-                (new Request(
-                    self::URL . 'DkbTransactionBanking/content/LoginWithTan/LoginWithTanProcess/InfoOpenLoginRequest.xhtml'
-                ))
-                    ->setCookieFile($initResponse->getCookieFile())
-                    ->setParameter('$event', 'next')
-            );
-            $responseBody = $response->getBody()->getContent();
+            $this->browserService->waitForElementById($page, 'tanInputSelector');
+        } catch (BrowserException $e) {
+            $page->pressButton('Anmeldung bestätigen');
+            $this->browserService->waitForElementById($page, 'tanInputSelector');
         }
 
-        $this->logger->debug('Authenticate response: ' . $responseBody);
+        $this->logger->debug('Authenticate page: ' . $page->getContent());
         $strategy
-            ->setConfigValue('cookieFile', $response->getCookieFile())
+            ->setConfigValue('session', $session)
             ->setConfigValue('username', $this->cryptService->encrypt($parameters['j_username']))
             ->setConfigValue('password', $this->cryptService->encrypt($parameters['j_password']))
             ->setNextConfigStep()
         ;
     }
 
-    public function unload(): void
+    /**
+     * @throws ElementNotFoundException
+     */
+    public function unload(Strategy $strategy): void
     {
-        $this->browserService->get(new Request(self::URL . 'DkbTransactionBanking/banner.xhtml?$event=logout'));
+        $session = $this->getSession($strategy);
+        $page = $session->getPage();
+        $page->pressButton('Abmelden');
     }
 
     /**
-     * @throws WebException
+     * @throws BrowserException
+     * @throws ElementNotFoundException
      */
     private function validateTan(Strategy $strategy, array $parameters): void
     {
-        $response = $this->browserService->post(
-            (new Request(
-                self::URL . 'DkbTransactionBanking/content/LoginWithTan/LoginWithTanProcess/LoginWithTanSubmit.xhtm'
-            ))
-                ->setCookieFile($strategy->getConfigValue('cookieFile'))
-                ->setParameter('tan', (string) $parameters['tan'])
-                ->setParameter('$event', 'next')
-        );
-        $responseBody = $response->getBody()->getContent();
-        $this->logger->debug('Response: ' . $responseBody);
-
-        $response = $this->browserService->post(
-            (new Request(self::URL . 'banking/postfach'))
-                ->setCookieFile($strategy->getConfigValue('cookieFile'))
-        );
-        $responseBody = $response->getBody()->getContent();
+        $session = $this->getSession($strategy);
+        $page = $session->getPage();
+        $this->browserService->fillFormFields($page, ['tan' => $parameters['tan']]);
+        $page->pressButton('Anmeldung bestätigen');
+        $this->browserService->waitForElementById($page, 'menu_0.4-node');
+        $page->clickLink('Postfach');
+        $this->browserService->waitForElementById($page, 'welcomeMboTable');
 
         $links = [[], [], []];
-        preg_match_all('/href="([^"]*)".+?class="evt-gotoFolder"[^>]*>([^<]*)/', $responseBody, $links);
+        preg_match_all('/href="([^"]*)".+?class="evt-gotoFolder"[^>]*>([^<]*)/', $page->getContent(), $links);
 
         $directories = [];
 

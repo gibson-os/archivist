@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Strategy;
 
+use Behat\Mink\Session;
 use GibsonOS\Core\Service\CryptService;
+use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 use GibsonOS\Module\Archivist\Service\BrowserService;
 use Psr\Log\LoggerInterface;
@@ -46,5 +48,17 @@ abstract class AbstractWebStrategy implements StrategyInterface
         );
 
         return $matches[1];
+    }
+
+    protected function getSession(Strategy $strategy = null): Session
+    {
+        if (
+            $strategy !== null &&
+            $strategy->hasConfigValue('session')
+        ) {
+            return $strategy->getConfigValue('session');
+        }
+
+        return $this->browserService->getSession();
     }
 }
