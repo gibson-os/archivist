@@ -103,6 +103,7 @@ class RuleController extends AbstractController
             ],
             'config' => $strategyDto->getConfig(),
             'strategy' => $strategy,
+            'lastStep' => true,
             'id' => $rule === null ? null : $rule->getId(),
         ]);
     }
