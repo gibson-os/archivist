@@ -70,7 +70,7 @@ class IndexRepository extends AbstractRepository
                 (new Rule())
                     ->setId($record->rule_id)
                     ->setName($record->name)
-                    ->setObservedFilename($record->observe_filename)
+                    ->setObservedFilename($record->observed_filename)
                     ->setMoveDirectory($record->move_directory)
                     ->setMoveFilename($record->move_filename)
                     ->setActive((bool) $record->active)

@@ -72,7 +72,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
                         me.addFields(responseData.parameters);
                     }
 
-                    save = !!responseData.files;
+                    save = !!responseData.id;
 
                     if (responseData.id) {
                         me.down('#coreEventElementParameterSaveButton').up().add({

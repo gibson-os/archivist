@@ -59,9 +59,8 @@ class RuleService extends AbstractService
             ->setConfig(JsonUtility::decode($rule->getConfiguration()))
         ;
         $rule->setMessage('Starte Indexierung')->save();
-        $files = $strategyService->getFiles($strategy);
 
-        foreach ($files as $file) {
+        foreach ($strategyService->getFiles($strategy) as $file) {
             $rule->setMessage(sprintf('Indexiere %s', $file->getName()))->save();
             $matches = [];
             preg_match('/' . ($rule->getObservedFilename() ?? '.*') . '/', $file->getName(), $matches);
@@ -85,7 +84,6 @@ class RuleService extends AbstractService
                 ->setRule($rule)
                 ->setInputPath($inputPath)
                 ->setOutputPath($newFileName)
-                ->setSize(filesize($newFileName))
             ;
 
             if (file_exists($newFileName)) {
@@ -113,7 +111,9 @@ class RuleService extends AbstractService
             $newFile = fopen($newFileName, 'w');
             stream_copy_to_stream($resource, $newFile);
             fclose($newFile);
-            $index->save();
+            $index
+                ->setSize(filesize($newFileName))
+                ->save();
         }
 
         $rule->setMessage('Fertig')->save();

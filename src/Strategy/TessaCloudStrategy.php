@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Strategy;
 
 use Behat\Mink\Exception\ElementNotFoundException;
+use Generator;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
@@ -51,14 +52,14 @@ class TessaCloudStrategy extends AbstractWebStrategy
         return true;
     }
 
-    public function getFiles(Strategy $strategy): array
+    public function getFiles(Strategy $strategy): Generator
     {
 //        $response = $this->browserService->get(
 //            (new Request(self::URL . 'api/documents'))
 //                ->setCookieFile($strategy->getConfigValue('cookieFile'))
 //        );
 
-        return [];
+        yield null;
     }
 
     public function setFileResource(File $file): File

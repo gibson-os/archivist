@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Strategy;
 
+use Generator;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
 use GibsonOS\Core\Dto\Parameter\IntParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
@@ -99,9 +100,9 @@ class DeutscheBankStrategy extends AbstractWebStrategy
         );
     }
 
-    public function getFiles(Strategy $strategy): array
+    public function getFiles(Strategy $strategy): Generator
     {
-        return [];
+        yield null;
     }
 
     /**

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Strategy;
 
+use Generator;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 
@@ -23,9 +24,9 @@ class AllianzStrategy implements StrategyInterface
         return true;
     }
 
-    public function getFiles(Strategy $strategy): array
+    public function getFiles(Strategy $strategy): Generator
     {
-        return [];
+        yield null;
     }
 
     public function setFileResource(File $file): File

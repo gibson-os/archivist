@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Strategy;
 
 use Behat\Mink\Exception\ElementNotFoundException;
+use Generator;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
 use GibsonOS\Core\Dto\Parameter\IntParameter;
 use GibsonOS\Core\Dto\Parameter\OptionParameter;
@@ -98,7 +99,7 @@ class DkbStrategy extends AbstractWebStrategy
      * @throws BrowserException
      * @throws WebException
      */
-    public function getFiles(Strategy $strategy): array
+    public function getFiles(Strategy $strategy): Generator
     {
         return $this->getFilesFromPage($strategy, $strategy->getConfigValue('path'));
     }

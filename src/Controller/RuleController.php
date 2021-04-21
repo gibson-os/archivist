@@ -101,7 +101,6 @@ class RuleController extends AbstractController
                 'moveFilename' => (new StringParameter('Ablage Dateiname'))
                     ->setValue($rule === null ? null : $rule->getMoveFilename()),
             ],
-            'files' => $strategyService->getFiles($strategyDto),
             'config' => $strategyDto->getConfig(),
             'strategy' => $strategy,
             'id' => $rule === null ? null : $rule->getId(),
