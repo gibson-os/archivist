@@ -253,7 +253,7 @@ class DkbStrategy extends AbstractWebStrategy
         $this->browserService->waitForElementById($page, 'welcomeMboTable');
 
         $links = [[], [], []];
-        preg_match_all('/href="([^"]*)".+?class="evt-gotoFolder"[^>]*>([^<]*)/', $page->getContent(), $links);
+        preg_match_all('/href="([^"]*)".+?class="evt-gotoFolder[^>]*>([^<|^\s]*)/', $page->getContent(), $links);
 
         $directories = [];
 
