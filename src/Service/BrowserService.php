@@ -62,32 +62,49 @@ class BrowserService
 
     /**
      * @param array<string, string> $parameters
+     *
+     * @throws BrowserException
      */
     public function fillFormFields(DocumentElement $page, array $parameters): void
     {
         foreach ($parameters as $name => $value) {
-            $page->findField($name)->setValue($value);
+            $field = $page->findField($name);
+
+            if ($field === null) {
+                throw new BrowserException(sprintf('Field %s not found!', $name));
+            }
+
+            $field->focus();
+            $field->setValue($value);
         }
     }
 
     /**
      * @throws DriverException
      */
-    public function getCookies(Session $session): array
+    public function createCookieFile(Session $session): string
     {
         /** @var ChromeDriver $driver */
         $driver = $session->getDriver();
+        $cookies = '';
 
-        return $driver->getCookies();
-    }
+        foreach ($driver->getCookies() as $cookie) {
+            $cookie = [
+                $cookie['domain'],
+                'FALSE', // include subdomain
+                $cookie['path'],
+                $cookie['secure'] ? 'TRUE' : 'FALSE',
+                $cookie['expires'],
+                $cookie['name'],
+                $cookie['value'],
+            ];
 
-    public function setCookies(Session $session, array $cookies): void
-    {
-        /** @var ChromeDriver $driver */
-        $driver = $session->getDriver();
-
-        foreach ($cookies as $cookie) {
-            $driver->setCookie($cookie['name'], $cookie['value']);
+            $cookies .= implode("\t", $cookie) . PHP_EOL;
         }
+
+        $cookieFileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cookies' . uniqid() . '.jar';
+        file_put_contents($cookieFileName, $cookies);
+
+        return $cookieFileName;
     }
 }

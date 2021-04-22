@@ -18,6 +18,7 @@ use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Repository\IndexRepository;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonException;
+use Psr\Log\LoggerInterface;
 use Twig\Extension\StringLoaderExtension;
 
 class RuleService extends AbstractService
@@ -32,12 +33,15 @@ class RuleService extends AbstractService
 
     private TwigService $twigService;
 
+    private LoggerInterface $logger;
+
     public function __construct(
         FileService $fileService,
         DirService $dirService,
         IndexRepository $indexRepository,
         ServiceManagerService $serviceManagerService,
-        TwigService $twigService
+        TwigService $twigService,
+        LoggerInterface $logger
     ) {
         $this->fileService = $fileService;
         $this->dirService = $dirService;
@@ -45,6 +49,7 @@ class RuleService extends AbstractService
         $this->serviceManagerService = $serviceManagerService;
         $this->twigService = $twigService;
         $this->twigService->getTwig()->addExtension(new StringLoaderExtension());
+        $this->logger = $logger;
     }
 
     /**
@@ -53,15 +58,18 @@ class RuleService extends AbstractService
      */
     public function executeRule(Rule $rule): void
     {
+        $this->logger->info(sprintf('Start indexing for rule %s', $rule->getName()));
         /** @var StrategyInterface $strategyService */
         $strategyService = $this->serviceManagerService->get($rule->getStrategy(), StrategyInterface::class);
         $strategy = (new Strategy($strategyService->getName(), $rule->getStrategy()))
             ->setConfig(JsonUtility::decode($rule->getConfiguration()))
         ;
         $rule->setMessage('Starte Indexierung')->save();
+        $this->logger->info(sprintf('Get files with %s strategy', $strategyService->getName()));
 
         foreach ($strategyService->getFiles($strategy) as $file) {
-            $rule->setMessage(sprintf('Indexiere %s', $file->getName()))->save();
+            $this->logger->info(sprintf('Indexing file "%s"', $file->getName()));
+            $rule->setMessage(sprintf('Indexiere "%s"', $file->getName()))->save();
             $matches = [];
             preg_match('/' . ($rule->getObservedFilename() ?? '.*') . '/', $file->getName(), $matches);
 
@@ -92,20 +100,27 @@ class RuleService extends AbstractService
 
                     continue;
                 } catch (SelectError $e) {
+                    $this->logger->warning(sprintf('File %s already exists!', $newFileName));
                     $index->setError('Datei existiert bereits!')->save();
-
-                    throw new RuleException(sprintf('File %s exists', $newFileName));
                 }
             }
 
+            $this->logger->info(sprintf('Load file %s', $file->getName()));
             $rule->setMessage(sprintf('Lade Datei %s', $file->getName()))->save();
             $strategyService->setFileResource($file);
             $resource = $file->getResource();
 
             if ($resource === null) {
+                $this->logger->warning(sprintf('Resource for %s not set!', $file->getName()));
                 $index->setError('Datei konnte nicht geladen werden!')->save();
 
                 throw new RuleException(sprintf('Resource for %s not set', $file->getName()));
+            }
+
+            $dir = $this->fileService->getDir($newFileName);
+
+            if (!file_exists($dir)) {
+                $this->dirService->create($dir);
             }
 
             $newFile = fopen($newFileName, 'w');

@@ -5,6 +5,7 @@ namespace GibsonOS\Module\Archivist\Strategy;
 
 use Behat\Mink\Session;
 use GibsonOS\Core\Service\CryptService;
+use GibsonOS\Core\Service\WebService;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 use GibsonOS\Module\Archivist\Service\BrowserService;
@@ -14,13 +15,20 @@ abstract class AbstractWebStrategy implements StrategyInterface
 {
     protected BrowserService $browserService;
 
+    protected WebService $webService;
+
     protected LoggerInterface $logger;
 
     protected CryptService $cryptService;
 
-    public function __construct(BrowserService $browserService, LoggerInterface $logger, CryptService $cryptService)
-    {
+    public function __construct(
+        BrowserService $browserService,
+        WebService $webService,
+        LoggerInterface $logger,
+        CryptService $cryptService
+    ) {
         $this->browserService = $browserService;
+        $this->webService = $webService;
         $this->logger = $logger;
         $this->cryptService = $cryptService;
     }

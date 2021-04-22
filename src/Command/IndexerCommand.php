@@ -52,13 +52,14 @@ class IndexerCommand extends AbstractCommand
     protected function run(): int
     {
         $ruleId = (int) $this->getArgument('ruleId');
+        $rule = $this->ruleRepository->getById($ruleId);
 
         try {
-            $this->lockService->lock(self::LOCK_NAME . $ruleId);
-            $this->ruleService->executeRule($this->ruleRepository->getById($ruleId));
-            $this->lockService->unlock(self::LOCK_NAME . $ruleId);
+            $this->lockService->lock(self::LOCK_NAME . $rule->getStrategy());
+            $this->ruleService->executeRule($rule);
+            $this->lockService->unlock(self::LOCK_NAME . $rule->getStrategy());
         } catch (LockError $e) {
-            // Indexer in progress
+            $rule->setMessage('Eine indexiere für diese Strategy läuft schon')->save();
         }
 
         return 0;

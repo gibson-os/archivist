@@ -13,6 +13,7 @@ use GibsonOS\Core\Dto\Web\Request;
 use GibsonOS\Core\Exception\WebException;
 use GibsonOS\Core\Service\CryptService;
 use GibsonOS\Core\Service\DateTimeService;
+use GibsonOS\Core\Service\WebService;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
@@ -22,8 +23,7 @@ use Psr\Log\LoggerInterface;
 
 class DkbStrategy extends AbstractWebStrategy
 {
-//    private const URL = 'https://www.dkb.de/banking';
-    private const URL = 'http://localhost/img/page/dkb/';
+    private const URL = 'https://www.dkb.de';
 
     private const STEP_LOGIN = 0;
 
@@ -35,11 +35,12 @@ class DkbStrategy extends AbstractWebStrategy
 
     public function __construct(
         BrowserService $browserService,
+        WebService $webService,
         LoggerInterface $logger,
         CryptService $cryptService,
         DateTimeService $dateTimeService
     ) {
-        parent::__construct($browserService, $logger, $cryptService);
+        parent::__construct($browserService, $webService, $logger, $cryptService);
         $this->dateTimeService = $dateTimeService;
     }
 
@@ -97,19 +98,31 @@ class DkbStrategy extends AbstractWebStrategy
     }
 
     /**
-     * @throws BrowserException
-     * @throws WebException
+     * @throws ElementNotFoundException
      */
     public function getFiles(Strategy $strategy): Generator
     {
-        return $this->getFilesFromPage($strategy, $strategy->getConfigValue('path'));
+        $session = $this->getSession($strategy);
+        $page = $session->getPage();
+        $page->clickLink($strategy->getConfigValue('path'));
+
+        try {
+            while (true) {
+                foreach ($this->getFilesFromPage($strategy) as $file) {
+                    yield $file;
+                }
+
+                $page->clickLink('Nächste Seite');
+            }
+        } catch (ElementNotFoundException $exception) {
+            // do nothing
+        }
     }
 
     /**
-     * @throws WebException
-     * @throws BrowserException
+     * @return File[]
      */
-    private function getFilesFromPage(Strategy $strategy, string $url): array
+    private function getFilesFromPage(Strategy $strategy): array
     {
         $session = $this->getSession($strategy);
         $page = $session->getPage();
@@ -117,7 +130,7 @@ class DkbStrategy extends AbstractWebStrategy
 
         $fileMatches = [[], [], [], [], [], []];
         preg_match_all(
-            '/(\d{2})\.(\d{2})\.(\d{4})<\/div>\s*<a.+?href="([^"]*)".+?tid="getMailboxAttachment">([^<]+)/gs',
+            '/(\d{2})\.(\d{2})\.(\d{4})<\/div>\s*<a.+?href="([^"]*)".+?tid="getMailboxAttachment">([^<]+)/s',
             $responseBody,
             $fileMatches
         );
@@ -126,21 +139,10 @@ class DkbStrategy extends AbstractWebStrategy
         foreach ($fileMatches[5] as $id => $fileName) {
             $files[] = new File(
                 $fileName,
-                $fileMatches[4][$id],
-                $this->dateTimeService->get($fileMatches[3][$id] . '-' . $fileMatches[2][$id] . $fileMatches[1][$id]),
+                self::URL . $fileMatches[4][$id],
+                $this->dateTimeService->get($fileMatches[3][$id] . '-' . $fileMatches[2][$id] . '-' . $fileMatches[1][$id]),
                 $strategy
             );
-        }
-
-        $nextPage = [];
-        preg_match(
-            '/href="([^"]*)"[ ^>]*class="pager-navigator-link"><img\s*src="[^"]*Next/',
-            $responseBody,
-            $nextPage
-        );
-
-        if (isset($nextPage[1])) {
-            $files += $this->getFilesFromPage($strategy, $nextPage[1]);
         }
 
         return $files;
@@ -148,20 +150,23 @@ class DkbStrategy extends AbstractWebStrategy
 
     /**
      * @throws StrategyException
+     * @throws WebException
      */
     public function setFileResource(File $file): File
     {
-        if ($file->getStrategy()->getClassName() !== self::class) {
+        $strategy = $file->getStrategy();
+
+        if ($strategy->getClassName() !== self::class) {
             throw new StrategyException(sprintf(
                 'Class name %s is not equal with %s',
-                $file->getStrategy()->getClassName(),
+                $strategy->getClassName(),
                 self::class
             ));
         }
 
-        $response = $this->browserService->get(
+        $response = $this->webService->get(
             (new Request($file->getPath()))
-                ->setCookieFile($file->getStrategy()->getConfigValue('cookieFile'))
+                ->setCookieFile($this->browserService->createCookieFile($this->getSession($strategy)))
         );
 
         $resource = $response->getBody()->getResource();
@@ -206,8 +211,8 @@ class DkbStrategy extends AbstractWebStrategy
      */
     private function login(Strategy $strategy, array $parameters): void
     {
-        $session = $this->getSession($strategy);
-        $page = $this->browserService->loadPage($session, self::URL);
+        $session = $this->browserService->getSession();
+        $page = $this->browserService->loadPage($session, self::URL . '/banking');
         $this->logger->debug('Init page: ' . $page->getContent());
         $this->browserService->fillFormFields($page, $parameters);
         $page->pressButton('Anmelden');
@@ -235,7 +240,8 @@ class DkbStrategy extends AbstractWebStrategy
     {
         $session = $this->getSession($strategy);
         $page = $session->getPage();
-        $page->pressButton('Abmelden');
+        $page->clickLink('Abmelden');
+        $session->stop();
     }
 
     /**
