@@ -139,7 +139,7 @@ class DkbStrategy extends AbstractWebStrategy
         foreach ($fileMatches[5] as $id => $fileName) {
             $files[] = new File(
                 $fileName,
-                self::URL . $fileMatches[4][$id],
+                self::URL . html_entity_decode($fileMatches[4][$id]),
                 $this->dateTimeService->get($fileMatches[3][$id] . '-' . $fileMatches[2][$id] . '-' . $fileMatches[1][$id]),
                 $strategy
             );
