@@ -100,7 +100,7 @@ class BrowserService
         foreach ($driver->getCookies() as $cookie) {
             $cookie = [
                 $cookie['domain'],
-                'FALSE', // include subdomain
+                mb_strpos($cookie['domain'], '.') === 0 ? 'TRUE' : 'FALSE',
                 $cookie['path'],
                 $cookie['secure'] ? 'TRUE' : 'FALSE',
                 (int) $cookie['expires'] === -1 ? 0 : $cookie['expires'],
