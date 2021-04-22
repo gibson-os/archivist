@@ -9,9 +9,17 @@ use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Session;
 use DMore\ChromeDriver\ChromeDriver;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
+use Psr\Log\LoggerInterface;
 
 class BrowserService
 {
+    private LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     public function getSession(): Session
     {
         return new Session(new ChromeDriver('http://localhost:9222', null, ''));
@@ -42,13 +50,13 @@ class BrowserService
         }
 
         $waitTime = 100000;
+        $this->logger->debug(sprintf('Wait %dµs for #%s', $waitTime, $id));
 
         try {
             $element = $page->findById($id);
 
             if ($element === null) {
                 usleep($waitTime);
-
                 $element = $this->waitForElementById($page, $id, $maxWait - $waitTime);
             }
 
@@ -76,6 +84,7 @@ class BrowserService
 
             $field->focus();
             $field->setValue($value);
+            $this->logger->info(sprintf('Fill field "%s" with "%s"', $name, $value));
         }
     }
 
@@ -94,7 +103,7 @@ class BrowserService
                 'FALSE', // include subdomain
                 $cookie['path'],
                 $cookie['secure'] ? 'TRUE' : 'FALSE',
-                $cookie['expires'],
+                (int) $cookie['expires'] === -1 ? 0 : $cookie['expires'],
                 $cookie['name'],
                 $cookie['value'],
             ];
@@ -104,6 +113,8 @@ class BrowserService
 
         $cookieFileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cookies' . uniqid() . '.jar';
         file_put_contents($cookieFileName, $cookies);
+        $this->logger->info(sprintf('Write cookies to %s', $cookieFileName));
+        $this->logger->debug($cookies);
 
         return $cookieFileName;
     }
