@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Strategy;
 
+use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Generator;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
@@ -11,15 +12,10 @@ use GibsonOS\Core\Dto\Parameter\OptionParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Dto\Web\Request;
 use GibsonOS\Core\Exception\WebException;
-use GibsonOS\Core\Service\CryptService;
-use GibsonOS\Core\Service\DateTimeService;
-use GibsonOS\Core\Service\WebService;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
-use GibsonOS\Module\Archivist\Service\BrowserService;
-use Psr\Log\LoggerInterface;
 
 class DkbStrategy extends AbstractWebStrategy
 {
@@ -30,19 +26,6 @@ class DkbStrategy extends AbstractWebStrategy
     private const STEP_TAN = 1;
 
     private const STEP_PATH = 2;
-
-    private DateTimeService $dateTimeService;
-
-    public function __construct(
-        BrowserService $browserService,
-        WebService $webService,
-        LoggerInterface $logger,
-        CryptService $cryptService,
-        DateTimeService $dateTimeService
-    ) {
-        parent::__construct($browserService, $webService, $logger, $cryptService);
-        $this->dateTimeService = $dateTimeService;
-    }
 
     public function getName(): string
     {
@@ -151,6 +134,7 @@ class DkbStrategy extends AbstractWebStrategy
     /**
      * @throws StrategyException
      * @throws WebException
+     * @throws DriverException
      */
     public function setFileResource(File $file): File
     {

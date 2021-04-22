@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Strategy;
 
+use Behat\Mink\Exception\ElementNotFoundException;
 use Generator;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
 use GibsonOS\Core\Dto\Parameter\IntParameter;
@@ -11,15 +12,14 @@ use GibsonOS\Core\Dto\Web\Request;
 use GibsonOS\Core\Exception\WebException;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
+use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 
 class DeutscheBankStrategy extends AbstractWebStrategy
 {
-    private const URL = 'https://meine.deutsche-bank.de/';
+    private const URL = 'http://localhost/img/page/db/';
 
-    private const STEP_LOGIN = 0;
-
-    private const STEP_TAN = 0;
+//    private const URL = 'https://meine.deutsche-bank.de/';
 
     public function getName(): string
     {
@@ -31,11 +31,12 @@ class DeutscheBankStrategy extends AbstractWebStrategy
      */
     public function getConfigurationParameters(Strategy $strategy): array
     {
-        switch ($strategy->getConfigStep()) {
-            case self::STEP_TAN: return $this->getTanParameters();
-            //case self::STEP_PATH: return $this->getPathParameters($strategy);
-            default: return $this->getLoginParameters();
-        }
+        return [
+            'branch' => (new IntParameter('Filiale'))->setRange(1, 999),
+            'account' => (new IntParameter('Konto'))->setRange(1, 9999999),
+            'subAccount' => (new IntParameter('Unterkonto'))->setRange(0, 99),
+            'pin' => (new StringParameter('PIN'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
+        ];
     }
 
     /**
@@ -46,6 +47,26 @@ class DeutscheBankStrategy extends AbstractWebStrategy
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
+        $session = $this->browserService->getSession();
+        $page = $this->browserService->loadPage($session, self::URL . '/banking');
+        $this->logger->debug('Init page: ' . $page->getContent());
+        $this->browserService->fillFormFields($page, $parameters);
+        $page->pressButton('Login ausführen');
+
+        try {
+            $this->browserService->waitForElementById($page, 'pushTANForm');
+        } catch (BrowserException $e) {
+            $this->browserService->waitForElementById($page, 'photoTAN');
+            $page->clickLink('photoTAN push');
+            $this->browserService->waitForElementById($page, 'pushTANForm');
+        }
+
+        $page->pressButton('confirmButton');
+        $this->browserService->waitForElementById($page, 'iframeContainer');
+        $session->switchToIFrame('iframeContainer');
+        $this->browserService->waitForElementById($page, 'layoutWrapper');
+        $page->find('named_partial', 'Alle Dokumente')->click();
+
         switch ($strategy->getConfigStep()) {
             case self::STEP_TAN:
                 $this->validateTan($strategy, $parameters);
@@ -87,19 +108,6 @@ class DeutscheBankStrategy extends AbstractWebStrategy
         return true;
     }
 
-    /**
-     * @param array<string, string> $parameters
-     */
-    public function authenticate2Factor(Strategy $strategy, array $parameters): void
-    {
-        $response = $this->browserService->post(
-            (new Request($strategy->getConfigValue('photoTanAction')))
-                ->setParameter('challengeMessage', $strategy->getConfigValue('challengeMessage'))
-                ->setParameter('tan', $strategy->getConfigValue($parameters['photoTan']))
-                ->setCookieFile($strategy->getConfigValue('cookieFile'))
-        );
-    }
-
     public function getFiles(Strategy $strategy): Generator
     {
         yield null;
@@ -121,25 +129,16 @@ class DeutscheBankStrategy extends AbstractWebStrategy
         return $file->setResource($resource, $responseBody->getLength());
     }
 
+    /**
+     * @throws ElementNotFoundException
+     */
     public function unload(Strategy $strategy): void
     {
-    }
-
-    private function getLoginParameters(): array
-    {
-        return [
-            'branch' => (new IntParameter('Filiale'))->setRange(1, 999),
-            'account' => (new IntParameter('Konto'))->setRange(1, 9999999),
-            'subAccount' => (new IntParameter('Unterkonto'))->setRange(0, 99),
-            'pin' => (new StringParameter('PIN'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
-        ];
-    }
-
-    private function getTanParameters(): array
-    {
-        return [
-            'photoTan' => new IntParameter('Photo TAN'),
-        ];
+        $session = $this->getSession($strategy);
+        $session->switchToWindow();
+        $page = $session->getPage();
+        $page->clickLink('Kunden-Logout');
+        $session->stop();
     }
 
     private function login(Strategy $strategy, array $parameters): void
@@ -181,9 +180,5 @@ class DeutscheBankStrategy extends AbstractWebStrategy
             ->setConfigValue('pin', $this->cryptService->encrypt($parameters['pin']))
             ->setNextConfigStep()
         ;
-    }
-
-    private function validateTan(Strategy $strategy, array $parameters): void
-    {
     }
 }
