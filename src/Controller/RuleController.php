@@ -160,12 +160,23 @@ class RuleController extends AbstractController
     }
 
     /**
+     * @throws DateTimeError
      * @throws LoginRequired
      * @throws PermissionDenied
+     * @throws SelectError
      */
-    public function execute(CommandService $commandService, int $id): AjaxResponse
-    {
+    public function execute(
+        RuleRepository $ruleRepository,
+        CommandService $commandService,
+        array $configuration,
+        int $id
+    ): AjaxResponse {
         $this->checkPermission(PermissionService::WRITE);
+
+        $ruleRepository->getById($id)
+            ->setConfiguration(JsonUtility::encode($configuration))
+            ->save()
+        ;
         $commandService->executeAsync(IndexerCommand::class, ['ruleId' => $id]);
 
         return $this->returnSuccess();

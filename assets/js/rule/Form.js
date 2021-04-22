@@ -74,8 +74,12 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
 
                     save = !!responseData.lastStep;
 
-                    if (responseData.id) {
+                    if (
+                        responseData.id &&
+                        !me.down('#archivistRuleFormExecuteButton')
+                    ) {
                         me.down('#coreEventElementParameterSaveButton').up().add({
+                            itemId: 'archivistRuleFormExecuteButton',
                             text: 'Ausführen',
                             handler() {
                                 GibsonOS.Ajax.request({
