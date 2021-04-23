@@ -97,12 +97,12 @@ class RuleService extends AbstractService
             if (file_exists($newFileName)) {
                 try {
                     $this->indexRepository->getByInputPath($rule->getId() ?? 0, $inputPath);
-
-                    continue;
                 } catch (SelectError $e) {
                     $this->logger->warning(sprintf('File %s already exists!', $newFileName));
                     $index->setError('Datei existiert bereits!')->save();
                 }
+
+                continue;
             }
 
             $this->logger->info(sprintf('Load file %s', $file->getName()));
