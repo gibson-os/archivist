@@ -19,6 +19,8 @@ use GibsonOS\Module\Archivist\Exception\StrategyException;
 
 class DkbStrategy extends AbstractWebStrategy
 {
+//    private const URL = 'http://localhost/img/page/dkb/';
+
     private const URL = 'https://www.dkb.de';
 
     private const STEP_LOGIN = 0;
@@ -196,6 +198,7 @@ class DkbStrategy extends AbstractWebStrategy
     private function login(Strategy $strategy, array $parameters): void
     {
         $session = $this->browserService->getSession();
+//        $page = $this->browserService->loadPage($session, self::URL);
         $page = $this->browserService->loadPage($session, self::URL . '/banking');
         $this->logger->debug('Init page: ' . $page->getContent());
         $this->browserService->fillFormFields($page, $parameters);
@@ -242,13 +245,13 @@ class DkbStrategy extends AbstractWebStrategy
         $page->clickLink('Postfach');
         $this->browserService->waitForElementById($page, 'welcomeMboTable');
 
-        $links = [[], [], []];
-        preg_match_all('/class="evt-gotoFolder[^>]*>(([^<|^\s]*)[^<]*)/', $page->getContent(), $links);
+        $links = [[], []];
+        preg_match_all('/class="evt-gotoFolder[^>]*>([^<|^\s]*)[^<]*/', $page->getContent(), $links);
 
         $directories = [];
 
-        foreach ($links[1] as $key => $link) {
-            $directories[$links[2][$key]] = $link;
+        foreach ($links[1] as $link) {
+            $directories[$link] = $link;
         }
 
         $strategy
