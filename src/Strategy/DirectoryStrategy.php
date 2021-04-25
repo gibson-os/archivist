@@ -78,10 +78,15 @@ class DirectoryStrategy implements StrategyInterface
         $directory = $strategy->getConfigValue('directory');
 
         foreach ($this->dirService->getFiles($directory) as $file) {
-            $lockName = RuleService::RULE_LOCK_PREFIX . 'directory' . JsonUtility::decode($rule->getConfiguration())['directory'];
+            if ($rule !== null) {
+                $lockName =
+                    RuleService::RULE_LOCK_PREFIX . 'directory' .
+                    JsonUtility::decode($rule->getConfiguration())['directory']
+                ;
 
-            if ($this->lockService->shouldStop($lockName)) {
-                return null;
+                if ($this->lockService->shouldStop($lockName)) {
+                    return null;
+                }
             }
 
             if (
@@ -124,7 +129,7 @@ class DirectoryStrategy implements StrategyInterface
 
         $strategy->setConfigValue('waitTime', $waitTime);
 
-        foreach ($this->getFiles($strategy) as $file) {
+        foreach ($this->getFiles($strategy, $rule) as $file) {
             yield $file;
         }
     }

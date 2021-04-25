@@ -95,7 +95,7 @@ class RuleService extends AbstractService
         $rule->setMessage('Starte Indexierung')->save();
         $this->logger->info(sprintf('Get files with %s strategy', $strategyService->getName()));
 
-        foreach ($strategyService->getFiles($strategy) as $file) {
+        foreach ($strategyService->getFiles($strategy, $rule) as $file) {
             $this->logger->info(sprintf('Indexing file "%s"', $file->getName()));
             $rule->setMessage(sprintf('Indexiere "%s"', $file->getName()))->save();
             $matches = [];
