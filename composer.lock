@@ -73,27 +73,29 @@
         },
         {
             "name": "dmore/chrome-mink-driver",
-            "version": "2.7.0",
+            "version": "2.8.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/DMore/chrome-mink-driver.git",
-                "reference": "d66765fb7f448e8b2bca2b899308a4a6d8a69264"
+                "reference": "f85c8f86ca2e9000119c310577a6942683f7e280"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/DMore%2Fchrome-mink-driver/repository/archive.zip?sha=d66765fb7f448e8b2bca2b899308a4a6d8a69264",
-                "reference": "d66765fb7f448e8b2bca2b899308a4a6d8a69264",
+                "url": "https://gitlab.com/api/v4/projects/DMore%2Fchrome-mink-driver/repository/archive.zip?sha=f85c8f86ca2e9000119c310577a6942683f7e280",
+                "reference": "f85c8f86ca2e9000119c310577a6942683f7e280",
                 "shasum": ""
             },
             "require": {
                 "behat/mink": "^1.7",
                 "ext-curl": "*",
                 "ext-json": "*",
+                "ext-mbstring": "*",
                 "textalk/websocket": "^1.2.0"
             },
             "require-dev": {
                 "mink/driver-testsuite": "dev-master",
-                "phpunit/phpunit": "^5.0.0"
+                "phpunit/phpunit": "^5.0.0",
+                "squizlabs/php_codesniffer": "^3.5"
             },
             "type": "library",
             "extra": {
@@ -117,7 +119,10 @@
                 }
             ],
             "description": "Mink driver for controlling chrome without selenium",
-            "time": "2019-03-30T09:22:58+00:00"
+            "support": {
+                "issues": "https://gitlab.com/api/v4/projects/3255077/issues"
+            },
+            "time": "2021-04-25T06:49:32+00:00"
         },
         {
             "name": "gibson-os/core",
@@ -125,7 +130,7 @@
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Core.git",
-                "reference": "7735f615406acfc3bb4d1d367b64f07121492622"
+                "reference": "d34440de0cbce0669cddf60b9fad0a9f4ff5d64e"
             },
             "require": {
                 "ext-curl": "*",
@@ -184,7 +189,7 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2021-04-22T13:33:09+00:00"
+            "time": "2021-04-25T08:30:07+00:00"
         },
         {
             "name": "gibson-os/explorer",
@@ -192,7 +197,7 @@
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Explorer.git",
-                "reference": "8f8796c2ee6896614b80edcc9f972279a595ec77"
+                "reference": "3848ea5f7aee1bde074215bc986d3e56d941874b"
             },
             "require": {
                 "ext-exif": "*",
@@ -239,7 +244,7 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2021-04-13T16:36:25+00:00"
+            "time": "2021-04-25T08:41:10+00:00"
         },
         {
             "name": "mdo/mdo",

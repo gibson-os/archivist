@@ -42,13 +42,13 @@ class DeutscheBankStrategy extends AbstractWebStrategy
     /**
      * @param array<string, string> $parameters
      *
-     * @throws StrategyException
-     * @throws WebException
+     * @throws BrowserException
+     * @throws ElementNotFoundException
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
         $session = $this->browserService->getSession();
-        $page = $this->browserService->loadPage($session, self::URL . '/banking');
+        $page = $this->browserService->loadPage($session, self::URL);
         $this->logger->debug('Init page: ' . $page->getContent());
         $this->browserService->fillFormFields($page, $parameters);
         $page->pressButton('Login ausführen');
@@ -65,45 +65,12 @@ class DeutscheBankStrategy extends AbstractWebStrategy
         $this->browserService->waitForElementById($page, 'iframeContainer');
         $session->switchToIFrame('iframeContainer');
         $this->browserService->waitForElementById($page, 'layoutWrapper');
-        $page->find('named_partial', 'Alle Dokumente')->click();
+        $page->find('named_partial', ['content', 'Alle Dokumente'])->click();
+        $this->browserService->waitForElementById($page, 'layoutWrapper');
 
-        switch ($strategy->getConfigStep()) {
-            case self::STEP_TAN:
-                $this->validateTan($strategy, $parameters);
-
-                return false;
-//            case self::STEP_PATH:
-//                $strategy->setConfigValue('path', $parameters['path']);
-//
-//                return true;
-            default:
-                $this->login($strategy, $parameters);
-
-                return false;
+        foreach ($page->findAll('css', '.node-row-actions__action--download') as $downloadAction) {
+            $downloadAction->click();
         }
-
-        $response = $this->browserService->post(
-            (new Request(self::URL . 'trxm/db/gvo/login/login.do'))
-                ->setParameters($parameters)
-        );
-        $responseBody = $response->getBody()->getContent();
-        $cookieFile = $response->getCookieFile();
-        $imageResponse = $this->browserService->get(
-            (new Request($this->getResponseValue($responseBody, 'id', 'photoTANGraphic', 'src')))
-                ->setCookieFile($cookieFile)
-        );
-        $strategy
-            ->setConfigValue(
-                'photoTanAction',
-                $this->getResponseValue($responseBody, 'id', 'photoTANForm', 'action')
-            )
-            ->setConfigValue(
-                'challengeMessage',
-                $this->getResponseValue($responseBody, 'id', 'challengeMessage', 'value')
-            )
-            ->setConfigValue('photoTanImage', $imageResponse->getBody()->getContent())
-            ->setConfigValue('cookieFile', $cookieFile)
-        ;
 
         return true;
     }
@@ -119,7 +86,7 @@ class DeutscheBankStrategy extends AbstractWebStrategy
      */
     public function setFileResource(File $file): File
     {
-        $responseBody = $this->browserService->get(new Request($file->getPath()))->getBody();
+        $responseBody = $this->webService->get(new Request($file->getPath()))->getBody();
         $resource = $responseBody->getResource();
 
         if ($resource === null) {
@@ -139,46 +106,5 @@ class DeutscheBankStrategy extends AbstractWebStrategy
         $page = $session->getPage();
         $page->clickLink('Kunden-Logout');
         $session->stop();
-    }
-
-    private function login(Strategy $strategy, array $parameters): void
-    {
-        $response = $this->browserService->post(
-            (new Request(self::URL . 'trxm/db/gvo/login/login.do'))
-                ->setParameters($parameters)
-                ->setParameter('gvo', 'DisplayFinancialOverview')
-                ->setParameter('process', 'DisplayFinancialOverview')
-                ->setParameter('wknOrIsin', '')
-                ->setParameter('quantity', '')
-                ->setParameter('fingerprintToken', '')
-                ->setParameter('fingerprintTokenVersion', '')
-                ->setParameter('updateFingerprintToken', 'false')
-                ->setParameter('javascriptEnabled', 'false')
-                ->setParameter('quickLink', 'setupNachrichtenbox')
-        );
-        $responseBody = $response->getBody()->getContent();
-
-//        try {
-        $this->getResponseValue($responseBody, 'name', 'tan', 'id');
-//        } catch (StrategyException $e) {
-//            $response = $this->webService->post(
-//                (new Request(
-//                    self::URL . 'DkbTransactionBanking/content/LoginWithTan/LoginWithTanProcess/InfoOpenLoginRequest.xhtml'
-//                ))
-//                    ->setCookieFile($response->getCookieFile())
-//                    ->setParameter('$event', 'next')
-//            );
-//            $responseBody = $response->getBody()->getContent();
-//        }
-
-        $this->logger->debug('Authenticate response: ' . $responseBody);
-        $strategy
-            ->setConfigValue('cookieFile', $response->getCookieFile())
-            ->setConfigValue('branch', $this->cryptService->encrypt($parameters['branch']))
-            ->setConfigValue('account', $this->cryptService->encrypt($parameters['account']))
-            ->setConfigValue('subAccount', $this->cryptService->encrypt($parameters['subAccount']))
-            ->setConfigValue('pin', $this->cryptService->encrypt($parameters['pin']))
-            ->setNextConfigStep()
-        ;
     }
 }
