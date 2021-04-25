@@ -6,6 +6,7 @@ namespace GibsonOS\Module\Archivist\Strategy;
 use Generator;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
+use GibsonOS\Module\Archivist\Model\Rule;
 
 class CommerzbankStrategy implements StrategyInterface
 {
@@ -36,5 +37,10 @@ class CommerzbankStrategy implements StrategyInterface
 
     public function unload(Strategy $strategy): void
     {
+    }
+
+    public function getLockName(Rule $rule): string
+    {
+        return 'commerzbank';
     }
 }

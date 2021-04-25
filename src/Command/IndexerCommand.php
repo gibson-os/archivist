@@ -5,36 +5,35 @@ namespace GibsonOS\Module\Archivist\Command;
 
 use GibsonOS\Core\Command\AbstractCommand;
 use GibsonOS\Core\Exception\ArgumentError;
+use GibsonOS\Core\Exception\CreateError;
 use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\Flock\LockError;
 use GibsonOS\Core\Exception\Flock\UnlockError;
+use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
-use GibsonOS\Core\Service\LockService;
+use GibsonOS\Module\Archivist\Exception\RuleException;
 use GibsonOS\Module\Archivist\Repository\RuleRepository;
 use GibsonOS\Module\Archivist\Service\RuleService;
 use JsonException;
 use Psr\Log\LoggerInterface;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class IndexerCommand extends AbstractCommand
 {
-    private const LOCK_NAME = 'archivistIndexer';
-
     private RuleRepository $ruleRepository;
 
     private RuleService $ruleService;
 
-    private LockService $lockService;
-
     public function __construct(
         RuleRepository $ruleRepository,
         RuleService $ruleService,
-        LockService $lockService,
         LoggerInterface $logger
     ) {
         $this->ruleRepository = $ruleRepository;
         $this->ruleService = $ruleService;
-        $this->lockService = $lockService;
 
         parent::__construct($logger);
 
@@ -42,12 +41,18 @@ class IndexerCommand extends AbstractCommand
     }
 
     /**
-     * @throws DateTimeError
-     * @throws SelectError
-     * @throws UnlockError
      * @throws ArgumentError
+     * @throws DateTimeError
      * @throws FactoryError
      * @throws JsonException
+     * @throws SelectError
+     * @throws UnlockError
+     * @throws CreateError
+     * @throws SaveError
+     * @throws RuleException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     protected function run(): int
     {
@@ -55,9 +60,7 @@ class IndexerCommand extends AbstractCommand
         $rule = $this->ruleRepository->getById($ruleId);
 
         try {
-            $this->lockService->lock(self::LOCK_NAME . $rule->getStrategy());
             $this->ruleService->executeRule($rule);
-            $this->lockService->unlock(self::LOCK_NAME . $rule->getStrategy());
         } catch (LockError $e) {
             $rule->setMessage('Eine Indexierung für diese Strategy läuft schon')->save();
         }

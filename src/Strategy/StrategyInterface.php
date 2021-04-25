@@ -7,6 +7,7 @@ use Generator;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
+use GibsonOS\Module\Archivist\Model\Rule;
 
 interface StrategyInterface
 {
@@ -30,4 +31,6 @@ interface StrategyInterface
     public function setFileResource(File $file): File;
 
     public function unload(Strategy $strategy): void;
+
+    public function getLockName(Rule $rule): string;
 }

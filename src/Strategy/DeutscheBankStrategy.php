@@ -14,6 +14,7 @@ use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
+use GibsonOS\Module\Archivist\Model\Rule;
 
 class DeutscheBankStrategy extends AbstractWebStrategy
 {
@@ -106,5 +107,10 @@ class DeutscheBankStrategy extends AbstractWebStrategy
         $page = $session->getPage();
         $page->clickLink('Kunden-Logout');
         $session->stop();
+    }
+
+    public function getLockName(Rule $rule): string
+    {
+        return 'db';
     }
 }

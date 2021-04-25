@@ -16,6 +16,7 @@ use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
+use GibsonOS\Module\Archivist\Model\Rule;
 
 class DkbStrategy extends AbstractWebStrategy
 {
@@ -258,5 +259,10 @@ class DkbStrategy extends AbstractWebStrategy
             ->setConfigValue('directories', $directories)
             ->setNextConfigStep()
         ;
+    }
+
+    public function getLockName(Rule $rule): string
+    {
+        return 'dkb';
     }
 }

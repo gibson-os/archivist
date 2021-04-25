@@ -3,11 +3,17 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Service;
 
+use GibsonOS\Core\Exception\CreateError;
+use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\FactoryError;
+use GibsonOS\Core\Exception\Flock\LockError;
+use GibsonOS\Core\Exception\Flock\UnlockError;
+use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Service\AbstractService;
 use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
+use GibsonOS\Core\Service\LockService;
 use GibsonOS\Core\Service\ServiceManagerService;
 use GibsonOS\Core\Service\TwigService;
 use GibsonOS\Core\Utility\JsonUtility;
@@ -19,6 +25,9 @@ use GibsonOS\Module\Archivist\Repository\IndexRepository;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonException;
 use Psr\Log\LoggerInterface;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Twig\Extension\StringLoaderExtension;
 
 class RuleService extends AbstractService
@@ -35,13 +44,16 @@ class RuleService extends AbstractService
 
     private LoggerInterface $logger;
 
+    private LockService $lockService;
+
     public function __construct(
         FileService $fileService,
         DirService $dirService,
         IndexRepository $indexRepository,
         ServiceManagerService $serviceManagerService,
         TwigService $twigService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        LockService $lockService
     ) {
         $this->fileService = $fileService;
         $this->dirService = $dirService;
@@ -50,17 +62,31 @@ class RuleService extends AbstractService
         $this->twigService = $twigService;
         $this->twigService->getTwig()->addExtension(new StringLoaderExtension());
         $this->logger = $logger;
+        $this->lockService = $lockService;
     }
 
     /**
      * @throws FactoryError
      * @throws JsonException
+     * @throws RuleException
+     * @throws CreateError
+     * @throws DateTimeError
+     * @throws LockError
+     * @throws UnlockError
+     * @throws SaveError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function executeRule(Rule $rule): void
     {
         $this->logger->info(sprintf('Start indexing for rule %s', $rule->getName()));
         /** @var StrategyInterface $strategyService */
         $strategyService = $this->serviceManagerService->get($rule->getStrategy(), StrategyInterface::class);
+
+        $lockName = 'archivistIndexer' . $strategyService->getLockName($rule);
+        $this->lockService->lock($lockName);
+
         $strategy = (new Strategy($strategyService->getName(), $rule->getStrategy()))
             ->setConfig(JsonUtility::decode($rule->getConfiguration()))
         ;
@@ -133,5 +159,6 @@ class RuleService extends AbstractService
 
         $rule->setMessage('Fertig')->save();
         $strategyService->unload($strategy);
+        $this->lockService->unlock($lockName);
     }
 }

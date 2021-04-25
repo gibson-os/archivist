@@ -7,6 +7,7 @@ use Generator;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
+use GibsonOS\Module\Archivist\Model\Rule;
 
 class AudibleStrategy extends AbstractWebStrategy
 {
@@ -47,5 +48,10 @@ class AudibleStrategy extends AbstractWebStrategy
         $page = $session->getPage();
         $page->clickLink('Abmelden');
         $session->stop();
+    }
+
+    public function getLockName(Rule $rule): string
+    {
+        return 'audible';
     }
 }

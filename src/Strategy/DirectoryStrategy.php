@@ -9,6 +9,7 @@ use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
+use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 use GibsonOS\Module\Explorer\Service\TrashService;
 
@@ -128,5 +129,10 @@ class DirectoryStrategy implements StrategyInterface
         }
 
         $strategy->setConfigValue('loadedFiles', []);
+    }
+
+    public function getLockName(Rule $rule): string
+    {
+        return 'directory' . $rule->getId();
     }
 }

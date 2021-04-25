@@ -10,6 +10,7 @@ use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
+use GibsonOS\Module\Archivist\Model\Rule;
 
 class TessaCloudStrategy extends AbstractWebStrategy
 {
@@ -69,5 +70,10 @@ class TessaCloudStrategy extends AbstractWebStrategy
 
     public function unload(Strategy $strategy): void
     {
+    }
+
+    public function getLockName(Rule $rule): string
+    {
+        return 'tessaCloud';
     }
 }
