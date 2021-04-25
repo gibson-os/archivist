@@ -11,6 +11,10 @@ use GibsonOS\Module\Archivist\Model\Rule;
 
 class AudibleStrategy extends AbstractWebStrategy
 {
+    private const URL = 'http://localhost/img/page/audible/';
+
+//    private const URL = 'https://audible.de';
+
     public function getName(): string
     {
         return 'Audible';
@@ -26,11 +30,35 @@ class AudibleStrategy extends AbstractWebStrategy
 
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
+        $session = $this->browserService->getSession();
+        $page = $this->browserService->loadPage($session, self::URL);
+        $page->clickLink('Bereits Kunde? Anmelden');
+        $this->browserService->waitForElementById($page, 'ap_email');
+        $this->browserService->fillFormFields($page, $parameters);
+        $page->pressButton('signInSubmit');
+        $this->browserService->waitForElementById($page, 'adbl-web-carousel-c1');
+        $page->clickLink('Bibliothek');
+        $this->browserService->waitForElementById($page, 'lib-subheader-actions');
+
         return true;
     }
 
     public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
+        $session = $this->getSession($strategy);
+        $page = $session->getPage();
+
+        $matches = [[], [], [], [], [], []];
+        preg_match_all(
+            '/class="adbl-library-content-row".+?bc-size-headline3">([^<]*).+?(Serie.+?<a[^>]*>([^<]*)<\/a>(, Titel (\S*))?.+?)?summaryLabel(.+?)(adbl-lib-action-download[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?<\/a>.+?)?bc-spacing-top-base/s',
+            $page->getContent(),
+            $matches
+        );
+
+        foreach ($matches[0] as $id => $match) {
+            $title = $match[1];
+//            $filename =
+        }
         yield new File('foo', 'bar', $this->dateTimeService->get(), $strategy);
     }
 
