@@ -159,12 +159,17 @@ class DirectoryStrategy implements StrategyInterface
     }
 
     /**
+     * @throws JsonException
      * @throws SaveError
      */
     public function getLockName(Rule $rule): string
     {
         $lockName = 'directory' . JsonUtility::decode($rule->getConfiguration())['directory'];
         $this->lockService->stop(RuleService::RULE_LOCK_PREFIX . $lockName);
+
+        while ($this->lockService->isLocked()) {
+            usleep(1000);
+        }
 
         return $lockName;
     }
