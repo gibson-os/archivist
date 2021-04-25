@@ -110,7 +110,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
                                                     messageField.setValue(Ext.decode(response.responseText).data.message + '...');
                                                 }
                                             });
-                                            setTimeout(reloadFunction, 1000);
+                                            setTimeout(reloadFunction, 100);
                                         };
                                         reloadFunction();
                                     }
