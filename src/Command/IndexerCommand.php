@@ -62,7 +62,12 @@ class IndexerCommand extends AbstractCommand
         try {
             $this->ruleService->executeRule($rule);
         } catch (LockError $e) {
-            $rule->setMessage('Eine Indexierung für diese Strategy läuft schon')->save();
+            $this->logger->warning('Indexing for this strategy already runs!');
+            $rule
+                ->setActive(false)
+                ->setMessage('Eine Indexierung für diese Strategy läuft bereits')
+                ->save()
+            ;
         }
 
         return 0;

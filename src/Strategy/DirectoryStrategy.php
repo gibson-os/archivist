@@ -4,9 +4,14 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Strategy;
 
 use Generator;
+use GibsonOS\Core\Exception\DateTimeError;
+use GibsonOS\Core\Exception\Model\DeleteError;
+use GibsonOS\Core\Exception\Repository\SelectError;
+use GibsonOS\Core\Repository\LockRepository;
 use GibsonOS\Core\Service\DateTimeService;
 use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
+use GibsonOS\Core\Service\ProcessService;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Model\Rule;
@@ -27,16 +32,24 @@ class DirectoryStrategy implements StrategyInterface
 
     private TrashService $trashService;
 
+    private LockRepository $lockRepository;
+
+    private ProcessService $processService;
+
     public function __construct(
         DirService $dirService,
         FileService $fileService,
         DateTimeService $dateTimeService,
-        TrashService $trashService
+        TrashService $trashService,
+        LockRepository $lockRepository,
+        ProcessService $processService
     ) {
         $this->dirService = $dirService;
         $this->fileService = $fileService;
         $this->dateTimeService = $dateTimeService;
         $this->trashService = $trashService;
+        $this->lockRepository = $lockRepository;
+        $this->processService = $processService;
     }
 
     public function getName(): string
@@ -88,7 +101,12 @@ class DirectoryStrategy implements StrategyInterface
             );
         }
 
-        $waitTime = ((int) $strategy->getConfigValue('waitTime')) + self::WAIT_PER_LOOP_SECONDS;
+        $waitTime =
+            ($strategy->hasConfigValue('waitTime')
+                ? ((int) $strategy->getConfigValue('waitTime')) :
+                0)
+            + self::WAIT_PER_LOOP_SECONDS
+        ;
         sleep(self::WAIT_PER_LOOP_SECONDS);
 
         if ($waitTime >= self::MAX_WAIT_SECONDS) {
@@ -131,8 +149,22 @@ class DirectoryStrategy implements StrategyInterface
         $strategy->setConfigValue('loadedFiles', []);
     }
 
+    /**
+     * @throws DateTimeError
+     * @throws DeleteError
+     */
     public function getLockName(Rule $rule): string
     {
-        return 'directory' . $rule->getId();
+        $lockName = 'directory' . $rule->getId();
+
+        try {
+            $lock = $this->lockRepository->getByName('archivistIndexer' . $lockName);
+            $this->processService->kill($lock->getPid());
+            $lock->delete();
+        } catch (SelectError $e) {
+            // do nothing
+        }
+
+        return $lockName;
     }
 }

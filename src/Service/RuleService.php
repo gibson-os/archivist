@@ -157,7 +157,11 @@ class RuleService extends AbstractService
                 ->save();
         }
 
-        $rule->setMessage('Fertig')->save();
+        $rule
+            ->setActive(false)
+            ->setMessage('Fertig')
+            ->save()
+        ;
         $strategyService->unload($strategy);
         $this->lockService->unlock($lockName);
     }

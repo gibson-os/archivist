@@ -176,7 +176,11 @@ class RuleController extends AbstractController
         $this->checkPermission(PermissionService::WRITE);
 
         $rule = $ruleRepository->getById($id)->setConfiguration(JsonUtility::encode($configuration));
-        $rule->save();
+        $rule
+            ->setActive(true)
+            ->setMessage('Starte')
+            ->save()
+        ;
         $commandService->executeAsync(IndexerCommand::class, ['ruleId' => $id]);
 
         return $this->returnSuccess($rule);
