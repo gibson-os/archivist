@@ -83,7 +83,7 @@ class DirectoryStrategy implements StrategyInterface
             }
 
             $fileSize = filesize($file);
-            sleep(self::WAIT_PER_LOOP_SECONDS);
+            sleep(1);
             $strategy->setConfigValue('waitTime', 0);
 
             if ($fileSize != filesize($file)) {
