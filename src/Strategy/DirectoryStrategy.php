@@ -172,7 +172,7 @@ class DirectoryStrategy implements StrategyInterface
         $lockName = 'directory' . JsonUtility::decode($rule->getConfiguration())['directory'];
         $this->lockService->stop(RuleService::RULE_LOCK_PREFIX . $lockName);
 
-        while ($this->lockService->isLocked()) {
+        while ($this->lockService->isLocked(RuleService::RULE_LOCK_PREFIX . $lockName)) {
             usleep(1000);
         }
 
