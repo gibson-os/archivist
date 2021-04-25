@@ -92,18 +92,19 @@ class RuleService extends AbstractService
         $strategy = (new Strategy($strategyService->getName(), $rule->getStrategy()))
             ->setConfig(JsonUtility::decode($rule->getConfiguration()))
         ;
-        $rule->setMessage('Starte Indexierung')->save();
+        $rule->setMessage('Ermittel Dateien')->save();
         $this->logger->info(sprintf('Get files with %s strategy', $strategyService->getName()));
 
         foreach ($strategyService->getFiles($strategy, $rule) as $file) {
-            $this->logger->info(sprintf('Indexing file "%s"', $file->getName()));
-            $rule->setMessage(sprintf('Indexiere "%s"', $file->getName()))->save();
             $matches = [];
             preg_match('/' . ($rule->getObservedFilename() ?? '.*') . '/', $file->getName(), $matches);
 
             if (empty($matches)) {
                 continue;
             }
+
+            $this->logger->info(sprintf('Indexing file "%s"', $file->getName()));
+            $rule->setMessage(sprintf('Indexiere "%s"', $file->getName()))->save();
 
             $context = [
                 'template' => $this->dirService->addEndSlash($rule->getMoveDirectory()) . $rule->getMoveFilename(),

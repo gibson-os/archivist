@@ -26,7 +26,7 @@ interface StrategyInterface
     /**
      * @return Generator<File>
      */
-    public function getFiles(Strategy $strategy, Rule $rule = null): Generator;
+    public function getFiles(Strategy $strategy, Rule $rule): Generator;
 
     public function setFileResource(File $file): File;
 

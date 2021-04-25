@@ -66,7 +66,12 @@ class DeutscheBankStrategy extends AbstractWebStrategy
         $this->browserService->waitForElementById($page, 'iframeContainer');
         $session->switchToIFrame('iframeContainer');
         $this->browserService->waitForElementById($page, 'layoutWrapper');
-        $page->find('named_partial', ['content', 'Alle Dokumente'])->click();
+        $allDocuments = $page->find('named_partial', ['content', 'Alle Dokumente']);
+
+        if ($allDocuments !== null) {
+            $allDocuments->click();
+        }
+
         $this->browserService->waitForElementById($page, 'layoutWrapper');
 
         foreach ($page->findAll('css', '.node-row-actions__action--download') as $downloadAction) {
@@ -76,9 +81,9 @@ class DeutscheBankStrategy extends AbstractWebStrategy
         return true;
     }
 
-    public function getFiles(Strategy $strategy, Rule $rule = null): Generator
+    public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
-        yield null;
+        yield new File('foo', 'bar', $this->dateTimeService->get(), $strategy);
     }
 
     /**

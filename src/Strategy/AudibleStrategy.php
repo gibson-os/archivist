@@ -29,9 +29,9 @@ class AudibleStrategy extends AbstractWebStrategy
         return true;
     }
 
-    public function getFiles(Strategy $strategy, Rule $rule = null): Generator
+    public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
-        // TODO: Implement getFiles() method.
+        yield new File('foo', 'bar', $this->dateTimeService->get(), $strategy);
     }
 
     public function setFileResource(File $file): File
@@ -40,6 +40,8 @@ class AudibleStrategy extends AbstractWebStrategy
         // ffprobe.exe file.aax
         // ffmpeg -activation_bytes 9736d71d -i file.aax -map 0:a -vn file.mp3
         // TODO: Implement setFileResource() method.
+
+        return $file;
     }
 
     public function unload(Strategy $strategy): void

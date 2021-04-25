@@ -53,14 +53,14 @@ class TessaCloudStrategy extends AbstractWebStrategy
         return true;
     }
 
-    public function getFiles(Strategy $strategy, Rule $rule = null): Generator
+    public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
 //        $response = $this->browserService->get(
 //            (new Request(self::URL . 'api/documents'))
 //                ->setCookieFile($strategy->getConfigValue('cookieFile'))
 //        );
 
-        yield null;
+        yield new File('foo', 'bar', $this->dateTimeService->get(), $strategy);
     }
 
     public function setFileResource(File $file): File

@@ -8,7 +8,7 @@ use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Model\Rule;
 
-class AllianzStrategy implements StrategyInterface
+class AllianzStrategy extends AbstractWebStrategy
 {
     public function getName(): string
     {
@@ -25,9 +25,9 @@ class AllianzStrategy implements StrategyInterface
         return true;
     }
 
-    public function getFiles(Strategy $strategy, Rule $rule = null): Generator
+    public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
-        yield null;
+        yield new File('foo', 'bar', $this->dateTimeService->get(), $strategy);
     }
 
     public function setFileResource(File $file): File

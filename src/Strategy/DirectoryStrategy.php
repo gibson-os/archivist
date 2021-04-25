@@ -72,21 +72,19 @@ class DirectoryStrategy implements StrategyInterface
      * @throws LockError
      * @throws JsonException
      */
-    public function getFiles(Strategy $strategy, Rule $rule = null): Generator
+    public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
         $viewedFiles = $strategy->hasConfigValue('viewedFiles') ? $strategy->getConfigValue('viewedFiles') : [];
         $directory = $strategy->getConfigValue('directory');
 
         foreach ($this->dirService->getFiles($directory) as $file) {
-            if ($rule !== null) {
-                $lockName =
-                    RuleService::RULE_LOCK_PREFIX . 'directory' .
-                    JsonUtility::decode($rule->getConfiguration())['directory']
-                ;
+            $lockName =
+                RuleService::RULE_LOCK_PREFIX . 'directory' .
+                JsonUtility::decode($rule->getConfiguration())['directory']
+            ;
 
-                if ($this->lockService->shouldStop($lockName)) {
-                    return null;
-                }
+            if ($this->lockService->shouldStop($lockName)) {
+                return null;
             }
 
             if (
@@ -97,6 +95,7 @@ class DirectoryStrategy implements StrategyInterface
             }
 
             $strategy->setConfigValue('waitTime', 0);
+            $rule->setMessage(sprintf('Prüfe ob Datei %s noch größer wird', $file))->save();
             $fileSize = filesize($file);
             sleep(1);
 
@@ -115,6 +114,7 @@ class DirectoryStrategy implements StrategyInterface
             );
         }
 
+        $rule->setMessage('Warte auf neue Dateien')->save();
         $waitTime =
             ($strategy->hasConfigValue('waitTime')
                 ? ((int) $strategy->getConfigValue('waitTime')) :
