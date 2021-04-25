@@ -86,7 +86,33 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
                                     url: baseDir + 'archivist/rule/execute',
                                     params: {
                                         id: responseData.id,
-                                        configuration: parameters.configuration
+                                        configuration: Ext.encode(responseData.config)
+                                    },
+                                    success(response) {
+                                        const messageBox = GibsonOS.MessageBox.show({
+                                            type: GibsonOS.MessageBox.type.INFO,
+                                            title: 'Status von ' + Ext.decode(response.responseText).data.name,
+                                            msg: 'Starte...'
+                                        });
+                                        const messageField = messageBox.down('displayfield');
+
+                                        const reloadFunction = () => {
+                                            if (messageBox.isHidden()) {
+                                                return;
+                                            }
+
+                                            GibsonOS.Ajax.request({
+                                                url: baseDir + 'archivist/rule/status',
+                                                params: {
+                                                    id: responseData.id
+                                                },
+                                                success(response) {
+                                                    messageField.setValue(Ext.decode(response.responseText).data.message + '...');
+                                                }
+                                            });
+                                            setTimeout(reloadFunction, 1000);
+                                        };
+                                        reloadFunction();
                                     }
                                 });
                             }

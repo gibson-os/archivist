@@ -59,7 +59,7 @@ class IndexerCommand extends AbstractCommand
             $this->ruleService->executeRule($rule);
             $this->lockService->unlock(self::LOCK_NAME . $rule->getStrategy());
         } catch (LockError $e) {
-            $rule->setMessage('Eine indexiere für diese Strategy läuft schon')->save();
+            $rule->setMessage('Eine Indexierung für diese Strategy läuft schon')->save();
         }
 
         return 0;

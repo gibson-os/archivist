@@ -58,6 +58,7 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
             formPanel.un('beforeAddFields', beforeAddFieldsFunctions);
 
             Ext.iterate(parameters, (name, parameter) => {
+                console.log('set value ' + configuration[name] + ' for ' + name);
                 parameter.value = configuration[name] ?? null;
             });
         };
