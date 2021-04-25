@@ -68,11 +68,16 @@ class DirectoryStrategy implements StrategyInterface
                 continue;
             }
 
+            $fileSize = filesize($file);
+            sleep(self::WAIT_PER_LOOP_SECONDS);
+            $strategy->setConfigValue('waitTime', 0);
+
+            if ($fileSize != filesize($file)) {
+                continue;
+            }
+
             $viewedFiles[] = $file;
-            $strategy
-                ->setConfigValue('waitTime', 0)
-                ->setConfigValue('viewedFiles', $viewedFiles)
-            ;
+            $strategy->setConfigValue('viewedFiles', $viewedFiles);
 
             yield new File(
                 $this->fileService->getFilename($file),
