@@ -32,6 +32,8 @@ use Twig\Extension\StringLoaderExtension;
 
 class RuleService extends AbstractService
 {
+    public const RULE_LOCK_PREFIX = 'archivistIndexer';
+
     private FileService $fileService;
 
     private DirService $dirService;
@@ -84,7 +86,7 @@ class RuleService extends AbstractService
         /** @var StrategyInterface $strategyService */
         $strategyService = $this->serviceManagerService->get($rule->getStrategy(), StrategyInterface::class);
 
-        $lockName = 'archivistIndexer' . $strategyService->getLockName($rule);
+        $lockName = self::RULE_LOCK_PREFIX . $strategyService->getLockName($rule);
         $this->lockService->lock($lockName);
 
         $strategy = (new Strategy($strategyService->getName(), $rule->getStrategy()))

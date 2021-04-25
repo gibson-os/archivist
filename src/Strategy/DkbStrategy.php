@@ -86,7 +86,7 @@ class DkbStrategy extends AbstractWebStrategy
     /**
      * @throws ElementNotFoundException
      */
-    public function getFiles(Strategy $strategy): Generator
+    public function getFiles(Strategy $strategy, Rule $rule = null): Generator
     {
         $session = $this->getSession($strategy);
         $page = $session->getPage();

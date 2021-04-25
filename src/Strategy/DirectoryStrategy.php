@@ -4,19 +4,21 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Strategy;
 
 use Generator;
-use GibsonOS\Core\Exception\DateTimeError;
-use GibsonOS\Core\Exception\Model\DeleteError;
-use GibsonOS\Core\Exception\Repository\SelectError;
-use GibsonOS\Core\Repository\LockRepository;
+use GibsonOS\Core\Exception\Flock\LockError;
+use GibsonOS\Core\Exception\GetError;
+use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Service\DateTimeService;
 use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
-use GibsonOS\Core\Service\ProcessService;
+use GibsonOS\Core\Service\LockService;
+use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Model\Rule;
+use GibsonOS\Module\Archivist\Service\RuleService;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 use GibsonOS\Module\Explorer\Service\TrashService;
+use JsonException;
 
 class DirectoryStrategy implements StrategyInterface
 {
@@ -32,24 +34,20 @@ class DirectoryStrategy implements StrategyInterface
 
     private TrashService $trashService;
 
-    private LockRepository $lockRepository;
-
-    private ProcessService $processService;
+    private LockService $lockService;
 
     public function __construct(
         DirService $dirService,
         FileService $fileService,
         DateTimeService $dateTimeService,
         TrashService $trashService,
-        LockRepository $lockRepository,
-        ProcessService $processService
+        LockService $lockService
     ) {
         $this->dirService = $dirService;
         $this->fileService = $fileService;
         $this->dateTimeService = $dateTimeService;
         $this->trashService = $trashService;
-        $this->lockRepository = $lockRepository;
-        $this->processService = $processService;
+        $this->lockService = $lockService;
     }
 
     public function getName(): string
@@ -69,12 +67,23 @@ class DirectoryStrategy implements StrategyInterface
         return true;
     }
 
-    public function getFiles(Strategy $strategy): Generator
+    /**
+     * @throws GetError
+     * @throws LockError
+     * @throws JsonException
+     */
+    public function getFiles(Strategy $strategy, Rule $rule = null): Generator
     {
         $viewedFiles = $strategy->hasConfigValue('viewedFiles') ? $strategy->getConfigValue('viewedFiles') : [];
         $directory = $strategy->getConfigValue('directory');
 
         foreach ($this->dirService->getFiles($directory) as $file) {
+            $lockName = RuleService::RULE_LOCK_PREFIX . 'directory' . JsonUtility::decode($rule->getConfiguration())['directory'];
+
+            if ($this->lockService->shouldStop($lockName)) {
+                return null;
+            }
+
             if (
                 is_dir($file) ||
                 in_array($file, $viewedFiles)
@@ -82,9 +91,9 @@ class DirectoryStrategy implements StrategyInterface
                 continue;
             }
 
+            $strategy->setConfigValue('waitTime', 0);
             $fileSize = filesize($file);
             sleep(1);
-            $strategy->setConfigValue('waitTime', 0);
 
             if ($fileSize != filesize($file)) {
                 continue;
@@ -150,20 +159,12 @@ class DirectoryStrategy implements StrategyInterface
     }
 
     /**
-     * @throws DateTimeError
-     * @throws DeleteError
+     * @throws SaveError
      */
     public function getLockName(Rule $rule): string
     {
-        $lockName = 'directory' . $rule->getId();
-
-        try {
-            $lock = $this->lockRepository->getByName('archivistIndexer' . $lockName);
-            $this->processService->kill($lock->getPid());
-            $lock->delete();
-        } catch (SelectError $e) {
-            // do nothing
-        }
+        $lockName = 'directory' . JsonUtility::decode($rule->getConfiguration())['directory'];
+        $this->lockService->stop(RuleService::RULE_LOCK_PREFIX . $lockName);
 
         return $lockName;
     }

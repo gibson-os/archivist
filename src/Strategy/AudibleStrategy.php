@@ -29,7 +29,7 @@ class AudibleStrategy extends AbstractWebStrategy
         return true;
     }
 
-    public function getFiles(Strategy $strategy): Generator
+    public function getFiles(Strategy $strategy, Rule $rule = null): Generator
     {
         // TODO: Implement getFiles() method.
     }

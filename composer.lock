@@ -130,7 +130,7 @@
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Core.git",
-                "reference": "d34440de0cbce0669cddf60b9fad0a9f4ff5d64e"
+                "reference": "e6a2633faab97e1557b079d4bc6475fbcfa2b580"
             },
             "require": {
                 "ext-curl": "*",
@@ -189,7 +189,7 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2021-04-25T08:30:07+00:00"
+            "time": "2021-04-25T15:09:26+00:00"
         },
         {
             "name": "gibson-os/explorer",

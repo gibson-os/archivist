@@ -25,7 +25,7 @@ class CommerzbankStrategy implements StrategyInterface
         return true;
     }
 
-    public function getFiles(Strategy $strategy): Generator
+    public function getFiles(Strategy $strategy, Rule $rule = null): Generator
     {
         yield null;
     }

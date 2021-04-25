@@ -53,7 +53,7 @@ class TessaCloudStrategy extends AbstractWebStrategy
         return true;
     }
 
-    public function getFiles(Strategy $strategy): Generator
+    public function getFiles(Strategy $strategy, Rule $rule = null): Generator
     {
 //        $response = $this->browserService->get(
 //            (new Request(self::URL . 'api/documents'))
