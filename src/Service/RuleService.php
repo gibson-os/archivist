@@ -136,7 +136,7 @@ class RuleService extends AbstractService
 
             $this->logger->info(sprintf('Load file %s', $file->getName()));
             $rule->setMessage(sprintf('Lade Datei %s', $file->getName()))->save();
-            $strategyService->setFileResource($file);
+            $strategyService->setFileResource($file, $rule);
             $resource = $file->getResource();
 
             if ($resource === null) {

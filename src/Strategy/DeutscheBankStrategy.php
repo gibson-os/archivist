@@ -90,7 +90,7 @@ class DeutscheBankStrategy extends AbstractWebStrategy
      * @throws StrategyException
      * @throws WebException
      */
-    public function setFileResource(File $file): File
+    public function setFileResource(File $file, Rule $rule): File
     {
         $responseBody = $this->webService->get(new Request($file->getPath()))->getBody();
         $resource = $responseBody->getResource();
