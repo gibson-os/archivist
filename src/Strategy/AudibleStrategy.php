@@ -73,7 +73,7 @@ class AudibleStrategy extends AbstractWebStrategy
         $this->browserService->waitForElementById($page, 'ap_email');
         $this->browserService->fillFormFields($page, ['email' => $parameters['email'], 'password' => $parameters['password']]);
         $page->pressButton('signInSubmit');
-        $this->browserService->waitForElementById($page, 'adbl-web-carousel-c1');
+        $this->browserService->waitForElementById($page, 'adbl-web-carousel-c1', 60000000);
         $page->clickLink('Bibliothek');
         $this->browserService->waitForElementById($page, 'lib-subheader-actions');
 
