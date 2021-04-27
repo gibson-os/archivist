@@ -119,14 +119,14 @@ class AudibleStrategy extends AbstractWebStrategy
         $page = $session->getPage();
 
         $pageParts = explode('class="adbl-library-content-row"', $page->getContent());
+        $expression =
+            'bc-size-headline3">([^<]*).+?(Serie.+?<a[^>]*>([^<]*)</a>(, Titel (\S*))?.+?)?summaryLabel.+?' .
+            $expression .
+            'bc-spacing-top-base'
+        ;
 
         foreach ($pageParts as $pagePart) {
             $matches = ['', '', '', '', '', '', ''];
-            $expression =
-                'bc-size-headline3">([^<]*).+?(Serie.+?<a[^>]*>([^<]*)</a>(, Titel (\S*))?.+?)?summaryLabel.+?' .
-                $expression .
-                'bc-spacing-top-base'
-            ;
 
             if (preg_match('#' . $expression . '#s', $pagePart, $matches) !== 1) {
                 continue;
