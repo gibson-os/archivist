@@ -94,9 +94,7 @@ class DkbStrategy extends AbstractWebStrategy
 
         try {
             while (true) {
-                foreach ($this->getFilesFromPage($strategy) as $file) {
-                    yield $file;
-                }
+                yield from $this->getFilesFromPage($strategy);
 
                 $page->clickLink('Nächste Seite');
             }

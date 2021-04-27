@@ -17,6 +17,7 @@ use GibsonOS\Core\Service\LockService;
 use GibsonOS\Core\Service\ServiceManagerService;
 use GibsonOS\Core\Service\TwigService;
 use GibsonOS\Core\Utility\JsonUtility;
+use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\RuleException;
 use GibsonOS\Module\Archivist\Model\Index;
@@ -96,6 +97,10 @@ class RuleService extends AbstractService
         $this->logger->info(sprintf('Get files with %s strategy', $strategyService->getName()));
 
         foreach ($strategyService->getFiles($strategy, $rule) as $file) {
+            if (!$file instanceof File) {
+                continue;
+            }
+
             $matches = [];
             preg_match('/' . ($rule->getObservedFilename() ?? '.*') . '/', $file->getName(), $matches);
 

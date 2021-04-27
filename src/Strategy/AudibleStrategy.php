@@ -11,6 +11,12 @@ use GibsonOS\Core\Dto\Ffmpeg\Stream\Audio;
 use GibsonOS\Core\Dto\Parameter\OptionParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Dto\Web\Request;
+use GibsonOS\Core\Exception\DateTimeError;
+use GibsonOS\Core\Exception\DeleteError;
+use GibsonOS\Core\Exception\FfmpegException;
+use GibsonOS\Core\Exception\FileNotFound;
+use GibsonOS\Core\Exception\GetError;
+use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\WebException;
 use GibsonOS\Core\Service\CryptService;
 use GibsonOS\Core\Service\DateTimeService;
@@ -86,9 +92,6 @@ class AudibleStrategy extends AbstractWebStrategy
         return true;
     }
 
-    /**
-     * @return iterable<File>
-     */
     public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
         $session = $this->getSession($strategy);
@@ -96,26 +99,22 @@ class AudibleStrategy extends AbstractWebStrategy
 
         try {
             while (true) {
-                foreach ($this->getFilesFromPage($strategy) as $file) {
-                    yield $file;
-                }
+                yield from $this->getFilesFromPage($strategy, $rule);
 
                 $page->clickLink('Eine Seite vorwärts');
+                $this->browserService->waitForElementById($page, 'lib-subheader-actions');
             }
         } catch (ElementNotFoundException $exception) {
             // do nothing
         }
     }
 
-    /**
-     * @return Generator<File>
-     */
-    private function getFilesFromPage(Strategy $strategy): Generator
+    private function getFilesFromPage(Strategy $strategy, Rule $rule): Generator
     {
         $expression = 'adbl-lib-action-download[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
 
         if ($strategy->getConfigValue('elements') === 'podcast') {
-            $expression = 'adbl-episodes-link[^<]*<a[^<]*href="([^"]*)"[^<]*chevron-container.+?</a>.+?';
+            $expression = 'adbl-episodes-link[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*chevron-container.+?</a>.+?';
         }
 
         $session = $this->getSession($strategy);
@@ -127,6 +126,7 @@ class AudibleStrategy extends AbstractWebStrategy
             $expression .
             'bc-spacing-top-base'
         ;
+        echo $strategy->getConfigValue('elements') . PHP_EOL;
 
         foreach ($pageParts as $pagePart) {
             $matches = ['', '', '', '', '', '', ''];
@@ -140,26 +140,57 @@ class AudibleStrategy extends AbstractWebStrategy
                 'series' => $matches[3],
                 'episode' => $matches[5],
             ];
+            echo $strategy->getConfigValue('elements') . PHP_EOL;
+            if ($strategy->getConfigValue('elements') === 'podcast') {
+                $currentUrl = $session->getCurrentUrl();
+                $session->visit($matches[6]);
+                $this->browserService->waitForElementById($page, 'lib-subheader-actions');
+                echo 'jojo' . PHP_EOL;
+                foreach ($this->getFiles($strategy, $rule) as $file) {
+                    if (!$file instanceof File) {
+                        continue;
+                    }
+
+                    $titleParts['title'] = $file->getName();
+                    $titleParts['series'] = $titleParts['title'];
+                    echo 'jojo' . PHP_EOL;
+                    yield new File($this->cleanTitle($titleParts), $file->getPath(), $file->getCreateDate(), $strategy);
+                }
+
+                $session->visit($currentUrl);
+                $this->browserService->waitForElementById($page, 'lib-subheader-actions');
+
+                continue;
+            }
 
             if (empty($titleParts['series'])) {
                 $this->findSeriesAndEpisode($titleParts);
             }
 
             if (
-                empty($titleParts['series']) &&
-                $strategy->getConfigValue('elements') === 'series'
+                (empty($titleParts['series']) && $strategy->getConfigValue('elements') === 'series') ||
+                (empty($titleParts['series']) && $strategy->getConfigValue('elements') === 'podcast') ||
+                (!empty($titleParts['series']) && $strategy->getConfigValue('elements') === 'single')
             ) {
                 continue;
             }
 
             yield new File($this->cleanTitle($titleParts), $matches[6], $this->dateTimeService->get(), $strategy);
         }
+
+        yield null;
     }
 
     /**
-     * @throws StrategyException
      * @throws DriverException
+     * @throws StrategyException
      * @throws WebException
+     * @throws DateTimeError
+     * @throws DeleteError
+     * @throws FfmpegException
+     * @throws FileNotFound
+     * @throws GetError
+     * @throws SaveError
      */
     public function setFileResource(File $file, Rule $rule): File
     {
@@ -211,13 +242,10 @@ class AudibleStrategy extends AbstractWebStrategy
         );
         $mp3File = fopen($tmpFileNameMp3, 'r');
         $file->setResource($mp3File, filesize($tmpFileNameMp3));
-//        unlink($tmpFileNameMp3);
-//        unlink($tmpFileName);
+        unlink($tmpFileNameMp3);
+        unlink($tmpFileName);
 
         return $file;
-        // https://www.voss.earth/2018/08/01/audible-dateien-$rcrackProccess
-        // ffprobe.exe file.aax
-        // ffmpeg -activation_bytes 9736d71d -i file.aax -map 0:a -vn file.mp3
     }
 
     public function unload(Strategy $strategy): void
@@ -243,7 +271,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
         $matches = ['', '', ''];
 
-        if (preg_match('/(.+?)([\d|\W]*)$/', $splitTitle[1], $matches) !== 1) {
+        if (preg_match('/(.+?)([\d|\W]+)$/', $splitTitle[1], $matches) !== 1) {
             return;
         }
 

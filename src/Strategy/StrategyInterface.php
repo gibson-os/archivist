@@ -24,7 +24,7 @@ interface StrategyInterface
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool;
 
     /**
-     * @return iterable<File>
+     * @return Generator<File>
      */
     public function getFiles(Strategy $strategy, Rule $rule): Generator;
 
