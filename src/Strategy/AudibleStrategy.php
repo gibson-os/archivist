@@ -86,6 +86,9 @@ class AudibleStrategy extends AbstractWebStrategy
         return true;
     }
 
+    /**
+     * @return iterable<File>
+     */
     public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
         $session = $this->getSession($strategy);
@@ -107,7 +110,7 @@ class AudibleStrategy extends AbstractWebStrategy
     /**
      * @return Generator<File>
      */
-    public function getFilesFromPage(Strategy $strategy): Generator
+    private function getFilesFromPage(Strategy $strategy): Generator
     {
         $expression = 'adbl-lib-action-download[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
 

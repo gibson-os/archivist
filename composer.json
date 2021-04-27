@@ -35,7 +35,7 @@
   "autoload": {
     "psr-4": {
       "GibsonOS\\Module\\Archivist\\": "src/",
-      "Gibson\\Test\\Unit\\": "tests/unit/"
+      "GibsonOS\\Module\\Archivist\\Test\\Unit\\": "tests/unit/"
     }
   },
   "scripts": {
