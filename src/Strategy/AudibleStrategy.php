@@ -232,7 +232,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
     private function findSeriesAndEpisode(array &$titleParts): void
     {
-        $splitTitle = explode(':', $titleParts['title']);
+        $splitTitle = explode(':', str_ireplace(['staffel'], '', $titleParts['title']));
 
         if (count($splitTitle) !== 2) {
             return;
@@ -250,7 +250,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
     private function cleanTitle(array $titleParts): string
     {
-        $cleanTitle = str_ireplace(['staffel'], '', $titleParts['title']);
+        $cleanTitle = $titleParts['title'];
         $cleanTitleParts = explode(':', $cleanTitle);
 
         if (
