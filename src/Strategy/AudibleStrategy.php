@@ -122,14 +122,13 @@ class AudibleStrategy extends AbstractWebStrategy
 
         foreach ($pageParts as $pagePart) {
             $matches = ['', '', '', '', '', '', ''];
-            preg_match(
-                '#bc-size-headline3">([^<]*).+?(Serie.+?<a[^>]*>([^<]*)</a>(, Titel (\S*))?.+?)?summaryLabel.+?' .
+            $expression =
+                'bc-size-headline3">([^<]*).+?(Serie.+?<a[^>]*>([^<]*)</a>(, Titel (\S*))?.+?)?summaryLabel.+?' .
                 $expression .
-                'bc-spacing-top-base#s',
-                $pagePart,
-                $matches
-            );
-            if (empty($matches)) {
+                'bc-spacing-top-base'
+            ;
+
+            if (preg_match('#' . $expression . '#s', $pagePart, $matches) !== 1) {
                 continue;
             }
 
@@ -240,7 +239,11 @@ class AudibleStrategy extends AbstractWebStrategy
         }
 
         $matches = ['', '', ''];
-        preg_match('/(.+?)([\d|\W]*)$/', $splitTitle[1], $matches);
+
+        if (preg_match('/(.+?)([\d|\W]*)$/', $splitTitle[1], $matches) !== 1) {
+            return;
+        }
+
         $titleParts['series'] = trim($matches[1]);
         $titleParts['episode'] = trim($matches[2]);
     }
