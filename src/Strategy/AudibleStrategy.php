@@ -150,7 +150,7 @@ class AudibleStrategy extends AbstractWebStrategy
                 continue;
             }
 
-            yield new File($this->cleanTitle($titleParts), self::URL . $matches[6], $this->dateTimeService->get(), $strategy);
+            yield new File($this->cleanTitle($titleParts), $matches[6], $this->dateTimeService->get(), $strategy);
         }
     }
 
