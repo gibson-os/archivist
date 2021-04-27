@@ -255,8 +255,8 @@ class AudibleStrategy extends AbstractWebStrategy
 
         if (
             count($cleanTitleParts) === 2 &&
-            strtolower($cleanTitleParts[0]) === strtolower($titleParts['series']) &&
-            mb_strpos($cleanTitleParts[1], $titleParts['series']) === false
+            mb_stripos($cleanTitleParts[0], $titleParts['series']) === 0 &&
+            mb_stripos($cleanTitleParts[1], $titleParts['series']) === false
         ) {
             $cleanTitle = $cleanTitleParts[1] . ':' . $cleanTitleParts[0];
         }
