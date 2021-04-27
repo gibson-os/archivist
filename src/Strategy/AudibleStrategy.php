@@ -97,7 +97,7 @@ class AudibleStrategy extends AbstractWebStrategy
                     yield $file;
                 }
 
-                $page->clickLink('Eine Seite vorwÃ¤rts');
+                $page->clickLink('Eine Seite vorwärts');
             }
         } catch (ElementNotFoundException $exception) {
             // do nothing
