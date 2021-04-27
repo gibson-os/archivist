@@ -12,9 +12,7 @@ use GibsonOS\Module\Archivist\Model\Rule;
 
 class AudibleStrategy extends AbstractWebStrategy
 {
-    private const URL = 'http://localhost/img/page/audible/';
-
-//    private const URL = 'https://audible.de';
+    private const URL = 'https://audible.de/';
 
     public function getName(): string
     {
@@ -58,10 +56,10 @@ class AudibleStrategy extends AbstractWebStrategy
 
     public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
-        $expression = 'adbl-lib-action-download[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?<\/a>.+?';
+        $expression = 'adbl-lib-action-download[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
 
         if ($strategy->getConfigValue('elements') === 'podcast') {
-            $expression = 'adbl-episodes-link[^<]*<a[^<]*href="([^"]*)"[^<]*chevron-container.+?<\/a>.+?';
+            $expression = 'adbl-episodes-link[^<]*<a[^<]*href="([^"]*)"[^<]*chevron-container.+?</a>.+?';
         }
 
         $session = $this->getSession($strategy);
@@ -73,9 +71,9 @@ class AudibleStrategy extends AbstractWebStrategy
         foreach ($pageParts as $pagePart) {
             $matches = ['', '', '', '', '', '', ''];
             preg_match(
-                '/bc-size-headline3">([^<]*).+?(Serie.+?<a[^>]*>([^<]*)<\/a>(, Titel (\S*))?.+?)?summaryLabel.+?' .
+                '#bc-size-headline3">([^<]*).+?(Serie.+?<a[^>]*>([^<]*)</a>(, Titel (\S*))?.+?)?summaryLabel.+?' .
                 $expression .
-                'bc-spacing-top-base/s',
+                'bc-spacing-top-base#s',
                 $pagePart,
                 $matches
             );
