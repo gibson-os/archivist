@@ -63,7 +63,7 @@ class TessaCloudStrategy extends AbstractWebStrategy
         yield new File('foo', 'bar', $this->dateTimeService->get(), $strategy);
     }
 
-    public function setFileResource(File $file): File
+    public function setFileResource(File $file, Rule $rule): File
     {
         return $file;
     }

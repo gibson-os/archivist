@@ -134,7 +134,7 @@ class DirectoryStrategy implements StrategyInterface
         }
     }
 
-    public function setFileResource(File $file): File
+    public function setFileResource(File $file, Rule $rule): File
     {
         $fileName = $this->dirService->addEndSlash($file->getPath()) . $file->getName();
         $file->setResource(fopen($fileName, 'r'), filesize($fileName));

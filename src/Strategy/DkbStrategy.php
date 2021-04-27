@@ -139,7 +139,7 @@ class DkbStrategy extends AbstractWebStrategy
      * @throws WebException
      * @throws DriverException
      */
-    public function setFileResource(File $file): File
+    public function setFileResource(File $file, Rule $rule): File
     {
         $strategy = $file->getStrategy();
 
