@@ -279,10 +279,9 @@ class AudibleStrategy extends AbstractWebStrategy
             '..' . DIRECTORY_SEPARATOR .
             '..' . DIRECTORY_SEPARATOR .
             'bin' . DIRECTORY_SEPARATOR .
-            'inAudible-NG-tables' . DIRECTORY_SEPARATOR .
-            'rcrack'
+            'inAudible-NG-tables' . DIRECTORY_SEPARATOR
         );
-        $rcrackProccess = $this->processService->open(sprintf('%s . -h %s', $rcrack, $checksum), 'r');
+        $rcrackProccess = $this->processService->open(sprintf('cd %s && ./rcrack . -h %s', $rcrack, $checksum), 'r');
 
         while ($out = fgets($rcrackProccess)) {
             $matches = ['', ''];
