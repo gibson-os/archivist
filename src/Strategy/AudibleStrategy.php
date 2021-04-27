@@ -172,7 +172,7 @@ class AudibleStrategy extends AbstractWebStrategy
         }
 
         $response = $this->webService->get(
-            (new Request($file->getPath()))
+            (new Request(html_entity_decode($file->getPath())))
                 ->setCookieFile($this->browserService->createCookieFile($this->getSession($strategy)))
         );
 
