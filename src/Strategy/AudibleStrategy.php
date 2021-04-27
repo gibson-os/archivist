@@ -247,7 +247,18 @@ class AudibleStrategy extends AbstractWebStrategy
 
     private function cleanTitle(array $titleParts): string
     {
-        $cleanTitle = str_ireplace([$titleParts['series'], $titleParts['episode']], '', $titleParts['title']);
+        $cleanTitle = $titleParts['title'];
+        $cleanTitleParts = explode(':', $cleanTitle);
+
+        if (
+            count($cleanTitleParts) === 2 &&
+            mb_strpos($cleanTitleParts[0], $titleParts['series']) !== false &&
+            mb_strpos($cleanTitleParts[1], $titleParts['series']) === false
+        ) {
+            $cleanTitle = $cleanTitleParts[1] . ':' . $cleanTitleParts[0];
+        }
+
+        $cleanTitle = str_ireplace([$titleParts['series'], $titleParts['episode']], '', $cleanTitle);
 
         if (!empty($titleParts['series'])) {
             $cleanTitle = preg_replace('/:.*/s', '', $cleanTitle);
