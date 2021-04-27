@@ -247,7 +247,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
     private function cleanTitle(array $titleParts): string
     {
-        $cleanTitle = $titleParts['title'];
+        $cleanTitle = str_ireplace(['staffel'], '', $titleParts['title']);
         $cleanTitleParts = explode(':', $cleanTitle);
 
         if (
