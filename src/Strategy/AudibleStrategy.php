@@ -275,6 +275,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
         $cleanTitle = preg_replace('/^[\W|_]*/', '', $cleanTitle);
         $cleanTitle = preg_replace('/[\W|_]*$/', '', $cleanTitle);
+        $cleanTitle = preg_replace('/\s\.\s/', ' ', $cleanTitle);
 
         if (!empty($titleParts['episode'])) {
             $cleanTitle = $titleParts['episode'] . ' ' . $cleanTitle;
