@@ -101,7 +101,16 @@ class AudibleStrategy extends AbstractWebStrategy
             while (true) {
                 yield from $this->getFilesFromPage($strategy, $rule);
 
-                $page->clickLink('Eine Seite vorwärts');
+                $link = $page->findLink('Eine Seite vorwärts');
+
+                if (
+                    $link === null ||
+                    $link->getParent()->hasClass('bc-button-disabled')
+                ) {
+                    return;
+                }
+
+                $link->click();
                 $this->browserService->waitForElementById($page, 'lib-subheader-actions');
             }
         } catch (ElementNotFoundException $exception) {
@@ -271,7 +280,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
         $matches = ['', '', ''];
 
-        if (preg_match('/(.+?)([\d|\W]+)$/', $splitTitle[1], $matches) !== 1) {
+        if (preg_match('/(.+?)([\d|\W]+\d)$/', $splitTitle[1], $matches) !== 1) {
             return;
         }
 
@@ -305,8 +314,8 @@ class AudibleStrategy extends AbstractWebStrategy
             $cleanTitle = $titleParts['series'];
         }
 
-        $cleanTitle = preg_replace('/^[\W|_]*/', '', $cleanTitle);
-        $cleanTitle = preg_replace('/[\W|_]*$/', '', $cleanTitle);
+        $cleanTitle = preg_replace('/^[-:._]*/', '', $cleanTitle);
+        $cleanTitle = preg_replace('/[-:._]*$/', '', $cleanTitle);
         $cleanTitle = preg_replace('/\s\.\s/', ' ', $cleanTitle);
 
         if (!empty($titleParts['episode'])) {
