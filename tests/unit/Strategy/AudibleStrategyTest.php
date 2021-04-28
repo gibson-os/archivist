@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Test\Unit\Strategy;
 
 use Behat\Mink\Element\DocumentElement;
+use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
 use Codeception\Test\Unit;
 use GibsonOS\Core\Service\CryptService;
@@ -17,6 +18,7 @@ use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Service\BrowserService;
 use GibsonOS\Module\Archivist\Strategy\AudibleStrategy;
 use mysqlDatabase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
@@ -79,16 +81,26 @@ class AudibleStrategyTest extends Unit
         $session = $this->prophesize(Session::class);
         /** @var ObjectProphecy|DocumentElement $page */
         $page = $this->prophesize(DocumentElement::class);
-        $page->getContent()
-            ->shouldBeCalledTimes(3)
-            ->willReturn($content)
-        ;
+
+        if ($subContent === null) {
+            $page->getContent()->willReturn($content);
+        } else {
+            $page->getContent()->willReturn($content, $subContent, $content, $content);
+            $this->browserService->waitForElementById($page->reveal(), 'lib-subheader-actions')
+                ->shouldBeCalledOnce()
+                ->willReturn($this->prophesize(NodeElement::class)->reveal())
+            ;
+            $session->getCurrentUrl()->shouldBeCalledOnce();
+            $session->visit(Argument::any())->shouldBeCalledOnce();
+        }
+
+        $page->getContent()->shouldBeCalledTimes($subContent === null ? 3 : 4);
         $session->getPage()
-            ->shouldBeCalledTimes(6)
+            ->shouldBeCalledTimes($subContent === null ? 6 : 8)
             ->willReturn($page)
         ;
         $this->browserService->getSession()
-            ->shouldBeCalledTimes(6)
+            ->shouldBeCalledTimes($subContent === null ? 6 : 8)
             ->willReturn($session)
         ;
 

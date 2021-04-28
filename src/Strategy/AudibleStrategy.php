@@ -92,14 +92,14 @@ class AudibleStrategy extends AbstractWebStrategy
         return true;
     }
 
-    public function getFiles(Strategy $strategy, Rule $rule): Generator
+    public function getFiles(Strategy $strategy, Rule $rule, string $type = null): Generator
     {
         $session = $this->getSession($strategy);
         $page = $session->getPage();
 
         try {
             while (true) {
-                yield from $this->getFilesFromPage($strategy, $rule);
+                yield from $this->getFilesFromPage($strategy, $rule, $type ?? $strategy->getConfigValue('elements'));
 
                 $link = $page->findLink('Eine Seite vorwärts');
 
@@ -118,24 +118,28 @@ class AudibleStrategy extends AbstractWebStrategy
         }
     }
 
-    private function getFilesFromPage(Strategy $strategy, Rule $rule): Generator
+    private function getFilesFromPage(Strategy $strategy, Rule $rule, string $type): Generator
     {
         $expression = 'adbl-lib-action-download[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
 
-        if ($strategy->getConfigValue('elements') === 'podcast') {
-            $expression = 'adbl-episodes-link[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*chevron-container.+?</a>.+?';
+        if ($type === null) {
+            $type = $strategy->getConfigValue('elements');
+        }
+
+        if ($type === 'podcast') {
+            $expression = 'adbl-episodes-link[^<]*<[^<]*<[^<]*<[^<]*<[^<]*<[^<]*href="([^"]*)"[^<]*<[^<]*chevron-container.+?</a>.+?';
         }
 
         $session = $this->getSession($strategy);
         $page = $session->getPage();
 
         $pageParts = explode('class="adbl-library-content-row"', $page->getContent());
+
         $expression =
             'bc-size-headline3">([^<]*).+?(Serie.+?<a[^>]*>([^<]*)</a>(, Titel (\S*))?.+?)?summaryLabel.+?' .
             $expression .
             'bc-spacing-top-base'
         ;
-        echo $strategy->getConfigValue('elements') . PHP_EOL;
 
         foreach ($pageParts as $pagePart) {
             $matches = ['', '', '', '', '', '', ''];
@@ -149,20 +153,20 @@ class AudibleStrategy extends AbstractWebStrategy
                 'series' => $matches[3],
                 'episode' => $matches[5],
             ];
-            echo $strategy->getConfigValue('elements') . PHP_EOL;
-            if ($strategy->getConfigValue('elements') === 'podcast') {
+
+            if ($type === 'podcast') {
                 $currentUrl = $session->getCurrentUrl();
                 $session->visit($matches[6]);
                 $this->browserService->waitForElementById($page, 'lib-subheader-actions');
-                echo 'jojo' . PHP_EOL;
-                foreach ($this->getFiles($strategy, $rule) as $file) {
+
+                foreach ($this->getFiles($strategy, $rule, 'single') as $file) {
                     if (!$file instanceof File) {
                         continue;
                     }
 
-                    $titleParts['title'] = $file->getName();
                     $titleParts['series'] = $titleParts['title'];
-                    echo 'jojo' . PHP_EOL;
+                    $titleParts['title'] = $file->getName();
+
                     yield new File($this->cleanTitle($titleParts), $file->getPath(), $file->getCreateDate(), $strategy);
                 }
 
@@ -177,9 +181,9 @@ class AudibleStrategy extends AbstractWebStrategy
             }
 
             if (
-                (empty($titleParts['series']) && $strategy->getConfigValue('elements') === 'series') ||
-                (empty($titleParts['series']) && $strategy->getConfigValue('elements') === 'podcast') ||
-                (!empty($titleParts['series']) && $strategy->getConfigValue('elements') === 'single')
+                (empty($titleParts['series']) && $type === 'series') ||
+                (empty($titleParts['series']) && $type === 'podcast') ||
+                (!empty($titleParts['series']) && $type === 'single')
             ) {
                 continue;
             }
