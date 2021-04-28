@@ -2644,8 +2644,8 @@ bc-trigger-tooltip">
 </div>',
                 null,
             ],
-            'Der Zombie Survival Guide: Überleben unter Untoten' => [
-                'Der Zombie Survival Guide: Überleben unter Untoten',
+            'Der Zombie Survival Guide - Überleben unter Untoten' => [
+                'Der Zombie Survival Guide - Überleben unter Untoten',
                 'single',
                 '<div id="adbl-library-content-row-B005LNBKRS" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
@@ -3067,8 +3067,8 @@ bc-trigger-popover">
 </div>',
                 null,
             ],
-            'ALIEN - In den Schatten: Die 1. Staffel (Kostenlose Hörprobe)' => [
-                'ALIEN - In den Schatten: Die 1. Staffel (Kostenlose Hörprobe)',
+            'ALIEN - In den Schatten - Die 1. Staffel (Kostenlose Hörprobe)' => [
+                'ALIEN - In den Schatten - Die 1. Staffel (Kostenlose Hörprobe)',
                 'single',
                 '<div id="adbl-library-content-row-B07RDQSFD8" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
