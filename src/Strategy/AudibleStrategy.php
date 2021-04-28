@@ -295,11 +295,11 @@ class AudibleStrategy extends AbstractWebStrategy
 
         $matches = ['', '', ''];
 
-        if (preg_match('/(.+?)([\d|\W]+\d)$/', $splitTitle[1], $matches) !== 1) {
+        if (preg_match('/(.*)([\d\W]*\d)$/', $splitTitle[1], $matches) !== 1) {
             return;
         }
 
-        $titleParts['series'] = trim($matches[1]);
+        $titleParts['series'] = trim($matches[1]) ?: trim($splitTitle[0]);
         $titleParts['episode'] = trim($matches[2]);
     }
 
