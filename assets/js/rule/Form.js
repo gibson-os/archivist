@@ -41,6 +41,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
         me.down('#coreEventElementParameterSaveButton').on('click', () => {
             let parameters = {};
 
+            me.setLoading(true);
             me.items.each(field => {
                 if (field.getName() === 'strategy') {
                     return true;
@@ -63,6 +64,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
 
             GibsonOS.Ajax.request({
                 url: baseDir + 'archivist/rule/' + (save ? 'save' : 'edit'),
+                timeout: 120000,
                 params: parameters,
                 success(response) {
                     responseData = Ext.decode(response.responseText).data;
