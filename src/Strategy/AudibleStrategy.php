@@ -17,6 +17,7 @@ use GibsonOS\Core\Exception\FfmpegException;
 use GibsonOS\Core\Exception\FileNotFound;
 use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\Model\SaveError;
+use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Exception\WebException;
 use GibsonOS\Core\Service\CryptService;
 use GibsonOS\Core\Service\DateTimeService;
@@ -25,6 +26,7 @@ use GibsonOS\Core\Service\ProcessService;
 use GibsonOS\Core\Service\WebService;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
+use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Service\BrowserService;
@@ -70,6 +72,10 @@ class AudibleStrategy extends AbstractWebStrategy
         ];
     }
 
+    /**
+     * @throws ElementNotFoundException
+     * @throws BrowserException
+     */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
         $session = $this->browserService->getSession();
@@ -92,6 +98,9 @@ class AudibleStrategy extends AbstractWebStrategy
         return true;
     }
 
+    /**
+     * @throws BrowserException
+     */
     public function getFiles(Strategy $strategy, Rule $rule, string $type = null): Generator
     {
         $session = $this->getSession($strategy);
@@ -118,13 +127,12 @@ class AudibleStrategy extends AbstractWebStrategy
         }
     }
 
+    /**
+     * @throws BrowserException
+     */
     private function getFilesFromPage(Strategy $strategy, Rule $rule, string $type): Generator
     {
         $expression = 'adbl-lib-action-download[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
-
-        if ($type === null) {
-            $type = $strategy->getConfigValue('elements');
-        }
 
         if ($type === 'podcast') {
             $expression = 'adbl-episodes-link[^<]*<[^<]*<[^<]*<[^<]*<[^<]*<[^<]*href="([^"]*)"[^<]*<[^<]*chevron-container.+?</a>.+?';
@@ -156,7 +164,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
             if ($type === 'podcast') {
                 $currentUrl = $session->getCurrentUrl();
-                $session->visit($matches[6]);
+                $session->visit(self::URL . $matches[6]);
                 $this->browserService->waitForElementById($page, 'lib-subheader-actions');
 
                 foreach ($this->getFiles($strategy, $rule, 'single') as $file) {
@@ -182,7 +190,6 @@ class AudibleStrategy extends AbstractWebStrategy
 
             if (
                 (empty($titleParts['series']) && $type === 'series') ||
-                (empty($titleParts['series']) && $type === 'podcast') ||
                 (!empty($titleParts['series']) && $type === 'single')
             ) {
                 continue;
@@ -195,14 +202,15 @@ class AudibleStrategy extends AbstractWebStrategy
     }
 
     /**
-     * @throws DriverException
-     * @throws StrategyException
-     * @throws WebException
      * @throws DateTimeError
      * @throws DeleteError
+     * @throws DriverException
      * @throws FfmpegException
      * @throws FileNotFound
      * @throws GetError
+     * @throws ProcessError
+     * @throws StrategyException
+     * @throws WebException
      * @throws SaveError
      */
     public function setFileResource(File $file, Rule $rule): File
@@ -261,6 +269,9 @@ class AudibleStrategy extends AbstractWebStrategy
         return $file;
     }
 
+    /**
+     * @throws ElementNotFoundException
+     */
     public function unload(Strategy $strategy): void
     {
         $session = $this->getSession($strategy);
@@ -332,6 +343,10 @@ class AudibleStrategy extends AbstractWebStrategy
         ;
     }
 
+    /**
+     * @throws StrategyException
+     * @throws ProcessError
+     */
     private function getActivationBytes(string $checksum): string
     {
         $rcrack = realpath(
