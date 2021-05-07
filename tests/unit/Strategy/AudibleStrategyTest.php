@@ -17,7 +17,6 @@ use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Service\BrowserService;
 use GibsonOS\Module\Archivist\Strategy\AudibleStrategy;
-use mysqlDatabase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -75,12 +74,12 @@ class AudibleStrategyTest extends Unit
      */
     public function testGetFiles(string $name, string $elements, string $content, ?string $subContent): void
     {
-        /** @var ObjectProphecy|mysqlDatabase $session */
-        $mysqlDatabase = $this->prophesize(mysqlDatabase::class);
         /** @var ObjectProphecy|Session $session */
         $session = $this->prophesize(Session::class);
         /** @var ObjectProphecy|DocumentElement $page */
         $page = $this->prophesize(DocumentElement::class);
+        /** @var ObjectProphecy|Rule $rule */
+        $rule = $this->prophesize(Rule::class);
 
         if ($subContent === null) {
             $page->getContent()->willReturn($content);
@@ -92,6 +91,13 @@ class AudibleStrategyTest extends Unit
             ;
             $session->getCurrentUrl()->shouldBeCalledOnce();
             $session->visit(Argument::any())->shouldBeCalledOnce();
+            $rule->setMessage(Argument::any())
+                ->shouldBeCalledOnce()
+                ->willReturn($rule->reveal())
+            ;
+            $rule->save()
+                ->shouldBeCalledOnce()
+            ;
         }
 
         $page->getContent()->shouldBeCalledTimes($subContent === null ? 3 : 4);
@@ -113,13 +119,13 @@ class AudibleStrategyTest extends Unit
 
         $this->assertSame($name, $this->audibleStrategy->getFiles(
             (new Strategy('Audible', AudibleStrategy::class))->setConfigValue('elements', $elements),
-            new Rule($mysqlDatabase->reveal())
+            $rule->reveal()
         )->current()->getName());
 
         foreach ($possibleElements as $possibleElement) {
             $this->assertNull($this->audibleStrategy->getFiles(
                 (new Strategy('Audible', AudibleStrategy::class))->setConfigValue('elements', $possibleElement),
-                new Rule($mysqlDatabase->reveal())
+                $rule->reveal()
             )->current(), 'Matched for: ' . $possibleElement);
         }
     }
