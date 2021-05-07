@@ -165,7 +165,8 @@ class AudibleStrategy extends AbstractWebStrategy
             ];
 
             if ($type === 'podcast') {
-                $this->logger->info(sprintf('Open podcast page %s', $matches[6]));
+                $rule->setMessage(sprintf('Überprüfe %s', $matches[1]))->save();
+                $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[6]));
                 $currentUrl = $session->getCurrentUrl();
                 $session->visit(self::URL . $matches[6]);
                 $this->browserService->waitForElementById($page, 'lib-subheader-actions');
@@ -198,7 +199,10 @@ class AudibleStrategy extends AbstractWebStrategy
                 continue;
             }
 
-            yield new File($this->cleanTitle($titleParts), $matches[6], $this->dateTimeService->get(), $strategy);
+            $title = $this->cleanTitle($titleParts);
+            $this->logger->info(sprintf('Find %s', $title));
+
+            yield new File($title, $matches[6], $this->dateTimeService->get(), $strategy);
         }
 
         yield null;
