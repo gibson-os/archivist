@@ -84,7 +84,7 @@ class AudibleStrategy extends AbstractWebStrategy
         $this->browserService->waitForElementById($page, 'ap_email');
         $this->browserService->fillFormFields($page, ['email' => $parameters['email'], 'password' => $parameters['password']]);
         $page->pressButton('signInSubmit');
-        $this->browserService->waitForElementById($page, 'adbl_carousel_prev_slide', 60000000);
+        $this->browserService->waitForLink($page, 'Bibliothek', 60000000);
         $page->clickLink('Bibliothek');
         $this->browserService->waitForElementById($page, 'lib-subheader-actions');
 
@@ -119,6 +119,7 @@ class AudibleStrategy extends AbstractWebStrategy
                     return;
                 }
 
+                $this->logger->info('Open next page');
                 $link->click();
                 $this->browserService->waitForElementById($page, 'lib-subheader-actions');
             }
@@ -150,6 +151,7 @@ class AudibleStrategy extends AbstractWebStrategy
         ;
 
         foreach ($pageParts as $pagePart) {
+            $this->logger->debug(sprintf('Search #%s# in %s', $expression, $pagePart));
             $matches = ['', '', '', '', '', '', ''];
 
             if (preg_match('#' . $expression . '#s', $pagePart, $matches) !== 1) {
@@ -163,6 +165,7 @@ class AudibleStrategy extends AbstractWebStrategy
             ];
 
             if ($type === 'podcast') {
+                $this->logger->info(sprintf('Open podcast page %s', $matches[6]));
                 $currentUrl = $session->getCurrentUrl();
                 $session->visit(self::URL . $matches[6]);
                 $this->browserService->waitForElementById($page, 'lib-subheader-actions');

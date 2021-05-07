@@ -45,26 +45,58 @@ class BrowserService
      */
     public function waitForElementById(DocumentElement $page, string $id, int $maxWait = 10000000): NodeElement
     {
+        try {
+            $this->waitFor(
+                $page,
+                function () use (&$element, $page, $id) {
+                    $element = $page->findById($id);
+                },
+                $maxWait
+            );
+        } catch (BrowserException $e) {
+            throw new BrowserException(sprintf('Element #%s not found!', $id));
+        }
+
+        return $element;
+    }
+
+    /**
+     * @throws BrowserException
+     */
+    public function waitForLink(DocumentElement $page, string $link, int $maxWait = 10000000): NodeElement
+    {
+        try {
+            $this->waitFor(
+                $page,
+                function () use (&$element, $page, $link) {
+                    $element = $page->findLink($link);
+                },
+                $maxWait
+            );
+        } catch (BrowserException $e) {
+            throw new BrowserException(sprintf('Link "%s" not found!', $link));
+        }
+
+        return $element;
+    }
+
+    /**
+     * @throws BrowserException
+     */
+    public function waitFor(DocumentElement $page, callable $waitFunction, int $maxWait = 10000000): void
+    {
         if ($maxWait <= 0) {
-            throw new BrowserException(sprintf('Element %s not found!', $id));
+            throw new BrowserException('Max wait time reached!');
         }
 
         $waitTime = 100000;
-        $this->logger->debug(sprintf('Wait %dµs for #%s', $waitTime, $id));
 
         try {
-            $element = $page->findById($id);
-
-            if ($element === null) {
-                usleep($waitTime);
-                $element = $this->waitForElementById($page, $id, $maxWait - $waitTime);
-            }
-
-            return $element;
+            $waitFunction();
         } catch (DriverException $exception) {
             usleep($waitTime);
 
-            return $this->waitForElementById($page, $id, $maxWait - $waitTime);
+            $this->waitFor($page, $waitFunction, $maxWait - $waitTime);
         }
     }
 
