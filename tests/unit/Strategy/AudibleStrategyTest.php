@@ -90,7 +90,7 @@ class AudibleStrategyTest extends Unit
                 ->willReturn($this->prophesize(NodeElement::class)->reveal())
             ;
             $session->getCurrentUrl()->shouldBeCalledOnce();
-            $session->visit(Argument::any())->shouldBeCalledOnce();
+            $this->browserService->goto($session->reveal(), Argument::any())->shouldBeCalledOnce();
             $rule->setMessage(Argument::any())
                 ->shouldBeCalledOnce()
                 ->willReturn($rule->reveal())
