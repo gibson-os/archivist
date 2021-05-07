@@ -168,21 +168,21 @@ class AudibleStrategy extends AbstractWebStrategy
                 $rule->setMessage(sprintf('Überprüfe %s', $matches[1]))->save();
                 $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[6]));
                 $currentUrl = $session->getCurrentUrl();
-                $session->visit(self::URL . $matches[6]);
+                $this->browserService->goto($session, $matches[6]);
                 $this->browserService->waitForElementById($page, 'lib-subheader-actions');
+                $titleParts['series'] = $titleParts['title'];
 
                 foreach ($this->getFiles($strategy, $rule, 'single') as $file) {
                     if (!$file instanceof File) {
                         continue;
                     }
 
-                    $titleParts['series'] = $titleParts['title'];
                     $titleParts['title'] = $file->getName();
 
                     yield new File($this->cleanTitle($titleParts), $file->getPath(), $file->getCreateDate(), $strategy);
                 }
 
-                $session->visit($currentUrl);
+                $this->browserService->goto($session, $currentUrl);
                 $this->browserService->waitForElementById($page, 'lib-subheader-actions');
 
                 continue;

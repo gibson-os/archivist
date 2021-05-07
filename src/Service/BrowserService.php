@@ -150,4 +150,9 @@ class BrowserService
 
         return $cookieFileName;
     }
+
+    public function goto(Session $session, string $uri): void
+    {
+        $session->executeScript('window.location.href = "' . $uri . '"');
+    }
 }
