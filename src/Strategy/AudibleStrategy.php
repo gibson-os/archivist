@@ -182,6 +182,8 @@ class AudibleStrategy extends AbstractWebStrategy
                     yield new File($this->cleanTitle($titleParts), $file->getPath(), $file->getCreateDate(), $strategy);
                 }
 
+                $rule->setMessage('Gehe zurück zur Bibliothek')->save();
+                $this->logger->info(sprintf('Go back to %s', $currentUrl));
                 $this->browserService->goto($session, $currentUrl);
                 $this->browserService->waitForElementById($page, 'lib-subheader-actions');
 
