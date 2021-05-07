@@ -13,6 +13,8 @@ use Psr\Log\LoggerInterface;
 
 class BrowserService
 {
+    private const WAIT_TIME = 100000;
+
     private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
@@ -48,8 +50,14 @@ class BrowserService
         try {
             $this->waitFor(
                 $page,
-                function () use (&$element, $page, $id) {
+                function () use (&$element, $page, $id, $maxWait) {
                     $element = $page->findById($id);
+
+                    if ($element === null) {
+                        usleep(self::WAIT_TIME);
+
+                        $element = $this->waitForElementById($page, $id, $maxWait - self::WAIT_TIME);
+                    }
                 },
                 $maxWait
             );
@@ -68,13 +76,45 @@ class BrowserService
         try {
             $this->waitFor(
                 $page,
-                function () use (&$element, $page, $link) {
+                function () use (&$element, $page, $link, $maxWait) {
                     $element = $page->findLink($link);
+
+                    if ($element === null) {
+                        usleep(self::WAIT_TIME);
+
+                        $element = $this->waitForLink($page, $link, $maxWait - self::WAIT_TIME);
+                    }
                 },
                 $maxWait
             );
         } catch (BrowserException $e) {
             throw new BrowserException(sprintf('Link "%s" not found!', $link));
+        }
+
+        return $element;
+    }
+
+    /**
+     * @throws BrowserException
+     */
+    public function waitForButton(DocumentElement $page, string $button, int $maxWait = 10000000): NodeElement
+    {
+        try {
+            $this->waitFor(
+                $page,
+                function () use (&$element, $page, $button, $maxWait) {
+                    $element = $page->findButton($button);
+
+                    if ($element === null) {
+                        usleep(self::WAIT_TIME);
+
+                        $element = $this->waitForButton($page, $button, $maxWait - self::WAIT_TIME);
+                    }
+                },
+                $maxWait
+            );
+        } catch (BrowserException $e) {
+            throw new BrowserException(sprintf('Button "%s" not found!', $button));
         }
 
         return $element;
@@ -89,14 +129,12 @@ class BrowserService
             throw new BrowserException('Max wait time reached!');
         }
 
-        $waitTime = 100000;
-
         try {
             $waitFunction();
         } catch (DriverException $exception) {
-            usleep($waitTime);
+            usleep(self::WAIT_TIME);
 
-            $this->waitFor($page, $waitFunction, $maxWait - $waitTime);
+            $this->waitFor($page, $waitFunction, $maxWait - self::WAIT_TIME);
         }
     }
 

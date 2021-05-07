@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Strategy;
 
-use Behat\Mink\Exception\ElementNotFoundException;
 use Generator;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Module\Archivist\Dto\File;
@@ -34,31 +33,42 @@ class TessaCloudStrategy extends AbstractWebStrategy
     /**
      * @throws BrowserException
      * @throws StrategyException
-     * @throws ElementNotFoundException
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
         $session = $this->browserService->getSession();
         $page = $this->browserService->loadPage($session, self::URL);
+        $button = $this->browserService->waitForButton($page, 'ext-element-107');
         $this->browserService->fillFormFields($page, $parameters);
-        $page->pressButton('ext-element-107');
-        $element = $this->browserService->waitForElementById($page, 'ext-element-211');
+        $userName = $page->findField('userName');
 
-        if (trim($element->getText()) !== 'Neueste Dokumente') {
+        if ($userName !== null) {
+            $userName->focus();
+        }
+
+        $button->press();
+
+        try {
+            $element = $this->browserService->waitForLink($page, 'Neueste Dokumente');
+            $element->click();
+            $element = $this->browserService->waitForElementById($page, 'ext-element-335');
+        } catch (BrowserException $e) {
+            file_put_contents('/home/gibsonOS/tessa.png', $session->getScreenshot());
+
             throw new StrategyException('Login failed!');
         }
 
-        $strategy->setConfigValue('session', $session);
+        if (trim($element->getText()) !== 'Titel') {
+            throw new StrategyException('Documents not found!');
+        }
 
         return true;
     }
 
     public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
-//        $response = $this->browserService->get(
-//            (new Request(self::URL . 'api/documents'))
-//                ->setCookieFile($strategy->getConfigValue('cookieFile'))
-//        );
+        $session = $this->getSession($strategy);
+        $page = $session->getPage();
 
         yield new File('foo', 'bar', $this->dateTimeService->get(), $strategy);
     }
@@ -70,6 +80,15 @@ class TessaCloudStrategy extends AbstractWebStrategy
 
     public function unload(Strategy $strategy): void
     {
+        $session = $this->getSession($strategy);
+        $page = $session->getPage();
+        $button = $page->findById('ext-element-610');
+
+        if ($button !== null) {
+            $button->click();
+        }
+
+        $session->stop();
     }
 
     public function getLockName(Rule $rule): string
