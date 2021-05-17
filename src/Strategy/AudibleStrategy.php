@@ -24,6 +24,7 @@ use GibsonOS\Core\Service\DateTimeService;
 use GibsonOS\Core\Service\FfmpegService;
 use GibsonOS\Core\Service\ProcessService;
 use GibsonOS\Core\Service\WebService;
+use GibsonOS\Module\Archivist\Dto\Audible\TitleParts;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
@@ -35,6 +36,18 @@ use Psr\Log\LoggerInterface;
 class AudibleStrategy extends AbstractWebStrategy
 {
     private const URL = 'https://audible.de/';
+
+    private const KEY_EMAIL = 'email';
+
+    private const KEY_PASSWORD = 'password';
+
+    private const KEY_TYPE = 'type';
+
+    private const TYPE_SINGLE = 'single';
+
+    private const TYPE_SERIES = 'series';
+
+    private const TYPE_PODCAST = 'podcast';
 
     private FfmpegService $ffmpegService;
 
@@ -61,14 +74,23 @@ class AudibleStrategy extends AbstractWebStrategy
 
     public function getConfigurationParameters(Strategy $strategy): array
     {
+        $typeParameter = new OptionParameter('Typ', [
+            'Einzelne Hörbücher' => self::TYPE_SINGLE,
+            'Serien' => self::TYPE_SERIES,
+            'Podcast' => self::TYPE_PODCAST,
+        ]);
+
+        if (
+            $strategy->hasConfigValue(self::KEY_EMAIL) &&
+            $strategy->hasConfigValue(self::KEY_PASSWORD)
+        ) {
+            return [self::KEY_TYPE => $typeParameter];
+        }
+
         return [
-            'email' => (new StringParameter('E-Mail'))->setInputType(StringParameter::INPUT_TYPE_EMAIL),
-            'password' => (new StringParameter('Passwort'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
-            'elements' => new OptionParameter('Elemente', [
-                'Einzelne Hörbücher' => 'single',
-                'Serien' => 'series',
-                'Podcast' => 'podcast',
-            ]),
+            self::KEY_EMAIL => (new StringParameter('E-Mail'))->setInputType(StringParameter::INPUT_TYPE_EMAIL),
+            self::KEY_PASSWORD => (new StringParameter('Passwort'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
+            self::KEY_TYPE => $typeParameter,
         ];
     }
 
@@ -82,17 +104,22 @@ class AudibleStrategy extends AbstractWebStrategy
         $page = $this->browserService->loadPage($session, self::URL);
         $page->clickLink('Bereits Kunde? Anmelden');
         $this->browserService->waitForElementById($page, 'ap_email');
-        $this->browserService->fillFormFields($page, ['email' => $parameters['email'], 'password' => $parameters['password']]);
+        $this->browserService->fillFormFields($page, [
+            self::KEY_EMAIL => $parameters[self::KEY_EMAIL]
+                ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_EMAIL)),
+            self::KEY_PASSWORD => $parameters[self::KEY_PASSWORD]
+                ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_PASSWORD)),
+        ]);
         $page->pressButton('signInSubmit');
         $this->browserService->waitForLink($page, 'Bibliothek', 60000000);
         $page->clickLink('Bibliothek');
         $this->browserService->waitForElementById($page, 'lib-subheader-actions');
 
         $strategy
-            ->setConfigValue('session', serialize($session))
-            ->setConfigValue('elements', $parameters['elements'])
-            ->setConfigValue('email', $this->cryptService->encrypt($parameters['email']))
-            ->setConfigValue('password', $this->cryptService->encrypt($parameters['password']))
+            ->setConfigValue(self::KEY_SESSION, serialize($session))
+            ->setConfigValue(self::KEY_TYPE, $parameters[self::KEY_TYPE])
+            ->setConfigValue(self::KEY_EMAIL, $this->cryptService->encrypt($parameters[self::KEY_EMAIL]))
+            ->setConfigValue(self::KEY_PASSWORD, $this->cryptService->encrypt($parameters[self::KEY_PASSWORD]))
         ;
 
         return true;
@@ -108,7 +135,11 @@ class AudibleStrategy extends AbstractWebStrategy
 
         try {
             while (true) {
-                yield from $this->getFilesFromPage($strategy, $rule, $type ?? $strategy->getConfigValue('elements'));
+                yield from $this->getFilesFromPage(
+                    $strategy,
+                    $rule,
+                    $type ?? $strategy->getConfigValue(self::KEY_TYPE)
+                );
 
                 $link = $page->findLink('Eine Seite vorwärts');
 
@@ -130,12 +161,14 @@ class AudibleStrategy extends AbstractWebStrategy
 
     /**
      * @throws BrowserException
+     * @throws DateTimeError
+     * @throws SaveError
      */
     private function getFilesFromPage(Strategy $strategy, Rule $rule, string $type): Generator
     {
         $expression = 'adbl-lib-action-download[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
 
-        if ($type === 'podcast') {
+        if ($type === self::TYPE_PODCAST) {
             $expression = 'adbl-episodes-link[^<]*<[^<]*<[^<]*<[^<]*<[^<]*<[^<]*href="([^"]*)"[^<]*<[^<]*chevron-container.+?</a>.+?';
         }
 
@@ -158,26 +191,22 @@ class AudibleStrategy extends AbstractWebStrategy
                 continue;
             }
 
-            $titleParts = [
-                'title' => $matches[1],
-                'series' => $matches[3],
-                'episode' => $matches[5],
-            ];
+            $titleParts = new TitleParts($matches[1], $matches[3], $matches[5]);
 
-            if ($type === 'podcast') {
+            if ($type === self::TYPE_PODCAST) {
                 $rule->setMessage(sprintf('Überprüfe %s', $matches[1]))->save();
                 $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[6]));
                 $currentUrl = $session->getCurrentUrl();
                 $this->browserService->goto($session, $matches[6]);
                 $this->browserService->waitForElementById($page, 'lib-subheader-actions');
-                $titleParts['series'] = $titleParts['title'];
+                $titleParts->setSeries($titleParts->getTitle());
 
-                foreach ($this->getFiles($strategy, $rule, 'single') as $file) {
+                foreach ($this->getFiles($strategy, $rule, self::TYPE_SINGLE) as $file) {
                     if (!$file instanceof File) {
                         continue;
                     }
 
-                    $titleParts['title'] = $file->getName();
+                    $titleParts->setTitle($file->getName());
 
                     yield new File($this->cleanTitle($titleParts), $file->getPath(), $file->getCreateDate(), $strategy);
                 }
@@ -190,13 +219,15 @@ class AudibleStrategy extends AbstractWebStrategy
                 continue;
             }
 
-            if (empty($titleParts['series'])) {
+            $series = $titleParts->getSeries();
+
+            if (empty($series)) {
                 $this->findSeriesAndEpisode($titleParts);
             }
 
             if (
-                (empty($titleParts['series']) && $type === 'series') ||
-                (!empty($titleParts['series']) && $type === 'single')
+                (empty($series) && $type === self::TYPE_SERIES) ||
+                (!empty($series) && $type === self::TYPE_SINGLE)
             ) {
                 continue;
             }
@@ -294,9 +325,9 @@ class AudibleStrategy extends AbstractWebStrategy
         return 'audible';
     }
 
-    private function findSeriesAndEpisode(array &$titleParts): void
+    private function findSeriesAndEpisode(TitleParts $titleParts): void
     {
-        $splitTitle = explode(':', str_ireplace(['staffel'], '', $titleParts['title']));
+        $splitTitle = explode(':', str_ireplace(['staffel'], '', $titleParts->getTitle()));
 
         if (count($splitTitle) !== 2) {
             return;
@@ -308,34 +339,36 @@ class AudibleStrategy extends AbstractWebStrategy
             return;
         }
 
-        $titleParts['series'] = trim($matches[1]) ?: trim($splitTitle[0]);
-        $titleParts['episode'] = trim($matches[2]);
+        $titleParts->setSeries(trim($matches[1]) ?: trim($splitTitle[0]));
+        $titleParts->setEpisode(trim($matches[2]));
     }
 
-    private function cleanTitle(array $titleParts): string
+    private function cleanTitle(TitleParts $titleParts): string
     {
-        $cleanTitle = $titleParts['title'];
+        $cleanTitle = $titleParts->getTitle();
         $cleanTitleParts = explode(':', $cleanTitle);
+        $series = $titleParts->getSeries();
 
         if (
-            !empty($titleParts['series']) &&
+            !empty($series) &&
             count($cleanTitleParts) === 2 &&
-            mb_stripos($cleanTitleParts[0], $titleParts['series']) === 0 &&
-            mb_stripos($cleanTitleParts[1], $titleParts['series']) === false
+            mb_stripos($cleanTitleParts[0], $series) === 0 &&
+            mb_stripos($cleanTitleParts[1], $series) === false
         ) {
             $cleanTitle = $cleanTitleParts[1] . ':' . $cleanTitleParts[0];
         }
 
-        $cleanTitle = str_ireplace([$titleParts['series'], $titleParts['episode']], '', $cleanTitle);
+        $episode = $titleParts->getEpisode();
+        $cleanTitle = str_ireplace([$series, $episode], '', $cleanTitle);
 
-        if (!empty($titleParts['series'])) {
+        if (!empty($series)) {
             $cleanTitle = preg_replace('/:.*/s', '', $cleanTitle);
         }
 
         $cleanTitle = trim($cleanTitle);
 
         if (empty($cleanTitle)) {
-            $cleanTitle = $titleParts['series'];
+            $cleanTitle = $series;
         }
 
         $cleanTitle = preg_replace('/^[-:._]*/', '', $cleanTitle);
@@ -344,12 +377,12 @@ class AudibleStrategy extends AbstractWebStrategy
         $cleanTitle = str_replace(['\\', '/', ':', '*', '?', '"', '<', '>', '|'], '', $cleanTitle);
         $cleanTitle = preg_replace('/\s\.\s/', ' ', $cleanTitle);
 
-        if (!empty($titleParts['episode'])) {
-            $cleanTitle = $titleParts['episode'] . ' ' . $cleanTitle;
+        if (!empty($episode)) {
+            $cleanTitle = $episode . ' ' . $cleanTitle;
         }
 
         return
-            (empty($titleParts['series']) ? '' : '[' . $titleParts['series'] . '] ') .
+            (empty($series) ? '' : '[' . $series . '] ') .
             trim(preg_replace('/\s{2,}/s', ' ', $cleanTitle))
         ;
     }

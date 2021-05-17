@@ -79,15 +79,15 @@ class RuleController extends AbstractController
         if (!$strategyService->saveConfigurationParameters($strategyDto, $parameters)) {
             $configurationParameters = $strategyService->getConfigurationParameters($strategyDto);
 
-            if ($rule !== null) {
-                foreach ($configurationParameters as $parameterName => $configurationParameter) {
-                    $configurationParameter->setValue($configuration[$parameterName]);
+            if (!empty($configurationParameters)) {
+                if ($rule !== null) {
+                    foreach ($configurationParameters as $parameterName => $configurationParameter) {
+                        $configurationParameter->setValue($configuration[$parameterName]);
+                    }
                 }
-            }
 
-            return $this->returnSuccess(
-                $strategyDto->setParameters($configurationParameters)
-            );
+                return $this->returnSuccess($strategyDto->setParameters($configurationParameters));
+            }
         }
 
         return $this->returnSuccess([
@@ -143,8 +143,8 @@ class RuleController extends AbstractController
             ->setMoveDirectory($moveDirectory)
             ->setMoveFilename($moveFilename)
             ->setUserId($this->sessionService->getUserId() ?? 0)
+            ->save()
         ;
-        $rule->save();
 
         return $this->returnSuccess($rule);
     }
@@ -170,7 +170,12 @@ class RuleController extends AbstractController
     public function execute(
         RuleRepository $ruleRepository,
         CommandService $commandService,
+        string $strategy,
         array $configuration,
+        string $name,
+        string $observedFilename,
+        string $moveDirectory,
+        string $moveFilename,
         int $id
     ): AjaxResponse {
         $this->checkPermission(PermissionService::WRITE);
@@ -179,6 +184,12 @@ class RuleController extends AbstractController
         $rule
             ->setActive(true)
             ->setMessage('Starte')
+            ->setName($name)
+            ->setStrategy($strategy)
+            ->setConfiguration(JsonUtility::encode($configuration))
+            ->setObservedFilename($observedFilename)
+            ->setMoveDirectory($moveDirectory)
+            ->setMoveFilename($moveFilename)
             ->save()
         ;
         $commandService->executeAsync(IndexerCommand::class, ['ruleId' => $id]);

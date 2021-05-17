@@ -13,7 +13,9 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
             parameterObject: {
                 config: {
                     model: 'GibsonOS.module.archivist.rule.model.Strategy',
-                    parameters: {},
+                    parameters: {
+                        ruleId: me.ruleId
+                    },
                     autoCompleteClassname: 'GibsonOS\\Module\\Archivist\\AutoComplete\\StrategyAutoComplete'
                 }
             },
@@ -39,33 +41,38 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
         let save = false;
 
         me.down('#coreEventElementParameterSaveButton').on('click', () => {
-            let parameters = {};
-
             me.setLoading(true);
-            me.items.each(field => {
-                if (field.getName() === 'strategy') {
-                    return true;
+
+            const getParameters = () => {
+                let parameters = {};
+
+                me.items.each(field => {
+                    if (field.getName() === 'strategy') {
+                        return true;
+                    }
+
+                    parameters[field.getName()] = field.getValue();
+                });
+
+                if (!save) {
+                    parameters = {parameters: Ext.encode(parameters)};
                 }
 
-                parameters[field.getName()] = field.getValue();
-            });
+                parameters.strategy = !me.getForm().findField('strategy')
+                    ? responseData.className
+                    : me.getForm().findField('strategy').getValue()
+                ;
+                parameters.configuration = !responseData.config ? '[]' : Ext.encode(responseData.config);
+                parameters.id = me.ruleId;
+                parameters.configStep = responseData.configStep ?? 0;
 
-            if (!save) {
-                parameters = {parameters: Ext.encode(parameters)};
-            }
-
-            parameters.strategy = !me.getForm().findField('strategy')
-                ? responseData.className
-                : me.getForm().findField('strategy').getValue()
-            ;
-            parameters.configuration = !responseData.config ? '[]' : Ext.encode(responseData.config);
-            parameters.id = me.ruleId;
-            parameters.configStep = responseData.configStep ?? 0;
+                return parameters;
+            };
 
             GibsonOS.Ajax.request({
                 url: baseDir + 'archivist/rule/' + (save ? 'save' : 'edit'),
                 timeout: 120000,
-                params: parameters,
+                params: getParameters(),
                 success(response) {
                     responseData = Ext.decode(response.responseText).data;
 
@@ -86,10 +93,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
                             handler() {
                                 GibsonOS.Ajax.request({
                                     url: baseDir + 'archivist/rule/execute',
-                                    params: {
-                                        id: responseData.id,
-                                        configuration: Ext.encode(responseData.config)
-                                    },
+                                    params: getParameters(),
                                     success(response) {
                                         const messageBox = GibsonOS.MessageBox.show({
                                             type: GibsonOS.MessageBox.type.INFO,

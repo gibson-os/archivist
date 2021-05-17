@@ -14,6 +14,8 @@ use Psr\Log\LoggerInterface;
 
 abstract class AbstractWebStrategy implements StrategyInterface
 {
+    protected const KEY_SESSION = 'session';
+
     protected BrowserService $browserService;
 
     protected WebService $webService;
