@@ -59,7 +59,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
                 }
 
                 parameters.strategy = !me.getForm().findField('strategy')
-                    ? responseData.className
+                    ? (responseData.className ?? responseData.strategy)
                     : me.getForm().findField('strategy').getValue()
                 ;
                 parameters.configuration = !responseData.config ? '[]' : Ext.encode(responseData.config);
@@ -81,7 +81,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
                         me.addFields(responseData.parameters);
                     }
 
-                    save = !!responseData.lastStep;
+                    save = save || !!responseData.lastStep;
 
                     if (
                         responseData.id &&
