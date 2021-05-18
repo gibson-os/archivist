@@ -127,6 +127,8 @@ class AudibleStrategy extends AbstractWebStrategy
 
     /**
      * @throws BrowserException
+     * @throws DateTimeError
+     * @throws SaveError
      */
     public function getFiles(Strategy $strategy, Rule $rule, string $type = null): Generator
     {
@@ -223,6 +225,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
             if (empty($series)) {
                 $this->findSeriesAndEpisode($titleParts);
+                $series = $titleParts->getSeries();
             }
 
             if (

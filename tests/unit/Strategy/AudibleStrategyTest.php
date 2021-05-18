@@ -72,7 +72,7 @@ class AudibleStrategyTest extends Unit
     /**
      * @dataProvider getData
      */
-    public function testGetFiles(string $name, string $elements, string $content, ?string $subContent): void
+    public function testGetFiles(string $name, string $types, string $content, ?string $subContent): void
     {
         /** @var ObjectProphecy|Session $session */
         $session = $this->prophesize(Session::class);
@@ -110,21 +110,21 @@ class AudibleStrategyTest extends Unit
             ->willReturn($session)
         ;
 
-        $possibleElements = [
+        $possibleTypes = [
             'single' => 'single',
             'series' => 'series',
             'podcast' => 'podcast',
         ];
-        unset($possibleElements[$elements]);
+        unset($possibleTypes[$types]);
 
         $this->assertSame($name, $this->audibleStrategy->getFiles(
-            (new Strategy('Audible', AudibleStrategy::class))->setConfigValue('elements', $elements),
+            (new Strategy('Audible', AudibleStrategy::class))->setConfigValue('type', $types),
             $rule->reveal()
         )->current()->getName());
 
-        foreach ($possibleElements as $possibleElement) {
+        foreach ($possibleTypes as $possibleElement) {
             $this->assertNull($this->audibleStrategy->getFiles(
-                (new Strategy('Audible', AudibleStrategy::class))->setConfigValue('elements', $possibleElement),
+                (new Strategy('Audible', AudibleStrategy::class))->setConfigValue('type', $possibleElement),
                 $rule->reveal()
             )->current(), 'Matched for: ' . $possibleElement);
         }
