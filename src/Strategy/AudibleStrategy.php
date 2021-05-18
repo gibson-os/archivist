@@ -104,11 +104,16 @@ class AudibleStrategy extends AbstractWebStrategy
         $page = $this->browserService->loadPage($session, self::URL);
         $page->clickLink('Bereits Kunde? Anmelden');
         $this->browserService->waitForElementById($page, 'ap_email');
+
+        $email = $parameters[self::KEY_EMAIL]
+            ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_EMAIL))
+        ;
+        $password = $parameters[self::KEY_PASSWORD]
+            ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_PASSWORD))
+        ;
         $this->browserService->fillFormFields($page, [
-            self::KEY_EMAIL => $parameters[self::KEY_EMAIL]
-                ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_EMAIL)),
-            self::KEY_PASSWORD => $parameters[self::KEY_PASSWORD]
-                ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_PASSWORD)),
+            self::KEY_EMAIL => $email,
+            self::KEY_PASSWORD => $password,
         ]);
         $page->pressButton('signInSubmit');
         $this->browserService->waitForLink($page, 'Bibliothek', 60000000);
@@ -118,8 +123,8 @@ class AudibleStrategy extends AbstractWebStrategy
         $strategy
             ->setConfigValue(self::KEY_SESSION, serialize($session))
             ->setConfigValue(self::KEY_TYPE, $parameters[self::KEY_TYPE])
-            ->setConfigValue(self::KEY_EMAIL, $this->cryptService->encrypt($parameters[self::KEY_EMAIL]))
-            ->setConfigValue(self::KEY_PASSWORD, $this->cryptService->encrypt($parameters[self::KEY_PASSWORD]))
+            ->setConfigValue(self::KEY_EMAIL, $this->cryptService->encrypt($email))
+            ->setConfigValue(self::KEY_PASSWORD, $this->cryptService->encrypt($password))
         ;
 
         return true;
