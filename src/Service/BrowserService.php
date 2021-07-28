@@ -10,6 +10,7 @@ use Behat\Mink\Session;
 use DMore\ChromeDriver\ChromeDriver;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
 use Psr\Log\LoggerInterface;
+use function sprintf;
 
 class BrowserService
 {
@@ -62,7 +63,7 @@ class BrowserService
                 $maxWait
             );
         } catch (BrowserException $e) {
-            throw new BrowserException(sprintf('Element #%s not found!', $id));
+            throw new BrowserException(sprintf('Element #%s not found!', $id), $this);
         }
 
         return $element;
@@ -88,7 +89,7 @@ class BrowserService
                 $maxWait
             );
         } catch (BrowserException $e) {
-            throw new BrowserException(sprintf('Link "%s" not found!', $link));
+            throw new BrowserException(sprintf('Link "%s" not found!', $link), $this);
         }
 
         return $element;
@@ -114,7 +115,7 @@ class BrowserService
                 $maxWait
             );
         } catch (BrowserException $e) {
-            throw new BrowserException(sprintf('Button "%s" not found!', $button));
+            throw new BrowserException(sprintf('Button "%s" not found!', $button), $this);
         }
 
         return $element;
@@ -126,7 +127,7 @@ class BrowserService
     public function waitFor(DocumentElement $page, callable $waitFunction, int $maxWait = 10000000): void
     {
         if ($maxWait <= 0) {
-            throw new BrowserException('Max wait time reached!');
+            throw new BrowserException('Max wait time reached!', $this);
         }
 
         try {
@@ -149,7 +150,7 @@ class BrowserService
             $field = $page->findField($name);
 
             if ($field === null) {
-                throw new BrowserException(sprintf('Field %s not found!', $name));
+                throw new BrowserException(sprintf('Field %s not found!', $name), $this);
             }
 
             $field->focus();
@@ -192,5 +193,10 @@ class BrowserService
     public function goto(Session $session, string $uri): void
     {
         $session->executeScript('window.location.href = "' . $uri . '"');
+    }
+
+    public function getScreenshot(): string
+    {
+        return $this->getSession()->getScreenshot();
     }
 }
