@@ -8,6 +8,7 @@ use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Session;
 use DMore\ChromeDriver\ChromeDriver;
+use Exception;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
 use Psr\Log\LoggerInterface;
 use function sprintf;
@@ -195,6 +196,9 @@ class BrowserService
         $session->executeScript('window.location.href = "' . $uri . '"');
     }
 
+    /**
+     * @throws Exception
+     */
     public function getScreenshot(): string
     {
         return $this->getSession()->getScreenshot();
