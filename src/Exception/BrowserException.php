@@ -11,7 +11,7 @@ class BrowserException extends AbstractException
 {
     public function __construct($message, Session $session)
     {
-        $filename = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('BrowserScreenshot', true);
+        $filename = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('BrowserScreenshot', true) . '.png';
 
         try {
             file_put_contents($filename, $session->getScreenshot());
