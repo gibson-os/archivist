@@ -200,14 +200,14 @@ class DkbStrategy extends AbstractWebStrategy
 //        $page = $this->browserService->loadPage($session, self::URL);
         $page = $this->browserService->loadPage($session, self::URL . '/banking');
         $this->logger->debug('Init page: ' . $page->getContent());
-        $this->browserService->fillFormFields($page, $parameters);
+        $this->browserService->fillFormFields($session, $parameters);
         $page->pressButton('Anmelden');
 
         try {
-            $this->browserService->waitForElementById($page, 'tanInputSelector');
+            $this->browserService->waitForElementById($session, 'tanInputSelector');
         } catch (BrowserException $e) {
             $page->pressButton('Anmeldung bestätigen');
-            $this->browserService->waitForElementById($page, 'tanInputSelector');
+            $this->browserService->waitForElementById($session, 'tanInputSelector');
         }
 
         $this->logger->debug('Authenticate page: ' . $page->getContent());
@@ -238,11 +238,11 @@ class DkbStrategy extends AbstractWebStrategy
     {
         $session = $this->getSession($strategy);
         $page = $session->getPage();
-        $this->browserService->fillFormFields($page, ['tan' => $parameters['tan']]);
+        $this->browserService->fillFormFields($session, ['tan' => $parameters['tan']]);
         $page->pressButton('Anmeldung bestätigen');
-        $this->browserService->waitForElementById($page, 'menu_0.4-node');
+        $this->browserService->waitForElementById($session, 'menu_0.4-node');
         $page->clickLink('Postfach');
-        $this->browserService->waitForElementById($page, 'welcomeMboTable');
+        $this->browserService->waitForElementById($session, 'welcomeMboTable');
 
         $links = [[], []];
         preg_match_all('/class="evt-gotoFolder[^>]*>([^<|^\s]*)[^<]*/', $page->getContent(), $links);

@@ -11,7 +11,6 @@ use DMore\ChromeDriver\ChromeDriver;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
 use Psr\Log\LoggerInterface;
 use function sprintf;
-use Throwable;
 
 class BrowserService
 {
@@ -35,36 +34,35 @@ class BrowserService
     public function loadPage(Session $session, string $url, string $waitId = null): DocumentElement
     {
         $session->visit($url);
-        $page = $session->getPage();
 
         if ($waitId !== null) {
-            $this->waitForElementById($page, $waitId);
+            $this->waitForElementById($session, $waitId);
         }
 
-        return $page;
+        return $session->getPage();
     }
 
     /**
      * @throws BrowserException
      */
-    public function waitForElementById(DocumentElement $page, string $id, int $maxWait = 10000000): NodeElement
+    public function waitForElementById(Session $session, string $id, int $maxWait = 10000000): NodeElement
     {
         try {
             $this->waitFor(
-                $page,
-                function () use (&$element, $page, $id, $maxWait) {
-                    $element = $page->findById($id);
+                $session,
+                function () use (&$element, $session, $id, $maxWait) {
+                    $element = $session->getPage()->findById($id);
 
                     if ($element === null) {
                         usleep(self::WAIT_TIME);
 
-                        $element = $this->waitForElementById($page, $id, $maxWait - self::WAIT_TIME);
+                        $element = $this->waitForElementById($session, $id, $maxWait - self::WAIT_TIME);
                     }
                 },
                 $maxWait
             );
         } catch (BrowserException $e) {
-            throw new BrowserException(sprintf('Element #%s not found!', $id), $this);
+            throw new BrowserException(sprintf('Element #%s not found!', $id), $session);
         }
 
         return $element;
@@ -73,24 +71,24 @@ class BrowserService
     /**
      * @throws BrowserException
      */
-    public function waitForLink(DocumentElement $page, string $link, int $maxWait = 10000000): NodeElement
+    public function waitForLink(Session $session, string $link, int $maxWait = 10000000): NodeElement
     {
         try {
             $this->waitFor(
-                $page,
-                function () use (&$element, $page, $link, $maxWait) {
-                    $element = $page->findLink($link);
+                $session,
+                function () use (&$element, $session, $link, $maxWait) {
+                    $element = $session->getPage()->findLink($link);
 
                     if ($element === null) {
                         usleep(self::WAIT_TIME);
 
-                        $element = $this->waitForLink($page, $link, $maxWait - self::WAIT_TIME);
+                        $element = $this->waitForLink($session, $link, $maxWait - self::WAIT_TIME);
                     }
                 },
                 $maxWait
             );
         } catch (BrowserException $e) {
-            throw new BrowserException(sprintf('Link "%s" not found!', $link), $this);
+            throw new BrowserException(sprintf('Link "%s" not found!', $link), $session);
         }
 
         return $element;
@@ -99,24 +97,24 @@ class BrowserService
     /**
      * @throws BrowserException
      */
-    public function waitForButton(DocumentElement $page, string $button, int $maxWait = 10000000): NodeElement
+    public function waitForButton(Session $session, string $button, int $maxWait = 10000000): NodeElement
     {
         try {
             $this->waitFor(
-                $page,
-                function () use (&$element, $page, $button, $maxWait) {
-                    $element = $page->findButton($button);
+                $session,
+                function () use (&$element, $session, $button, $maxWait) {
+                    $element = $session->getPage()->findButton($button);
 
                     if ($element === null) {
                         usleep(self::WAIT_TIME);
 
-                        $element = $this->waitForButton($page, $button, $maxWait - self::WAIT_TIME);
+                        $element = $this->waitForButton($session, $button, $maxWait - self::WAIT_TIME);
                     }
                 },
                 $maxWait
             );
         } catch (BrowserException $e) {
-            throw new BrowserException(sprintf('Button "%s" not found!', $button), $this);
+            throw new BrowserException(sprintf('Button "%s" not found!', $button), $session);
         }
 
         return $element;
@@ -125,10 +123,10 @@ class BrowserService
     /**
      * @throws BrowserException
      */
-    public function waitFor(DocumentElement $page, callable $waitFunction, int $maxWait = 10000000): void
+    public function waitFor(Session $session, callable $waitFunction, int $maxWait = 10000000): void
     {
         if ($maxWait <= 0) {
-            throw new BrowserException('Max wait time reached!', $this);
+            throw new BrowserException('Max wait time reached!', $session);
         }
 
         try {
@@ -136,7 +134,7 @@ class BrowserService
         } catch (DriverException $exception) {
             usleep(self::WAIT_TIME);
 
-            $this->waitFor($page, $waitFunction, $maxWait - self::WAIT_TIME);
+            $this->waitFor($session, $waitFunction, $maxWait - self::WAIT_TIME);
         }
     }
 
@@ -145,13 +143,15 @@ class BrowserService
      *
      * @throws BrowserException
      */
-    public function fillFormFields(DocumentElement $page, array $parameters): void
+    public function fillFormFields(Session $session, array $parameters): void
     {
+        $page = $session->getPage();
+
         foreach ($parameters as $name => $value) {
             $field = $page->findField($name);
 
             if ($field === null) {
-                throw new BrowserException(sprintf('Field %s not found!', $name), $this);
+                throw new BrowserException(sprintf('Field %s not found!', $name), $session);
             }
 
             $field->focus();
@@ -194,13 +194,5 @@ class BrowserService
     public function goto(Session $session, string $uri): void
     {
         $session->executeScript('window.location.href = "' . $uri . '"');
-    }
-
-    /**
-     * @throws Throwable
-     */
-    public function getScreenshot(): string
-    {
-        return $this->getSession()->getScreenshot();
     }
 }

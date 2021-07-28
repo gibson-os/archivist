@@ -103,7 +103,7 @@ class AudibleStrategy extends AbstractWebStrategy
         $session = $this->browserService->getSession();
         $page = $this->browserService->loadPage($session, self::URL);
         $page->clickLink('Bereits Kunde? Anmelden');
-        $this->browserService->waitForElementById($page, 'ap_email');
+        $this->browserService->waitForElementById($session, 'ap_email');
 
         $email = $parameters[self::KEY_EMAIL]
             ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_EMAIL))
@@ -111,14 +111,14 @@ class AudibleStrategy extends AbstractWebStrategy
         $password = $parameters[self::KEY_PASSWORD]
             ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_PASSWORD))
         ;
-        $this->browserService->fillFormFields($page, [
+        $this->browserService->fillFormFields($session, [
             self::KEY_EMAIL => $email,
             self::KEY_PASSWORD => $password,
         ]);
         $page->pressButton('signInSubmit');
-        $this->browserService->waitForLink($page, 'Bibliothek', 60000000);
+        $this->browserService->waitForLink($session, 'Bibliothek', 60000000);
         $page->clickLink('Bibliothek');
-        $this->browserService->waitForElementById($page, 'lib-subheader-actions');
+        $this->browserService->waitForElementById($session, 'lib-subheader-actions');
 
         $strategy
             ->setConfigValue(self::KEY_SESSION, serialize($session))
@@ -159,7 +159,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
                 $this->logger->info('Open next page');
                 $link->click();
-                $this->browserService->waitForElementById($page, 'lib-subheader-actions');
+                $this->browserService->waitForElementById($session, 'lib-subheader-actions');
             }
         } catch (ElementNotFoundException $exception) {
             // do nothing
@@ -205,7 +205,7 @@ class AudibleStrategy extends AbstractWebStrategy
                 $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[6]));
                 $currentUrl = $session->getCurrentUrl();
                 $this->browserService->goto($session, $matches[6]);
-                $this->browserService->waitForElementById($page, 'lib-subheader-actions');
+                $this->browserService->waitForElementById($session, 'lib-subheader-actions');
                 $titleParts->setSeries($titleParts->getTitle());
 
                 foreach ($this->getFiles($strategy, $rule, self::TYPE_SINGLE) as $file) {
@@ -221,7 +221,7 @@ class AudibleStrategy extends AbstractWebStrategy
                 $rule->setMessage('Gehe zurück zur Bibliothek')->save();
                 $this->logger->info(sprintf('Go back to %s', $currentUrl));
                 $this->browserService->goto($session, $currentUrl);
-                $this->browserService->waitForElementById($page, 'lib-subheader-actions');
+                $this->browserService->waitForElementById($session, 'lib-subheader-actions');
 
                 continue;
             }

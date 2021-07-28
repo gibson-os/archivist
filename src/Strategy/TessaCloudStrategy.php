@@ -38,8 +38,8 @@ class TessaCloudStrategy extends AbstractWebStrategy
     {
         $session = $this->browserService->getSession();
         $page = $this->browserService->loadPage($session, self::URL);
-        $button = $this->browserService->waitForButton($page, 'ext-element-107');
-        $this->browserService->fillFormFields($page, $parameters);
+        $button = $this->browserService->waitForButton($session, 'ext-element-107');
+        $this->browserService->fillFormFields($session, $parameters);
         $userName = $page->findField('userName');
 
         if ($userName !== null) {
@@ -49,9 +49,9 @@ class TessaCloudStrategy extends AbstractWebStrategy
         $button->press();
 
         try {
-            $element = $this->browserService->waitForLink($page, 'Neueste Dokumente');
+            $element = $this->browserService->waitForLink($session, 'Neueste Dokumente');
             $element->click();
-            $element = $this->browserService->waitForElementById($page, 'ext-element-335');
+            $element = $this->browserService->waitForElementById($session, 'ext-element-335');
         } catch (BrowserException $e) {
             file_put_contents('/home/gibsonOS/tessa.png', $session->getScreenshot());
 
@@ -68,7 +68,6 @@ class TessaCloudStrategy extends AbstractWebStrategy
     public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
         $session = $this->getSession($strategy);
-        $page = $session->getPage();
 
         yield new File('foo', 'bar', $this->dateTimeService->get(), $strategy);
     }

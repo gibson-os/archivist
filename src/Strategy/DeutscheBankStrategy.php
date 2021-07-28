@@ -51,28 +51,28 @@ class DeutscheBankStrategy extends AbstractWebStrategy
         $session = $this->browserService->getSession();
         $page = $this->browserService->loadPage($session, self::URL);
         $this->logger->debug('Init page: ' . $page->getContent());
-        $this->browserService->fillFormFields($page, $parameters);
+        $this->browserService->fillFormFields($session, $parameters);
         $page->pressButton('Login ausführen');
 
         try {
-            $this->browserService->waitForElementById($page, 'pushTANForm');
+            $this->browserService->waitForElementById($session, 'pushTANForm');
         } catch (BrowserException $e) {
-            $this->browserService->waitForElementById($page, 'photoTAN');
+            $this->browserService->waitForElementById($session, 'photoTAN');
             $page->clickLink('photoTAN push');
-            $this->browserService->waitForElementById($page, 'pushTANForm');
+            $this->browserService->waitForElementById($session, 'pushTANForm');
         }
 
         $page->pressButton('confirmButton');
-        $this->browserService->waitForElementById($page, 'iframeContainer');
+        $this->browserService->waitForElementById($session, 'iframeContainer');
         $session->switchToIFrame('iframeContainer');
-        $this->browserService->waitForElementById($page, 'layoutWrapper');
+        $this->browserService->waitForElementById($session, 'layoutWrapper');
         $allDocuments = $page->find('named_partial', ['content', 'Alle Dokumente']);
 
         if ($allDocuments !== null) {
             $allDocuments->click();
         }
 
-        $this->browserService->waitForElementById($page, 'layoutWrapper');
+        $this->browserService->waitForElementById($session, 'layoutWrapper');
 
         foreach ($page->findAll('css', '.node-row-actions__action--download') as $downloadAction) {
             $downloadAction->click();
