@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Exception;
 
-use Exception;
 use GibsonOS\Core\Exception\AbstractException;
 use GibsonOS\Module\Archivist\Service\BrowserService;
+use Throwable;
 
 class BrowserException extends AbstractException
 {
@@ -16,7 +16,7 @@ class BrowserException extends AbstractException
         try {
             file_put_contents($filename, $browserService->getScreenshot());
             $message .= ' | Screenshot: ' . $filename;
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             // do nothing
         }
 
