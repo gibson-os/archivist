@@ -85,7 +85,7 @@ class AudibleStrategyTest extends Unit
             $page->getContent()->willReturn($content);
         } else {
             $page->getContent()->willReturn($content, $subContent, $content, $content);
-            $this->browserService->waitForElementById($page->reveal(), 'lib-subheader-actions')
+            $this->browserService->waitForElementById($session->reveal(), 'lib-subheader-actions')
                 ->shouldBeCalledOnce()
                 ->willReturn($this->prophesize(NodeElement::class)->reveal())
             ;
