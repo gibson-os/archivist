@@ -11,11 +11,14 @@ class BrowserException extends AbstractException
 {
     public function __construct($message, Session $session)
     {
-        $filename = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('BrowserScreenshot', true) . '.png';
+        $screenshotFilename = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('BrowserScreenshot', true) . '.png';
+        $pageFilename = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('BrowserPage', true) . '.html';
 
         try {
-            file_put_contents($filename, $session->getScreenshot());
-            $message .= ' | Screenshot: ' . $filename;
+            file_put_contents($pageFilename, $session->getPage()->getContent());
+            $message .= ' | Page: ' . $pageFilename;
+            file_put_contents($screenshotFilename, $session->getScreenshot());
+            $message .= ' | Screenshot: ' . $screenshotFilename;
         } catch (Throwable $exception) {
             // do nothing
         }
