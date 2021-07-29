@@ -110,6 +110,9 @@
       <path value="$PROJECT_DIR$/vendor/symfony/dependency-injection" />
       <path value="$PROJECT_DIR$/vendor/psr/cache" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/vendor/php-mock/php-mock-integration" />
+      <path value="$PROJECT_DIR$/vendor/php-mock/php-mock" />
+      <path value="$PROJECT_DIR$/vendor/php-mock/php-mock-phpunit" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

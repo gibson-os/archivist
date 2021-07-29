@@ -104,6 +104,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/dependency-injection" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php81" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-mock/php-mock-integration" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-mock/php-mock" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-mock/php-mock-phpunit" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

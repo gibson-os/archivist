@@ -17,6 +17,7 @@ use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Service\BrowserService;
 use GibsonOS\Module\Archivist\Strategy\AudibleStrategy;
+use phpmock\phpunit\PHPMock;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -25,6 +26,7 @@ use Psr\Log\LoggerInterface;
 class AudibleStrategyTest extends Unit
 {
     use ProphecyTrait;
+    use PHPMock;
 
     private AudibleStrategy $audibleStrategy;
 
@@ -48,6 +50,11 @@ class AudibleStrategyTest extends Unit
      */
     private $processService;
 
+    /**
+     * @var ObjectProphecy|CryptService
+     */
+    private $cryptService;
+
     protected function _before(): void
     {
         putenv('TIMEZONE=Europe/Berlin');
@@ -58,15 +65,80 @@ class AudibleStrategyTest extends Unit
         $this->webService = $this->prophesize(WebService::class);
         $this->ffmpegService = $this->prophesize(FfmpegService::class);
         $this->processService = $this->prophesize(ProcessService::class);
+        $this->cryptService = $this->prophesize(CryptService::class);
         $this->audibleStrategy = new AudibleStrategy(
             $this->browserService->reveal(),
             $this->webService->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal(),
-            $this->prophesize(CryptService::class)->reveal(),
+            $this->cryptService->reveal(),
             $serviceManager->get(DateTimeService::class),
             $this->ffmpegService->reveal(),
             $this->processService->reveal()
         );
+    }
+
+    public function testLogin(): void
+    {
+        /** @var ObjectProphecy|Session $session */
+        $session = $this->prophesize(Session::class);
+        /** @var ObjectProphecy|DocumentElement $page */
+        $page = $this->prophesize(DocumentElement::class);
+
+        $this->browserService->getSession()
+            ->shouldBeCalledOnce()
+            ->willReturn($session->reveal())
+        ;
+        $this->browserService->loadPage($session->reveal(), 'https://audible.de/')
+            ->shouldBeCalledOnce()
+            ->willReturn($page->reveal())
+        ;
+        $page->clickLink('Bereits Kunde? Anmelden')
+            ->shouldBeCalledOnce()
+        ;
+        $this->browserService->waitForElementById($session->reveal(), 'ap_email')
+            ->shouldBeCalledOnce()
+        ;
+        $this->cryptService->decrypt('Arthur')
+            ->shouldBeCalledOnce()
+            ->willReturn('Arthur')
+        ;
+        $this->cryptService->decrypt('Dent')
+            ->shouldBeCalledOnce()
+            ->willReturn('Dent')
+        ;
+        $this->browserService->fillFormFields($session->reveal(), [
+            'email' => 'Arthur',
+            'password' => 'Dent',
+        ])
+            ->shouldBeCalledOnce()
+        ;
+        $page->pressButton('signInSubmit')
+            ->shouldBeCalledOnce()
+        ;
+        $this->browserService->waitForLink($session->reveal(), 'Bibliothek', 60000000)
+            ->shouldBeCalledOnce()
+        ;
+        $page->clickLink('Bibliothek')
+            ->shouldBeCalledOnce()
+        ;
+        $this->browserService->waitForElementById($session->reveal(), 'lib-subheader-actions')
+            ->shouldBeCalledOnce()
+        ;
+        $this->getFunctionMock(__NAMESPACE__, 'serialize')
+            ->expects($this->once())
+            ->with($session->reveal())
+            ->willReturn('galaxy')
+        ;
+
+        $strategy = (new Strategy('Audible', AudibleStrategy::class))
+            ->setConfigValue('email', 'Arthur')
+            ->setConfigValue('password', 'Dent')
+        ;
+        $this->audibleStrategy->saveConfigurationParameters($strategy, []);
+    }
+
+    public function testLoginWithCaptcha(): void
+    {
     }
 
     /**
