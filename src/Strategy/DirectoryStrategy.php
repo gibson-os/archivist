@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Strategy;
 
 use Generator;
+use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\Flock\LockError;
 use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\Model\SaveError;
@@ -69,8 +70,10 @@ class DirectoryStrategy implements StrategyInterface
 
     /**
      * @throws GetError
-     * @throws LockError
      * @throws JsonException
+     * @throws LockError
+     * @throws SaveError
+     * @throws DateTimeError
      */
     public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
@@ -99,7 +102,7 @@ class DirectoryStrategy implements StrategyInterface
             $fileSize = filesize($file);
             sleep(1);
 
-            if ($fileSize != filesize($file)) {
+            if ($fileSize !== filesize($file)) {
                 continue;
             }
 
@@ -114,23 +117,22 @@ class DirectoryStrategy implements StrategyInterface
             );
         }
 
-        $rule->setMessage('Warte auf neue Dateien')->save();
-        $waitTime =
-            ($strategy->hasConfigValue('waitTime')
-                ? ((int) $strategy->getConfigValue('waitTime')) :
-                0)
-            + self::WAIT_PER_LOOP_SECONDS
-        ;
-        sleep(self::WAIT_PER_LOOP_SECONDS);
+        if (!$strategy->hasConfigValue('loadedFiles')) {
+            $rule->setMessage('Warte auf neue Dateien')->save();
+            $waitTime =
+                ($strategy->hasConfigValue('waitTime')
+                    ? ((int) $strategy->getConfigValue('waitTime')) :
+                    0)
+                + self::WAIT_PER_LOOP_SECONDS;
+            sleep(self::WAIT_PER_LOOP_SECONDS);
 
-        if ($waitTime >= self::MAX_WAIT_SECONDS) {
-            return null;
-        }
+            if ($waitTime >= self::MAX_WAIT_SECONDS) {
+                return null;
+            }
 
-        $strategy->setConfigValue('waitTime', $waitTime);
+            $strategy->setConfigValue('waitTime', $waitTime);
 
-        foreach ($this->getFiles($strategy, $rule) as $file) {
-            yield $file;
+            yield from $this->getFiles($strategy, $rule);
         }
     }
 
