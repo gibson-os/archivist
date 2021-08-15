@@ -43,11 +43,17 @@ class AudibleStrategy extends AbstractWebStrategy
 
     private const KEY_TYPE = 'type';
 
+    private const KEY_CAPTCHA_IMAGE = 'captchaImage';
+
     private const TYPE_SINGLE = 'single';
 
     private const TYPE_SERIES = 'series';
 
     private const TYPE_PODCAST = 'podcast';
+
+    private const STEP_LOGIN = 0;
+
+    private const STEP_CAPTCHA = 1;
 
     private FfmpegService $ffmpegService;
 
@@ -87,6 +93,12 @@ class AudibleStrategy extends AbstractWebStrategy
             return [self::KEY_TYPE => $typeParameter];
         }
 
+        if ($strategy->getConfigStep() === self::STEP_CAPTCHA) {
+            return [
+                self::KEY_CAPTCHA_IMAGE => (new StringParameter('Captcha'))->setImage($strategy->getConfigValue(self::KEY_CAPTCHA_IMAGE))
+            ];
+        }
+
         return [
             self::KEY_EMAIL => (new StringParameter('E-Mail'))->setInputType(StringParameter::INPUT_TYPE_EMAIL),
             self::KEY_PASSWORD => (new StringParameter('Passwort'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
@@ -101,31 +113,54 @@ class AudibleStrategy extends AbstractWebStrategy
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
         $session = $this->browserService->getSession();
-        $page = $this->browserService->loadPage($session, self::URL);
-        $page->clickLink('Bereits Kunde? Anmelden');
-        $this->browserService->waitForElementById($session, 'ap_email');
 
-        $email = $parameters[self::KEY_EMAIL]
-            ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_EMAIL))
-        ;
-        $password = $parameters[self::KEY_PASSWORD]
-            ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_PASSWORD))
-        ;
-        $this->browserService->fillFormFields($session, [
-            self::KEY_EMAIL => $email,
-            self::KEY_PASSWORD => $password,
-        ]);
-        $page->pressButton('signInSubmit');
-        $this->browserService->waitForLink($session, 'Bibliothek', 60000000);
+        if ($strategy->getConfigStep() === self::STEP_LOGIN) {
+            $page = $this->browserService->loadPage($session, self::URL);
+            $page->clickLink('Bereits Kunde? Anmelden');
+            $this->browserService->waitForElementById($session, 'ap_email');
+
+            $email = $parameters[self::KEY_EMAIL]
+                ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_EMAIL));
+            $password = $parameters[self::KEY_PASSWORD]
+                ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_PASSWORD));
+            $this->browserService->fillFormFields($session, [
+                self::KEY_EMAIL => $email,
+                self::KEY_PASSWORD => $password,
+            ]);
+            $page->pressButton('signInSubmit');
+
+            try {
+                $strategy
+                    ->setConfigValue(self::KEY_TYPE, $parameters[self::KEY_TYPE])
+                    ->setConfigValue(self::KEY_EMAIL, $this->cryptService->encrypt($email))
+                    ->setConfigValue(self::KEY_PASSWORD, $this->cryptService->encrypt($password))
+                ;
+                $this->browserService->waitForLink($session, 'Bibliothek');
+            } catch (BrowserException $e) {
+                $captchaImage = $this->browserService->waitForElementById($session, 'auth-captcha-image');
+                $captchaImageSource = $captchaImage->getAttribute('src') ?? '';
+                $strategy
+                    ->setConfigValue(self::KEY_SESSION, serialize($session))
+                    ->setConfigValue(self::KEY_CAPTCHA_IMAGE, $captchaImageSource)
+                    ->setNextConfigStep()
+                ;
+
+                return false;
+            }
+        }
+
+        if (self::STEP_CAPTCHA) {
+            $this->browserService->fillFormFields($session, [
+                'guess' => $strategy->getConfigValue(self::KEY_CAPTCHA_IMAGE)
+            ]);
+            $page->pressButton('signInSubmit');
+            $this->browserService->waitForLink($session, 'Bibliothek');
+        }
+
         $page->clickLink('Bibliothek');
         $this->browserService->waitForElementById($session, 'lib-subheader-actions');
 
-        $strategy
-            ->setConfigValue(self::KEY_SESSION, serialize($session))
-            ->setConfigValue(self::KEY_TYPE, $parameters[self::KEY_TYPE])
-            ->setConfigValue(self::KEY_EMAIL, $this->cryptService->encrypt($email))
-            ->setConfigValue(self::KEY_PASSWORD, $this->cryptService->encrypt($password))
-        ;
+        $strategy->setConfigValue(self::KEY_SESSION, serialize($session));
 
         return true;
     }
