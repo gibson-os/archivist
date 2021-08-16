@@ -86,17 +86,17 @@ class AudibleStrategy extends AbstractWebStrategy
             'Podcast' => self::TYPE_PODCAST,
         ]);
 
+        if ($strategy->getConfigStep() === self::STEP_CAPTCHA) {
+            return [
+                self::KEY_CAPTCHA_IMAGE => (new StringParameter('Captcha'))->setImage($strategy->getConfigValue(self::KEY_CAPTCHA_IMAGE))
+            ];
+        }
+
         if (
             $strategy->hasConfigValue(self::KEY_EMAIL) &&
             $strategy->hasConfigValue(self::KEY_PASSWORD)
         ) {
             return [self::KEY_TYPE => $typeParameter];
-        }
-
-        if ($strategy->getConfigStep() === self::STEP_CAPTCHA) {
-            return [
-                self::KEY_CAPTCHA_IMAGE => (new StringParameter('Captcha'))->setImage($strategy->getConfigValue(self::KEY_CAPTCHA_IMAGE))
-            ];
         }
 
         return [
