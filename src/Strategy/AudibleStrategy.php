@@ -5,6 +5,7 @@ namespace GibsonOS\Module\Archivist\Strategy;
 
 use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\Mink\Session;
 use Generator;
 use GibsonOS\Core\Dto\Ffmpeg\Media;
 use GibsonOS\Core\Dto\Ffmpeg\Stream\Audio;
@@ -40,6 +41,8 @@ class AudibleStrategy extends AbstractWebStrategy
     private const KEY_EMAIL = 'email';
 
     private const KEY_PASSWORD = 'password';
+
+    private const KEY_CAPTCHA = 'guess';
 
     private const KEY_TYPE = 'type';
 
@@ -112,51 +115,22 @@ class AudibleStrategy extends AbstractWebStrategy
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
-        $session = $this->browserService->getSession();
-
-        if ($strategy->getConfigStep() === self::STEP_LOGIN) {
-            $page = $this->browserService->loadPage($session, self::URL);
-            $page->clickLink('Bereits Kunde? Anmelden');
-            $this->browserService->waitForElementById($session, 'ap_email');
-
-            $email = $parameters[self::KEY_EMAIL]
-                ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_EMAIL));
-            $password = $parameters[self::KEY_PASSWORD]
-                ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_PASSWORD));
-            $this->browserService->fillFormFields($session, [
-                self::KEY_EMAIL => $email,
-                self::KEY_PASSWORD => $password,
-            ]);
-            $page->pressButton('signInSubmit');
-
-            try {
-                $strategy
-                    ->setConfigValue(self::KEY_TYPE, $parameters[self::KEY_TYPE])
-                    ->setConfigValue(self::KEY_EMAIL, $this->cryptService->encrypt($email))
-                    ->setConfigValue(self::KEY_PASSWORD, $this->cryptService->encrypt($password))
-                ;
-                $this->browserService->waitForLink($session, 'Bibliothek');
-            } catch (BrowserException $e) {
-                $captchaImage = $this->browserService->waitForElementById($session, 'auth-captcha-image');
-                $captchaImageSource = $captchaImage->getAttribute('src') ?? '';
-                $strategy
-                    ->setConfigValue(self::KEY_SESSION, serialize($session))
-                    ->setConfigValue(self::KEY_CAPTCHA_IMAGE, $captchaImageSource)
-                    ->setNextConfigStep()
-                ;
-
-                return false;
-            }
+        if (
+            $strategy->getConfigStep() === self::STEP_LOGIN &&
+            !$this->validateLogin($strategy, $parameters)
+        ) {
+            return false;
         }
 
-        if (self::STEP_CAPTCHA) {
-            $this->browserService->fillFormFields($session, [
-                'guess' => $strategy->getConfigValue(self::KEY_CAPTCHA_IMAGE)
-            ]);
-            $page->pressButton('signInSubmit');
-            $this->browserService->waitForLink($session, 'Bibliothek');
+        if (
+            $strategy->getConfigStep() === self::STEP_CAPTCHA &&
+            !$this->validateCaptcha($strategy, $parameters)
+        ) {
+            return false;
         }
 
+        $session = $this->getSession($strategy);
+        $page = $session->getPage();
         $page->clickLink('Bibliothek');
         $this->browserService->waitForElementById($session, 'lib-subheader-actions');
 
@@ -460,5 +434,92 @@ class AudibleStrategy extends AbstractWebStrategy
         $this->processService->close($rcrackProccess);
 
         throw new StrategyException('Activation bytes not found!');
+    }
+
+    /**
+     * @throws BrowserException
+     */
+    private function setCaptchaStep(Session $session, Strategy $strategy): void
+    {
+        $captchaImage = $this->browserService->waitForElementById($session, 'auth-captcha-image');
+        $captchaImageSource = $captchaImage->getAttribute('src') ?? '';
+        $strategy
+            ->setConfigValue(self::KEY_SESSION, serialize($session))
+            ->setConfigValue(self::KEY_CAPTCHA_IMAGE, $captchaImageSource)
+            ->setConfigStep(self::STEP_CAPTCHA);
+    }
+
+    /**
+     * @throws BrowserException
+     * @throws ElementNotFoundException
+     */
+    private function validateCaptcha(Strategy $strategy, array $parameters): bool
+    {
+        $email = $parameters[self::KEY_EMAIL]
+            ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_EMAIL));
+        $password = $parameters[self::KEY_PASSWORD]
+            ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_PASSWORD));
+        $session = $this->getSession($strategy);
+        $page = $session->getPage();
+        $this->browserService->fillFormFields($session, [
+            self::KEY_EMAIL => $email,
+            self::KEY_PASSWORD => $password,
+            self::KEY_CAPTCHA => $parameters[self::KEY_CAPTCHA_IMAGE]
+        ]);
+        $page->pressButton('signInSubmit');
+
+        try {
+            $this->waitForLibrary($session);
+        } catch (BrowserException $e) {
+            $this->setCaptchaStep($session, $strategy);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @throws BrowserException
+     * @throws ElementNotFoundException
+     */
+    private function validateLogin(Strategy $strategy, array $parameters): bool
+    {
+        $session = $this->browserService->getSession();
+        $email = $parameters[self::KEY_EMAIL]
+            ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_EMAIL));
+        $password = $parameters[self::KEY_PASSWORD]
+            ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_PASSWORD));
+        $page = $this->browserService->loadPage($session, self::URL);
+        $page->clickLink('Bereits Kunde? Anmelden');
+        $this->browserService->waitForElementById($session, 'ap_email');
+
+        $this->browserService->fillFormFields($session, [
+            self::KEY_EMAIL => $email,
+            self::KEY_PASSWORD => $password,
+        ]);
+        $page->pressButton('signInSubmit');
+
+        try {
+            $strategy
+                ->setConfigValue(self::KEY_TYPE, $parameters[self::KEY_TYPE])
+                ->setConfigValue(self::KEY_EMAIL, $this->cryptService->encrypt($email))
+                ->setConfigValue(self::KEY_PASSWORD, $this->cryptService->encrypt($password));
+            $this->waitForLibrary($session);
+        } catch (BrowserException $e) {
+            $this->setCaptchaStep($session, $strategy);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @throws BrowserException
+     */
+    private function waitForLibrary(Session $session): void
+    {
+        $this->browserService->waitForLink($session, 'Bibliothek', 30000000);
     }
 }
