@@ -58,6 +58,8 @@ class AudibleStrategy extends AbstractWebStrategy
 
     private const STEP_CAPTCHA = 1;
 
+    private const LINK_LIBRARY = 'Bibliothek';
+
     private FfmpegService $ffmpegService;
 
     private ProcessService $processService;
@@ -131,7 +133,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
         $session = $this->getSession($strategy);
         $page = $session->getPage();
-        $page->clickLink('Bibliothek');
+        $page->clickLink(self::LINK_LIBRARY);
         $this->browserService->waitForElementById($session, 'lib-subheader-actions');
 
         $strategy->setConfigValue(self::KEY_SESSION, serialize($session));
@@ -502,6 +504,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
         try {
             $strategy
+                ->setConfigValue(self::KEY_SESSION, serialize($session))
                 ->setConfigValue(self::KEY_TYPE, $parameters[self::KEY_TYPE])
                 ->setConfigValue(self::KEY_EMAIL, $this->cryptService->encrypt($email))
                 ->setConfigValue(self::KEY_PASSWORD, $this->cryptService->encrypt($password));
@@ -520,6 +523,6 @@ class AudibleStrategy extends AbstractWebStrategy
      */
     private function waitForLibrary(Session $session): void
     {
-        $this->browserService->waitForLink($session, 'Bibliothek', 30000000);
+        $this->browserService->waitForLink($session, self::LINK_LIBRARY, 30000000);
     }
 }
