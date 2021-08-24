@@ -72,7 +72,7 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
             text: 'Name',
             flex: 1
         },{
-            dataIndex: 'strategy',
+            dataIndex: 'strategyName',
             text: 'Strategy',
             flex: 1
         },{

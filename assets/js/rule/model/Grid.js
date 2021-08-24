@@ -10,6 +10,9 @@ Ext.define('GibsonOS.module.archivist.rule.model.Grid', {
         name: 'strategy',
         type: 'string'
     },{
+        name: 'strategyName',
+        type: 'string'
+    },{
         name: 'configuration',
         type: 'object'
     },{
