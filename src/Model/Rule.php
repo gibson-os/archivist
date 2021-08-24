@@ -7,6 +7,7 @@ use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Model\User;
 use GibsonOS\Core\Utility\JsonUtility;
+use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonSerializable;
 
 class Rule extends AbstractModel implements JsonSerializable
@@ -16,6 +17,8 @@ class Rule extends AbstractModel implements JsonSerializable
     private string $name;
 
     private string $strategy;
+
+    private ?string $strategyName = null;
 
     private string $configuration = '[]';
 
@@ -75,6 +78,26 @@ class Rule extends AbstractModel implements JsonSerializable
     public function setStrategy(string $strategy): Rule
     {
         $this->strategy = $strategy;
+
+        return $this;
+    }
+
+    public function setStrategyByClass(StrategyInterface $strategy): Rule
+    {
+        $this->strategy = get_class($strategy);
+        $this->strategyName = $strategy->getName();
+
+        return $this;
+    }
+    
+    public function getStrategyName(): ?string
+    {
+        return $this->strategyName;
+    }
+    
+    public function setStrategyName(?string $strategyName): Rule
+    {
+        $this->strategyName = $strategyName;
 
         return $this;
     }
@@ -228,6 +251,7 @@ class Rule extends AbstractModel implements JsonSerializable
             'id' => $this->getId(),
             'name' => $this->getName(),
             'strategy' => $this->getStrategy(),
+            'strategyName' => $this->getStrategyName(),
             'configuration' => JsonUtility::decode($this->getConfiguration()),
             'observedFilename' => $this->getObservedFilename(),
             'moveDirectory' => $this->getMoveDirectory(),
