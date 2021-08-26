@@ -101,7 +101,7 @@ class RuleController extends AbstractController
                 'moveFilename' => (new StringParameter('Ablage Dateiname'))
                     ->setValue($rule === null ? null : $rule->getMoveFilename()),
             ],
-            'config' => $strategyDto->getConfig(),
+            'configuration' => $strategyDto->getConfig(),
             'className' => $strategy,
             'lastStep' => true,
             'id' => $rule === null ? null : $rule->getId(),
@@ -128,7 +128,7 @@ class RuleController extends AbstractController
     ): AjaxResponse {
         $this->checkPermission(PermissionService::WRITE);
 
-        $rule = (new Rule());
+        $rule = new Rule();
 
         if ($id !== null) {
             $rule = $ruleRepository->getById($id);
