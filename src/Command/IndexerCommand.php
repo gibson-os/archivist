@@ -17,6 +17,7 @@ use GibsonOS\Module\Archivist\Repository\RuleRepository;
 use GibsonOS\Module\Archivist\Service\RuleService;
 use JsonException;
 use Psr\Log\LoggerInterface;
+use Throwable;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -42,17 +43,19 @@ class IndexerCommand extends AbstractCommand
 
     /**
      * @throws ArgumentError
+     * @throws CreateError
      * @throws DateTimeError
      * @throws FactoryError
      * @throws JsonException
-     * @throws SelectError
-     * @throws UnlockError
-     * @throws CreateError
-     * @throws SaveError
-     * @throws RuleException
      * @throws LoaderError
+     * @throws LockError
+     * @throws RuleException
      * @throws RuntimeError
+     * @throws SaveError
+     * @throws SelectError
      * @throws SyntaxError
+     * @throws Throwable
+     * @throws UnlockError
      */
     protected function run(): int
     {
@@ -61,13 +64,21 @@ class IndexerCommand extends AbstractCommand
 
         try {
             $this->ruleService->executeRule($rule);
-        } catch (LockError $e) {
+        } catch (LockError $exception) {
             $this->logger->warning('Indexing for this strategy already runs!');
             $rule
                 ->setActive(false)
                 ->setMessage('Eine Indexierung für diese Strategy läuft bereits')
                 ->save()
             ;
+        } catch (Throwable $exception) {
+            $rule
+                ->setActive(false)
+                ->setMessage(sprintf('Exception: %s', $exception->getMessage()))
+                ->save()
+            ;
+
+            throw $exception;
         }
 
         return 0;
