@@ -7,14 +7,6 @@ use DateTimeInterface;
 
 class File implements \JsonSerializable
 {
-    private string $name;
-
-    private string $path;
-
-    private DateTimeInterface $createDate;
-
-    private Strategy $strategy;
-
     private ?int $length = null;
 
     /**
@@ -22,12 +14,8 @@ class File implements \JsonSerializable
      */
     private $resource;
 
-    public function __construct(string $name, string $path, DateTimeInterface $createDate, Strategy $strategy)
+    public function __construct(private string $name, private string $path, private DateTimeInterface $createDate, private Strategy $strategy)
     {
-        $this->name = $name;
-        $this->path = $path;
-        $this->createDate = $createDate;
-        $this->strategy = $strategy;
     }
 
     public function getName(): string

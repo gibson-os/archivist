@@ -54,11 +54,11 @@ class DkbStrategy extends AbstractWebStrategy
             ]);
         }
 
-        switch ($strategy->getConfigStep()) {
-            case self::STEP_TAN: return $this->getTanParameters();
-            case self::STEP_PATH: return $this->getPathParameters($strategy);
-            default: return $this->getLoginParameters();
-        }
+        return match ($strategy->getConfigStep()) {
+            self::STEP_TAN => $this->getTanParameters(),
+            self::STEP_PATH => $this->getPathParameters($strategy),
+            default => $this->getLoginParameters(),
+        };
     }
 
     /**
@@ -98,7 +98,7 @@ class DkbStrategy extends AbstractWebStrategy
 
                 $page->clickLink('Nächste Seite');
             }
-        } catch (ElementNotFoundException $exception) {
+        } catch (ElementNotFoundException) {
             // do nothing
         }
     }
@@ -205,7 +205,7 @@ class DkbStrategy extends AbstractWebStrategy
 
         try {
             $this->browserService->waitForElementById($session, 'tanInputSelector');
-        } catch (BrowserException $e) {
+        } catch (BrowserException) {
             $page->pressButton('Anmeldung bestätigen');
             $this->browserService->waitForElementById($session, 'tanInputSelector');
         }

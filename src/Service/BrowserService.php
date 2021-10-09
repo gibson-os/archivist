@@ -16,11 +16,8 @@ class BrowserService
 {
     private const WAIT_TIME = 100000;
 
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     public function getSession(): Session
@@ -61,7 +58,7 @@ class BrowserService
                 },
                 $maxWait
             );
-        } catch (BrowserException $e) {
+        } catch (BrowserException) {
             throw new BrowserException(sprintf('Element #%s not found!', $id), $session);
         }
 
@@ -87,7 +84,7 @@ class BrowserService
                 },
                 $maxWait
             );
-        } catch (BrowserException $e) {
+        } catch (BrowserException) {
             throw new BrowserException(sprintf('Link "%s" not found!', $link), $session);
         }
 
@@ -113,7 +110,7 @@ class BrowserService
                 },
                 $maxWait
             );
-        } catch (BrowserException $e) {
+        } catch (BrowserException) {
             throw new BrowserException(sprintf('Button "%s" not found!', $button), $session);
         }
 
@@ -131,7 +128,7 @@ class BrowserService
 
         try {
             $waitFunction();
-        } catch (DriverException $exception) {
+        } catch (DriverException) {
             usleep(self::WAIT_TIME);
 
             $this->waitFor($session, $waitFunction, $maxWait - self::WAIT_TIME);

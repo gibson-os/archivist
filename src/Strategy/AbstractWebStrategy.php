@@ -16,28 +16,8 @@ abstract class AbstractWebStrategy implements StrategyInterface
 {
     protected const KEY_SESSION = 'session';
 
-    protected BrowserService $browserService;
-
-    protected WebService $webService;
-
-    protected LoggerInterface $logger;
-
-    protected CryptService $cryptService;
-
-    protected DateTimeService $dateTimeService;
-
-    public function __construct(
-        BrowserService $browserService,
-        WebService $webService,
-        LoggerInterface $logger,
-        CryptService $cryptService,
-        DateTimeService $dateTimeService
-    ) {
-        $this->browserService = $browserService;
-        $this->webService = $webService;
-        $this->logger = $logger;
-        $this->cryptService = $cryptService;
-        $this->dateTimeService = $dateTimeService;
+    public function __construct(protected BrowserService $browserService, protected WebService $webService, protected LoggerInterface $logger, protected CryptService $cryptService, protected DateTimeService $dateTimeService)
+    {
     }
 
     /**

@@ -19,7 +19,7 @@ class BrowserException extends AbstractException
             $message .= ' | Page: ' . $pageFilename;
             file_put_contents($screenshotFilename, $session->getScreenshot());
             $message .= ' | Screenshot: ' . $screenshotFilename;
-        } catch (Throwable $exception) {
+        } catch (Throwable) {
             // do nothing
         }
 

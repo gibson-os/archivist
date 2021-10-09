@@ -56,7 +56,7 @@ class DeutscheBankStrategy extends AbstractWebStrategy
 
         try {
             $this->browserService->waitForElementById($session, 'pushTANForm');
-        } catch (BrowserException $e) {
+        } catch (BrowserException) {
             $this->browserService->waitForElementById($session, 'photoTAN');
             $page->clickLink('photoTAN push');
             $this->browserService->waitForElementById($session, 'pushTANForm');

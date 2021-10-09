@@ -35,37 +35,16 @@ class RuleService extends AbstractService
 {
     public const RULE_LOCK_PREFIX = 'archivistIndexer';
 
-    private FileService $fileService;
-
-    private DirService $dirService;
-
-    private IndexRepository $indexRepository;
-
-    private ServiceManagerService $serviceManagerService;
-
-    private TwigService $twigService;
-
-    private LoggerInterface $logger;
-
-    private LockService $lockService;
-
     public function __construct(
-        FileService $fileService,
-        DirService $dirService,
-        IndexRepository $indexRepository,
-        ServiceManagerService $serviceManagerService,
-        TwigService $twigService,
-        LoggerInterface $logger,
-        LockService $lockService
+        private FileService $fileService,
+        private DirService $dirService,
+        private IndexRepository $indexRepository,
+        private ServiceManagerService $serviceManagerService,
+        private TwigService $twigService,
+        private LoggerInterface $logger,
+        private LockService $lockService
     ) {
-        $this->fileService = $fileService;
-        $this->dirService = $dirService;
-        $this->indexRepository = $indexRepository;
-        $this->serviceManagerService = $serviceManagerService;
-        $this->twigService = $twigService;
         $this->twigService->getTwig()->addExtension(new StringLoaderExtension());
-        $this->logger = $logger;
-        $this->lockService = $lockService;
     }
 
     /**
@@ -132,7 +111,7 @@ class RuleService extends AbstractService
             if (file_exists($newFileName)) {
                 try {
                     $this->indexRepository->getByInputPath($rule->getId() ?? 0, $inputPath);
-                } catch (SelectError $e) {
+                } catch (SelectError) {
                     $this->logger->warning(sprintf('File %s already exists!', $newFileName));
                     $index->setError('Datei existiert bereits!')->save();
                 }

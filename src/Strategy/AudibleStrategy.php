@@ -60,22 +60,16 @@ class AudibleStrategy extends AbstractWebStrategy
 
     private const LINK_LIBRARY = 'Bibliothek';
 
-    private FfmpegService $ffmpegService;
-
-    private ProcessService $processService;
-
     public function __construct(
         BrowserService $browserService,
         WebService $webService,
         LoggerInterface $logger,
         CryptService $cryptService,
         DateTimeService $dateTimeService,
-        FfmpegService $ffmpegService,
-        ProcessService $processService
+        private FfmpegService $ffmpegService,
+        private ProcessService $processService
     ) {
         parent::__construct($browserService, $webService, $logger, $cryptService, $dateTimeService);
-        $this->ffmpegService = $ffmpegService;
-        $this->processService = $processService;
     }
 
     public function getName(): string
@@ -172,7 +166,7 @@ class AudibleStrategy extends AbstractWebStrategy
                 $link->click();
                 $this->browserService->waitForElementById($session, 'lib-subheader-actions');
             }
-        } catch (ElementNotFoundException $exception) {
+        } catch (ElementNotFoundException) {
             // do nothing
         }
     }
@@ -472,7 +466,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
         try {
             $this->waitForLibrary($session);
-        } catch (BrowserException $e) {
+        } catch (BrowserException) {
             $this->setCaptchaStep($session, $strategy);
 
             return false;
@@ -509,7 +503,7 @@ class AudibleStrategy extends AbstractWebStrategy
                 ->setConfigValue(self::KEY_EMAIL, $this->cryptService->encrypt($email))
                 ->setConfigValue(self::KEY_PASSWORD, $this->cryptService->encrypt($password));
             $this->waitForLibrary($session);
-        } catch (BrowserException $e) {
+        } catch (BrowserException) {
             $this->setCaptchaStep($session, $strategy);
 
             return false;

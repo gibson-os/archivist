@@ -27,28 +27,8 @@ class DirectoryStrategy implements StrategyInterface
 
     private const WAIT_PER_LOOP_SECONDS = 3;
 
-    private DirService $dirService;
-
-    private FileService $fileService;
-
-    private DateTimeService $dateTimeService;
-
-    private TrashService $trashService;
-
-    private LockService $lockService;
-
-    public function __construct(
-        DirService $dirService,
-        FileService $fileService,
-        DateTimeService $dateTimeService,
-        TrashService $trashService,
-        LockService $lockService
-    ) {
-        $this->dirService = $dirService;
-        $this->fileService = $fileService;
-        $this->dateTimeService = $dateTimeService;
-        $this->trashService = $trashService;
-        $this->lockService = $lockService;
+    public function __construct(private DirService $dirService, private FileService $fileService, private DateTimeService $dateTimeService, private TrashService $trashService, private LockService $lockService)
+    {
     }
 
     public function getName(): string

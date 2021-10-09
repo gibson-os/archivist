@@ -15,12 +15,9 @@ class RuleStore extends AbstractDatabaseStore
 {
     private ?int $userId = null;
 
-    private ServiceManagerService $serviceManagerService;
-
-    public function __construct(ServiceManagerService $serviceManagerService, mysqlDatabase $database = null)
+    public function __construct(private ServiceManagerService $serviceManagerService, mysqlDatabase $database = null)
     {
         parent::__construct($database);
-        $this->serviceManagerService = $serviceManagerService;
     }
 
     protected function getTableName(): string

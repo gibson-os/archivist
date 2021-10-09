@@ -52,7 +52,7 @@ class TessaCloudStrategy extends AbstractWebStrategy
             $element = $this->browserService->waitForLink($session, 'Neueste Dokumente');
             $element->click();
             $element = $this->browserService->waitForElementById($session, 'ext-element-335');
-        } catch (BrowserException $e) {
+        } catch (BrowserException) {
             file_put_contents('/home/gibsonOS/tessa.png', $session->getScreenshot());
 
             throw new StrategyException('Login failed!');

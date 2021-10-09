@@ -24,18 +24,11 @@ use Twig\Error\SyntaxError;
 
 class IndexerCommand extends AbstractCommand
 {
-    private RuleRepository $ruleRepository;
-
-    private RuleService $ruleService;
-
     public function __construct(
-        RuleRepository $ruleRepository,
-        RuleService $ruleService,
+        private RuleRepository $ruleRepository,
+        private RuleService $ruleService,
         LoggerInterface $logger
     ) {
-        $this->ruleRepository = $ruleRepository;
-        $this->ruleService = $ruleService;
-
         parent::__construct($logger);
 
         $this->setArgument('ruleId', true);

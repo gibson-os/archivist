@@ -21,24 +21,8 @@ class StrategyAutoComplete implements AutoCompleteInterface
 {
     private const PARAMETER_RULE_ID = 'ruleId';
 
-    private ServiceManagerService $serviceManagerService;
-
-    private DirService $dirService;
-
-    private FileService $fileService;
-
-    private RuleRepository $ruleRepository;
-
-    public function __construct(
-        ServiceManagerService $serviceManagerService,
-        DirService $dirService,
-        FileService $fileService,
-        RuleRepository $ruleRepository
-    ) {
-        $this->serviceManagerService = $serviceManagerService;
-        $this->dirService = $dirService;
-        $this->fileService = $fileService;
-        $this->ruleRepository = $ruleRepository;
+    public function __construct(private ServiceManagerService $serviceManagerService, private DirService $dirService, private FileService $fileService, private RuleRepository $ruleRepository)
+    {
     }
 
     /**
@@ -66,7 +50,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
 
             try {
                 $strategyService = $this->serviceManagerService->get($namespace . $className);
-            } catch (FactoryError $e) {
+            } catch (FactoryError) {
                 continue;
             }
 

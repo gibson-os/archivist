@@ -9,10 +9,6 @@ use JsonSerializable;
 
 class Strategy implements JsonSerializable, AutoCompleteModelInterface
 {
-    private string $name;
-
-    private string $className;
-
     private array $config = [];
 
     private int $configStep = 0;
@@ -22,10 +18,8 @@ class Strategy implements JsonSerializable, AutoCompleteModelInterface
      */
     private array $parameters = [];
 
-    public function __construct(string $name, string $className)
+    public function __construct(private string $name, private string $className)
     {
-        $this->name = $name;
-        $this->className = $className;
     }
 
     public function getName(): string

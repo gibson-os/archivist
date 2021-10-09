@@ -84,7 +84,7 @@ class Rule extends AbstractModel implements JsonSerializable
 
     public function setStrategyByClass(StrategyInterface $strategy): Rule
     {
-        $this->strategy = get_class($strategy);
+        $this->strategy = $strategy::class;
         $this->strategyName = $strategy->getName();
 
         return $this;

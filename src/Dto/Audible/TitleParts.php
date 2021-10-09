@@ -5,17 +5,8 @@ namespace GibsonOS\Module\Archivist\Dto\Audible;
 
 class TitleParts
 {
-    private string $title;
-
-    private string $series;
-
-    private string $episode;
-
-    public function __construct(string $title, string $series, string $episode)
+    public function __construct(private string $title, private string $series, private string $episode)
     {
-        $this->title = $title;
-        $this->series = $series;
-        $this->episode = $episode;
     }
 
     public function getTitle(): string
