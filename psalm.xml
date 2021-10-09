@@ -14,8 +14,6 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
-        <MissingPropertyType errorLevel="suppress" />
-
         <LessSpecificReturnStatement>
             <errorLevel type="suppress">
                 <directory name="src/Repository" />
