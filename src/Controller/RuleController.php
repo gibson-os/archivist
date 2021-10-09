@@ -59,12 +59,12 @@ class RuleController extends AbstractController
         array $configuration,
         array $parameters,
         int $configStep = 0,
-        int $id = null
+        int $id = 0
     ): AjaxResponse {
         $this->checkPermission(PermissionService::WRITE);
         $rule = null;
 
-        if ($id !== null) {
+        if ($id > 0) {
             $rule = $ruleRepository->getById($id);
             $configuration = array_merge(JsonUtility::decode($rule->getConfiguration()), $configuration);
         }
