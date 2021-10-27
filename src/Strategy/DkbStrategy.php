@@ -45,12 +45,12 @@ class DkbStrategy extends AbstractWebStrategy
     {
         if (
             $strategy->getConfigurationStep() === self::STEP_LOGIN &&
-            $strategy->hasConfigValue('username') &&
-            $strategy->hasConfigValue('password')
+            $strategy->hasConfigurationValue('username') &&
+            $strategy->hasConfigurationValue('password')
         ) {
             $this->login($strategy, [
-                'j_username' => $this->cryptService->decrypt($strategy->getConfigValue('username')),
-                'j_password' => $this->cryptService->decrypt($strategy->getConfigValue('password')),
+                'j_username' => $this->cryptService->decrypt($strategy->getConfigurationValue('username')),
+                'j_password' => $this->cryptService->decrypt($strategy->getConfigurationValue('password')),
             ]);
         }
 
@@ -73,7 +73,7 @@ class DkbStrategy extends AbstractWebStrategy
 
                 return false;
             case self::STEP_PATH:
-                $strategy->setConfigValue('path', $parameters['path']);
+                $strategy->setConfigurationValue('path', $parameters['path']);
 
                 return true;
             default:
@@ -90,7 +90,7 @@ class DkbStrategy extends AbstractWebStrategy
     {
         $session = $this->getSession($strategy);
         $page = $session->getPage();
-        $page->clickLink($strategy->getConfigValue('path'));
+        $page->clickLink($strategy->getConfigurationValue('path'));
 
         try {
             while (true) {
@@ -186,7 +186,7 @@ class DkbStrategy extends AbstractWebStrategy
     private function getPathParameters(Strategy $strategy): array
     {
         return [
-            'path' => new OptionParameter('Verzeichnis', $strategy->getConfigValue('directories')),
+            'path' => new OptionParameter('Verzeichnis', $strategy->getConfigurationValue('directories')),
         ];
     }
 
@@ -212,9 +212,9 @@ class DkbStrategy extends AbstractWebStrategy
 
         $this->logger->debug('Authenticate page: ' . $page->getContent());
         $strategy
-            ->setConfigValue('session', serialize($session))
-            ->setConfigValue('username', $this->cryptService->encrypt($parameters['j_username']))
-            ->setConfigValue('password', $this->cryptService->encrypt($parameters['j_password']))
+            ->setConfigurationValue('session', serialize($session))
+            ->setConfigurationValue('username', $this->cryptService->encrypt($parameters['j_username']))
+            ->setConfigurationValue('password', $this->cryptService->encrypt($parameters['j_password']))
             ->setNextConfigurationStep()
         ;
     }
@@ -254,7 +254,7 @@ class DkbStrategy extends AbstractWebStrategy
         }
 
         $strategy
-            ->setConfigValue('directories', $directories)
+            ->setConfigurationValue('directories', $directories)
             ->setNextConfigurationStep()
         ;
     }

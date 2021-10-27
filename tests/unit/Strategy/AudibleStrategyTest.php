@@ -131,8 +131,8 @@ class AudibleStrategyTest extends Unit
         ;
 
         $strategy = (new Strategy('Audible', AudibleStrategy::class))
-            ->setConfigValue('email', 'Arthur')
-            ->setConfigValue('password', 'Dent')
+            ->setConfigurationValue('email', 'Arthur')
+            ->setConfigurationValue('password', 'Dent')
         ;
         $this->audibleStrategy->saveConfigurationParameters($strategy, []);
     }
@@ -190,13 +190,13 @@ class AudibleStrategyTest extends Unit
         unset($possibleTypes[$types]);
 
         $this->assertSame($name, $this->audibleStrategy->getFiles(
-            (new Strategy('Audible', AudibleStrategy::class))->setConfigValue('type', $types),
+            (new Strategy('Audible', AudibleStrategy::class))->setConfigurationValue('type', $types),
             $rule->reveal()
         )->current()->getName());
 
         foreach ($possibleTypes as $possibleElement) {
             $this->assertNull($this->audibleStrategy->getFiles(
-                (new Strategy('Audible', AudibleStrategy::class))->setConfigValue('type', $possibleElement),
+                (new Strategy('Audible', AudibleStrategy::class))->setConfigurationValue('type', $possibleElement),
                 $rule->reveal()
             )->current(), 'Matched for: ' . $possibleElement);
         }

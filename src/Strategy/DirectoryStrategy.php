@@ -43,7 +43,7 @@ class DirectoryStrategy implements StrategyInterface
 
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
-        $strategy->setConfigValue('directory', $parameters['directory']);
+        $strategy->setConfigurationValue('directory', $parameters['directory']);
 
         return true;
     }
@@ -57,8 +57,8 @@ class DirectoryStrategy implements StrategyInterface
      */
     public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
-        $viewedFiles = $strategy->hasConfigValue('viewedFiles') ? $strategy->getConfigValue('viewedFiles') : [];
-        $directory = $strategy->getConfigValue('directory');
+        $viewedFiles = $strategy->hasConfigurationValue('viewedFiles') ? $strategy->getConfigurationValue('viewedFiles') : [];
+        $directory = $strategy->getConfigurationValue('directory');
 
         foreach ($this->dirService->getFiles($directory) as $file) {
             $lockName =
@@ -77,7 +77,7 @@ class DirectoryStrategy implements StrategyInterface
                 continue;
             }
 
-            $strategy->setConfigValue('waitTime', 0);
+            $strategy->setConfigurationValue('waitTime', 0);
             $rule->setMessage(sprintf('Prüfe ob Datei %s noch größer wird', $file))->save();
             $fileSize = filesize($file);
             sleep(1);
@@ -87,7 +87,7 @@ class DirectoryStrategy implements StrategyInterface
             }
 
             $viewedFiles[] = $file;
-            $strategy->setConfigValue('viewedFiles', $viewedFiles);
+            $strategy->setConfigurationValue('viewedFiles', $viewedFiles);
 
             yield new File(
                 $this->fileService->getFilename($file),
@@ -97,11 +97,11 @@ class DirectoryStrategy implements StrategyInterface
             );
         }
 
-        if (!$strategy->hasConfigValue('loadedFiles')) {
+        if (!$strategy->hasConfigurationValue('loadedFiles')) {
             $rule->setMessage('Warte auf neue Dateien')->save();
             $waitTime =
-                ($strategy->hasConfigValue('waitTime')
-                    ? ((int) $strategy->getConfigValue('waitTime')) :
+                ($strategy->hasConfigurationValue('waitTime')
+                    ? ((int) $strategy->getConfigurationValue('waitTime')) :
                     0)
                 + self::WAIT_PER_LOOP_SECONDS;
             sleep(self::WAIT_PER_LOOP_SECONDS);
@@ -110,7 +110,7 @@ class DirectoryStrategy implements StrategyInterface
                 return null;
             }
 
-            $strategy->setConfigValue('waitTime', $waitTime);
+            $strategy->setConfigurationValue('waitTime', $waitTime);
 
             yield from $this->getFiles($strategy, $rule);
         }
@@ -121,28 +121,28 @@ class DirectoryStrategy implements StrategyInterface
         $fileName = $this->dirService->addEndSlash($file->getPath()) . $file->getName();
         $file->setResource(fopen($fileName, 'r'), filesize($fileName));
 
-        $files = $file->getStrategy()->hasConfigValue('loadedFiles')
-            ? $file->getStrategy()->getConfigValue('loadedFiles')
+        $files = $file->getStrategy()->hasConfigurationValue('loadedFiles')
+            ? $file->getStrategy()->getConfigurationValue('loadedFiles')
             : []
         ;
         $files[] = $fileName;
-        $file->getStrategy()->setConfigValue('loadedFiles', $files);
+        $file->getStrategy()->setConfigurationValue('loadedFiles', $files);
 
         return $file;
     }
 
     public function unload(Strategy $strategy): void
     {
-        if (!$strategy->hasConfigValue('loadedFiles')) {
+        if (!$strategy->hasConfigurationValue('loadedFiles')) {
             return;
         }
 
-        foreach ($strategy->getConfigValue('loadedFiles') as $file) {
+        foreach ($strategy->getConfigurationValue('loadedFiles') as $file) {
             unlink($file);
 //            $this->trashService->add($file);
         }
 
-        $strategy->setConfigValue('loadedFiles', []);
+        $strategy->setConfigurationValue('loadedFiles', []);
     }
 
     /**

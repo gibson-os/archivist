@@ -87,13 +87,13 @@ class AudibleStrategy extends AbstractWebStrategy
 
         if ($strategy->getConfigurationStep() === self::STEP_CAPTCHA) {
             return [
-                self::KEY_CAPTCHA_IMAGE => (new StringParameter('Captcha'))->setImage($strategy->getConfigValue(self::KEY_CAPTCHA_IMAGE))
+                self::KEY_CAPTCHA_IMAGE => (new StringParameter('Captcha'))->setImage($strategy->getConfigurationValue(self::KEY_CAPTCHA_IMAGE))
             ];
         }
 
         if (
-            $strategy->hasConfigValue(self::KEY_EMAIL) &&
-            $strategy->hasConfigValue(self::KEY_PASSWORD)
+            $strategy->hasConfigurationValue(self::KEY_EMAIL) &&
+            $strategy->hasConfigurationValue(self::KEY_PASSWORD)
         ) {
             return [self::KEY_TYPE => $typeParameter];
         }
@@ -130,7 +130,7 @@ class AudibleStrategy extends AbstractWebStrategy
         $page->clickLink(self::LINK_LIBRARY);
         $this->browserService->waitForElementById($session, 'lib-subheader-actions');
 
-        $strategy->setConfigValue(self::KEY_SESSION, serialize($session));
+        $strategy->setConfigurationValue(self::KEY_SESSION, serialize($session));
 
         return true;
     }
@@ -150,7 +150,7 @@ class AudibleStrategy extends AbstractWebStrategy
                 yield from $this->getFilesFromPage(
                     $strategy,
                     $rule,
-                    $type ?? $strategy->getConfigValue(self::KEY_TYPE)
+                    $type ?? $strategy->getConfigurationValue(self::KEY_TYPE)
                 );
 
                 $link = $page->findLink('Eine Seite vorwärts');
@@ -440,8 +440,8 @@ class AudibleStrategy extends AbstractWebStrategy
         $captchaImage = $this->browserService->waitForElementById($session, 'auth-captcha-image');
         $captchaImageSource = $captchaImage->getAttribute('src') ?? '';
         $strategy
-            ->setConfigValue(self::KEY_SESSION, serialize($session))
-            ->setConfigValue(self::KEY_CAPTCHA_IMAGE, $captchaImageSource)
+            ->setConfigurationValue(self::KEY_SESSION, serialize($session))
+            ->setConfigurationValue(self::KEY_CAPTCHA_IMAGE, $captchaImageSource)
             ->setConfigurationStep(self::STEP_CAPTCHA);
     }
 
@@ -452,9 +452,9 @@ class AudibleStrategy extends AbstractWebStrategy
     private function validateCaptcha(Strategy $strategy, array $parameters): bool
     {
         $email = $parameters[self::KEY_EMAIL]
-            ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_EMAIL));
+            ?? $this->cryptService->decrypt($strategy->getConfigurationValue(self::KEY_EMAIL));
         $password = $parameters[self::KEY_PASSWORD]
-            ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_PASSWORD));
+            ?? $this->cryptService->decrypt($strategy->getConfigurationValue(self::KEY_PASSWORD));
         $session = $this->getSession($strategy);
         $page = $session->getPage();
         $this->browserService->fillFormFields($session, [
@@ -483,9 +483,9 @@ class AudibleStrategy extends AbstractWebStrategy
     {
         $session = $this->browserService->getSession();
         $email = $parameters[self::KEY_EMAIL]
-            ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_EMAIL));
+            ?? $this->cryptService->decrypt($strategy->getConfigurationValue(self::KEY_EMAIL));
         $password = $parameters[self::KEY_PASSWORD]
-            ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_PASSWORD));
+            ?? $this->cryptService->decrypt($strategy->getConfigurationValue(self::KEY_PASSWORD));
         $page = $this->browserService->loadPage($session, self::URL);
         $page->clickLink('Anmelden');
         $this->browserService->waitForElementById($session, 'ap_email');
@@ -498,10 +498,10 @@ class AudibleStrategy extends AbstractWebStrategy
 
         try {
             $strategy
-                ->setConfigValue(self::KEY_SESSION, serialize($session))
-                ->setConfigValue(self::KEY_TYPE, $parameters[self::KEY_TYPE])
-                ->setConfigValue(self::KEY_EMAIL, $this->cryptService->encrypt($email))
-                ->setConfigValue(self::KEY_PASSWORD, $this->cryptService->encrypt($password));
+                ->setConfigurationValue(self::KEY_SESSION, serialize($session))
+                ->setConfigurationValue(self::KEY_TYPE, $parameters[self::KEY_TYPE])
+                ->setConfigurationValue(self::KEY_EMAIL, $this->cryptService->encrypt($email))
+                ->setConfigurationValue(self::KEY_PASSWORD, $this->cryptService->encrypt($password));
             $this->waitForLibrary($session);
         } catch (BrowserException) {
             $this->setCaptchaStep($session, $strategy);

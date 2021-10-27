@@ -58,17 +58,17 @@ class Strategy implements JsonSerializable, AutoCompleteModelInterface
         return $this;
     }
 
-    public function getConfigValue(string $name)
+    public function getConfigurationValue(string $name)
     {
         return $this->configuration[$name];
     }
 
-    public function hasConfigValue(string $name): bool
+    public function hasConfigurationValue(string $name): bool
     {
         return isset($this->configuration[$name]);
     }
 
-    public function setConfigValue(string $name, $value): Strategy
+    public function setConfigurationValue(string $name, $value): Strategy
     {
         $this->configuration[$name] = $value;
 
