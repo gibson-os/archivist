@@ -57,7 +57,7 @@ class IndexerCommand extends AbstractCommand
 
         try {
             $this->ruleService->executeRule($rule);
-        } catch (LockError $exception) {
+        } catch (LockError) {
             $this->logger->warning('Indexing for this strategy already runs!');
             $rule
                 ->setActive(false)
