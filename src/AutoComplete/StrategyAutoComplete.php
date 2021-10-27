@@ -67,7 +67,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
             $strategy = new Strategy($name, $namespace . $className);
 
             if ($rule !== null && $rule->getStrategy() === $namespace . $className) {
-                $strategy->setConfig(JsonUtility::decode($rule->getConfiguration()));
+                $strategy->setConfiguration(JsonUtility::decode($rule->getConfiguration()));
             }
 
             $strategies[$name] = $strategy->setParameters($strategyService->getConfigurationParameters($strategy));
@@ -88,7 +88,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
             $rule = $this->ruleRepository->getById((int) $parameters[self::PARAMETER_RULE_ID]);
 
             if ($rule->getStrategy() === $id) {
-                $strategy->setConfig(JsonUtility::decode($rule->getConfiguration()));
+                $strategy->setConfiguration(JsonUtility::decode($rule->getConfiguration()));
             }
         }
 

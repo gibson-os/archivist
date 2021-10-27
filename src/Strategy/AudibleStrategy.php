@@ -85,7 +85,7 @@ class AudibleStrategy extends AbstractWebStrategy
             'Podcast' => self::TYPE_PODCAST,
         ]);
 
-        if ($strategy->getConfigStep() === self::STEP_CAPTCHA) {
+        if ($strategy->getConfigurationStep() === self::STEP_CAPTCHA) {
             return [
                 self::KEY_CAPTCHA_IMAGE => (new StringParameter('Captcha'))->setImage($strategy->getConfigValue(self::KEY_CAPTCHA_IMAGE))
             ];
@@ -112,14 +112,14 @@ class AudibleStrategy extends AbstractWebStrategy
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
         if (
-            $strategy->getConfigStep() === self::STEP_LOGIN &&
+            $strategy->getConfigurationStep() === self::STEP_LOGIN &&
             !$this->validateLogin($strategy, $parameters)
         ) {
             return false;
         }
 
         if (
-            $strategy->getConfigStep() === self::STEP_CAPTCHA &&
+            $strategy->getConfigurationStep() === self::STEP_CAPTCHA &&
             !$this->validateCaptcha($strategy, $parameters)
         ) {
             return false;
@@ -442,7 +442,7 @@ class AudibleStrategy extends AbstractWebStrategy
         $strategy
             ->setConfigValue(self::KEY_SESSION, serialize($session))
             ->setConfigValue(self::KEY_CAPTCHA_IMAGE, $captchaImageSource)
-            ->setConfigStep(self::STEP_CAPTCHA);
+            ->setConfigurationStep(self::STEP_CAPTCHA);
     }
 
     /**

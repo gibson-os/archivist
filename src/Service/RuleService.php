@@ -70,7 +70,7 @@ class RuleService extends AbstractService
         $this->lockService->lock($lockName);
 
         $strategy = (new Strategy($strategyService->getName(), $rule->getStrategy()))
-            ->setConfig(JsonUtility::decode($rule->getConfiguration()))
+            ->setConfiguration(JsonUtility::decode($rule->getConfiguration()))
         ;
         $rule->setMessage('Ermittel Dateien')->save();
         $this->logger->info(sprintf('Get files with %s strategy', $strategyService->getName()));

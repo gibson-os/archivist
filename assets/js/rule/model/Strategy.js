@@ -8,7 +8,7 @@ Ext.define('GibsonOS.module.archivist.rule.model.Strategy', {
         name: 'name',
         type: 'string'
     },{
-        name: 'configStep',
+        name: 'configurationStep',
         type: 'int'
     },{
         name: 'parameters',

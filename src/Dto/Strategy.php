@@ -9,9 +9,9 @@ use JsonSerializable;
 
 class Strategy implements JsonSerializable, AutoCompleteModelInterface
 {
-    private array $config = [];
+    private array $configuration = [];
 
-    private int $configStep = 0;
+    private int $configurationStep = 0;
 
     /**
      * @var AbstractParameter[]
@@ -46,50 +46,50 @@ class Strategy implements JsonSerializable, AutoCompleteModelInterface
         return $this;
     }
 
-    public function getConfig(): array
+    public function getConfiguration(): array
     {
-        return $this->config;
+        return $this->configuration;
     }
 
-    public function setConfig(array $config): Strategy
+    public function setConfiguration(array $configuration): Strategy
     {
-        $this->config = $config;
+        $this->configuration = $configuration;
 
         return $this;
     }
 
     public function getConfigValue(string $name)
     {
-        return $this->config[$name];
+        return $this->configuration[$name];
     }
 
     public function hasConfigValue(string $name): bool
     {
-        return isset($this->config[$name]);
+        return isset($this->configuration[$name]);
     }
 
     public function setConfigValue(string $name, $value): Strategy
     {
-        $this->config[$name] = $value;
+        $this->configuration[$name] = $value;
 
         return $this;
     }
 
-    public function getConfigStep(): int
+    public function getConfigurationStep(): int
     {
-        return $this->configStep;
+        return $this->configurationStep;
     }
 
-    public function setConfigStep(int $configStep): Strategy
+    public function setConfigurationStep(int $configurationStep): Strategy
     {
-        $this->configStep = $configStep;
+        $this->configurationStep = $configurationStep;
 
         return $this;
     }
 
     public function setNextConfigStep(): Strategy
     {
-        ++$this->configStep;
+        ++$this->configurationStep;
 
         return $this;
     }
@@ -117,9 +117,9 @@ class Strategy implements JsonSerializable, AutoCompleteModelInterface
         return [
             'className' => $this->getClassName(),
             'name' => $this->getName(),
-            'config' => $this->getConfig(),
+            'configuration' => $this->getConfiguration(),
             'parameters' => $this->getParameters(),
-            'configStep' => $this->getConfigStep(),
+            'configStep' => $this->getConfigurationStep(),
         ];
     }
 

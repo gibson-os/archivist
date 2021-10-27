@@ -72,8 +72,8 @@ class RuleController extends AbstractController
         /** @var StrategyInterface $strategyService */
         $strategyService = $serviceManagerService->get($strategy, StrategyInterface::class);
         $strategyDto = (new Strategy($strategyService->getName(), $strategy))
-            ->setConfig($configuration)
-            ->setConfigStep($configStep)
+            ->setConfiguration($configuration)
+            ->setConfigurationStep($configStep)
         ;
 
         if (!$strategyService->saveConfigurationParameters($strategyDto, $parameters)) {
@@ -101,7 +101,7 @@ class RuleController extends AbstractController
                 'moveFilename' => (new StringParameter('Ablage Dateiname'))
                     ->setValue($rule === null ? null : $rule->getMoveFilename()),
             ],
-            'configuration' => $strategyDto->getConfig(),
+            'configuration' => $strategyDto->getConfiguration(),
             'className' => $strategy,
             'lastStep' => true,
             'id' => $rule === null ? null : $rule->getId(),

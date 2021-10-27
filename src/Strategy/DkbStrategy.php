@@ -44,7 +44,7 @@ class DkbStrategy extends AbstractWebStrategy
     public function getConfigurationParameters(Strategy $strategy): array
     {
         if (
-            $strategy->getConfigStep() === self::STEP_LOGIN &&
+            $strategy->getConfigurationStep() === self::STEP_LOGIN &&
             $strategy->hasConfigValue('username') &&
             $strategy->hasConfigValue('password')
         ) {
@@ -54,7 +54,7 @@ class DkbStrategy extends AbstractWebStrategy
             ]);
         }
 
-        return match ($strategy->getConfigStep()) {
+        return match ($strategy->getConfigurationStep()) {
             self::STEP_TAN => $this->getTanParameters(),
             self::STEP_PATH => $this->getPathParameters($strategy),
             default => $this->getLoginParameters(),
@@ -67,7 +67,7 @@ class DkbStrategy extends AbstractWebStrategy
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
     {
-        switch ($strategy->getConfigStep()) {
+        switch ($strategy->getConfigurationStep()) {
             case self::STEP_TAN:
                 $this->validateTan($strategy, $parameters);
 
