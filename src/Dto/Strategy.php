@@ -87,7 +87,7 @@ class Strategy implements JsonSerializable, AutoCompleteModelInterface
         return $this;
     }
 
-    public function setNextConfigStep(): Strategy
+    public function setNextConfigurationStep(): Strategy
     {
         ++$this->configurationStep;
 
@@ -119,7 +119,7 @@ class Strategy implements JsonSerializable, AutoCompleteModelInterface
             'name' => $this->getName(),
             'configuration' => $this->getConfiguration(),
             'parameters' => $this->getParameters(),
-            'configStep' => $this->getConfigurationStep(),
+            'configurationStep' => $this->getConfigurationStep(),
         ];
     }
 

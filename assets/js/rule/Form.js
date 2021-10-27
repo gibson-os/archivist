@@ -64,7 +64,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
                 ;
                 parameters.configuration = !responseData.configuration ? '[]' : Ext.encode(responseData.configuration);
                 parameters.id = me.ruleId;
-                parameters.configStep = responseData.configStep ?? 0;
+                parameters.configurationStep = responseData.configurationStep ?? 0;
 
                 return parameters;
             };

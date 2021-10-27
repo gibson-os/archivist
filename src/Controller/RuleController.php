@@ -54,12 +54,12 @@ class RuleController extends AbstractController
      */
     public function edit(
         ServiceManagerService $serviceManagerService,
-        RuleRepository $ruleRepository,
-        string $strategy,
-        array $configuration,
-        array $parameters,
-        int $configStep = 0,
-        int $id = null
+        RuleRepository        $ruleRepository,
+        string                $strategy,
+        array                 $configuration,
+        array                 $parameters,
+        int                   $configurationStep = 0,
+        int                   $id = null
     ): AjaxResponse {
         $this->checkPermission(PermissionService::WRITE);
         $rule = null;
@@ -73,7 +73,7 @@ class RuleController extends AbstractController
         $strategyService = $serviceManagerService->get($strategy, StrategyInterface::class);
         $strategyDto = (new Strategy($strategyService->getName(), $strategy))
             ->setConfiguration($configuration)
-            ->setConfigurationStep($configStep)
+            ->setConfigurationStep($configurationStep)
         ;
 
         if (!$strategyService->saveConfigurationParameters($strategyDto, $parameters)) {

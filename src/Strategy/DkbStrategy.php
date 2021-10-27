@@ -215,7 +215,7 @@ class DkbStrategy extends AbstractWebStrategy
             ->setConfigValue('session', serialize($session))
             ->setConfigValue('username', $this->cryptService->encrypt($parameters['j_username']))
             ->setConfigValue('password', $this->cryptService->encrypt($parameters['j_password']))
-            ->setNextConfigStep()
+            ->setNextConfigurationStep()
         ;
     }
 
@@ -255,7 +255,7 @@ class DkbStrategy extends AbstractWebStrategy
 
         $strategy
             ->setConfigValue('directories', $directories)
-            ->setNextConfigStep()
+            ->setNextConfigurationStep()
         ;
     }
 
