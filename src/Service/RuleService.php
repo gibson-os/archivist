@@ -142,7 +142,8 @@ class RuleService extends AbstractService
             fclose($newFile);
             $index
                 ->setSize(filesize($newFileName))
-                ->save();
+                ->save()
+            ;
         }
 
         $rule

@@ -487,7 +487,7 @@ class AudibleStrategy extends AbstractWebStrategy
         $password = $parameters[self::KEY_PASSWORD]
             ?? $this->cryptService->decrypt($strategy->getConfigValue(self::KEY_PASSWORD));
         $page = $this->browserService->loadPage($session, self::URL);
-        $page->clickLink('Bereits Kunde? Anmelden');
+        $page->clickLink('Anmelden');
         $this->browserService->waitForElementById($session, 'ap_email');
 
         $this->browserService->fillFormFields($session, [
