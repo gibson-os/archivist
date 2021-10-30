@@ -2,10 +2,10 @@
   "name": "gibson-os/archivist",
   "require": {
     "php": " ^8.0",
-    "mdo/mdo": "dev-feature/php8.0",
-    "gibson-os/core": "dev-feature/php8.0",
+    "mdo/mdo": "dev-master",
+    "gibson-os/core": "dev-master",
+    "gibson-os/explorer": "dev-master",
     "ext-json": "*",
-    "gibson-os/explorer": "dev-feature/php8.0",
     "behat/mink": "^1.8",
     "dmore/chrome-mink-driver": "^2.7"
   },

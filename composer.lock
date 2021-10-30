@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0a73e79e62631dd0f5b6910510c0a55c",
+    "content-hash": "724a8538d6dcbdff7f18e863071e3077",
     "packages": [
         {
             "name": "behat/mink",
@@ -127,11 +127,11 @@
         },
         {
             "name": "gibson-os/core",
-            "version": "dev-feature/php8.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Core.git",
-                "reference": "0484dcaf99c808a1ea40e3ac37446162f74436fb"
+                "reference": "53bc03fcfdefb68816d1c5d606d74d618bffb41a"
             },
             "require": {
                 "ext-curl": "*",
@@ -143,7 +143,7 @@
                 "ext-sockets": "*",
                 "ext-sqlite3": "*",
                 "ext-zip": "*",
-                "mdo/mdo": "dev-feature/php8.0",
+                "mdo/mdo": "dev-master",
                 "php": " ^8.0",
                 "twig/twig": "^3.0"
             },
@@ -159,6 +159,7 @@
                 "rector/rector": "^0.11.57",
                 "vimeo/psalm": "^4.0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -199,15 +200,15 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2021-10-26T07:35:31+00:00"
+            "time": "2021-10-30T07:32:01+00:00"
         },
         {
             "name": "gibson-os/explorer",
-            "version": "dev-feature/php8.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Explorer.git",
-                "reference": "3108eebec8806c9d9343ad83a1fb87587760d0a8"
+                "reference": "2cc23b155b75cf138ec10ad797c91ae9e74d546b"
             },
             "require": {
                 "ext-exif": "*",
@@ -215,20 +216,19 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-sqlite3": "*",
-                "gibson-os/core": "dev-feature/php8.0",
-                "mdo/mdo": "dev-feature/php8.0",
-                "php": " ^8.0"
+                "gibson-os/core": "dev-master",
+                "mdo/mdo": "dev-master"
             },
             "require-dev": {
                 "captainhook/captainhook": "^5.0",
                 "captainhook/plugin-composer": "^5.0",
                 "codeception/codeception": "^4.0",
                 "codeception/module-asserts": "^1.3",
-                "friendsofphp/php-cs-fixer": "^3.0",
+                "friendsofphp/php-cs-fixer": "^2.15",
                 "phpmd/phpmd": "^2.7",
-                "rector/rector": "^0.11.57",
                 "vimeo/psalm": "^4.0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -236,15 +236,6 @@
                 }
             },
             "scripts": {
-                "fix": [
-                    "@php-cs"
-                ],
-                "test": [
-                    "@php-cs-dry",
-                    "@php-psalm",
-                    "@php-md",
-                    "@php-unit"
-                ],
                 "php-cs": [
                     "php ./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix src --verbose"
                 ],
@@ -264,15 +255,15 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2021-10-26T07:43:14+00:00"
+            "time": "2021-10-08T22:08:22+00:00"
         },
         {
             "name": "mdo/mdo",
-            "version": "dev-feature/php8.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/mdo.git",
-                "reference": "e575bcad233df0c925f0b77330d1aeb94b4469c2"
+                "reference": "953e31a4e5b5400cbbedf801d54167f6e08af14e"
             },
             "require": {
                 "ext-mbstring": "*",
@@ -289,6 +280,7 @@
                 "rector/rector": "^0.11.57",
                 "vimeo/psalm": "^4.0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -327,7 +319,7 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2021-10-26T18:59:24+00:00"
+            "time": "2021-10-30T07:28:45+00:00"
         },
         {
             "name": "psr/log",
@@ -5225,16 +5217,16 @@
         },
         {
             "name": "symfony/config",
-            "version": "v5.3.4",
+            "version": "v5.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "4268f3059c904c61636275182707f81645517a37"
+                "reference": "ac23c2f24d5634966d665d836c3933d54347e5d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/4268f3059c904c61636275182707f81645517a37",
-                "reference": "4268f3059c904c61636275182707f81645517a37",
+                "url": "https://api.github.com/repos/symfony/config/zipball/ac23c2f24d5634966d665d836c3933d54347e5d4",
+                "reference": "ac23c2f24d5634966d665d836c3933d54347e5d4",
                 "shasum": ""
             },
             "require": {
@@ -5284,7 +5276,7 @@
             "description": "Helps you find, load, combine, autofill and validate configuration values of any kind",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/config/tree/v5.3.4"
+                "source": "https://github.com/symfony/config/tree/v5.3.10"
             },
             "funding": [
                 {
@@ -5300,7 +5292,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-21T12:40:44+00:00"
+            "time": "2021-10-22T09:06:52+00:00"
         },
         {
             "name": "symfony/console",
@@ -5402,16 +5394,16 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v5.3.8",
+            "version": "v5.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "e39c344e06a3ceab531ebeb6c077e6652c4a0829"
+                "reference": "be833dd336c248ef2bdabf24665351455f52afdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/e39c344e06a3ceab531ebeb6c077e6652c4a0829",
-                "reference": "e39c344e06a3ceab531ebeb6c077e6652c4a0829",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/be833dd336c248ef2bdabf24665351455f52afdb",
+                "reference": "be833dd336c248ef2bdabf24665351455f52afdb",
                 "shasum": ""
             },
             "require": {
@@ -5470,7 +5462,7 @@
             "description": "Allows you to standardize and centralize the way objects are constructed in your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dependency-injection/tree/v5.3.8"
+                "source": "https://github.com/symfony/dependency-injection/tree/v5.3.10"
             },
             "funding": [
                 {
@@ -5486,7 +5478,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-21T20:52:44+00:00"
+            "time": "2021-10-22T18:11:05+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -6517,16 +6509,16 @@
         },
         {
             "name": "symfony/string",
-            "version": "v5.3.7",
+            "version": "v5.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "8d224396e28d30f81969f083a58763b8b9ceb0a5"
+                "reference": "d70c35bb20bbca71fc4ab7921e3c6bda1a82a60c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/8d224396e28d30f81969f083a58763b8b9ceb0a5",
-                "reference": "8d224396e28d30f81969f083a58763b8b9ceb0a5",
+                "url": "https://api.github.com/repos/symfony/string/zipball/d70c35bb20bbca71fc4ab7921e3c6bda1a82a60c",
+                "reference": "d70c35bb20bbca71fc4ab7921e3c6bda1a82a60c",
                 "shasum": ""
             },
             "require": {
@@ -6580,7 +6572,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v5.3.7"
+                "source": "https://github.com/symfony/string/tree/v5.3.10"
             },
             "funding": [
                 {
@@ -6596,7 +6588,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-08-26T08:00:08+00:00"
+            "time": "2021-10-27T18:21:46+00:00"
         },
         {
             "name": "symfony/yaml",
