@@ -89,12 +89,12 @@ class Rule extends AbstractModel implements JsonSerializable
 
         return $this;
     }
-    
+
     public function getStrategyName(): ?string
     {
         return $this->strategyName;
     }
-    
+
     public function setStrategyName(?string $strategyName): Rule
     {
         $this->strategyName = $strategyName;

@@ -87,7 +87,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
         if ($strategy->getConfigurationStep() === self::STEP_CAPTCHA) {
             return [
-                self::KEY_CAPTCHA_IMAGE => (new StringParameter('Captcha'))->setImage($strategy->getConfigurationValue(self::KEY_CAPTCHA_IMAGE))
+                self::KEY_CAPTCHA_IMAGE => (new StringParameter('Captcha'))->setImage($strategy->getConfigurationValue(self::KEY_CAPTCHA_IMAGE)),
             ];
         }
 
@@ -460,7 +460,7 @@ class AudibleStrategy extends AbstractWebStrategy
         $this->browserService->fillFormFields($session, [
             self::KEY_EMAIL => $email,
             self::KEY_PASSWORD => $password,
-            self::KEY_CAPTCHA => $parameters[self::KEY_CAPTCHA_IMAGE]
+            self::KEY_CAPTCHA => $parameters[self::KEY_CAPTCHA_IMAGE],
         ]);
         $page->pressButton('signInSubmit');
 

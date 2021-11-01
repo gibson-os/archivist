@@ -44,6 +44,7 @@ class RuleStore extends AbstractDatabaseStore
     /**
      * @throws DateTimeError
      * @throws FactoryError
+     *
      * @return Rule[]
      */
     public function getList(): array
