@@ -3,55 +3,30 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Repository;
 
-use Generator;
-use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\Repository\SelectError;
+use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Repository\AbstractRepository;
 use GibsonOS\Module\Archivist\Model\Rule;
 
+/**
+ * @method Rule fetchOne(string $where, array $parameters, string $abstractModelClassName = AbstractModel::class)
+ */
 class RuleRepository extends AbstractRepository
 {
     /**
-     * @throws DateTimeError
      * @throws SelectError
      */
     public function getById(int $id): Rule
     {
-        $table = $this->getTable(Rule::getTableName())
-            ->setWhere('`id`=?')
-            ->addWhereParameter($id)
-        ;
-
-        if (!$table->selectPrepared()) {
-            throw (new SelectError($table->connection->error()))->setTable($table);
-        }
-
-        $rule = new Rule();
-        $rule->loadFromMysqlTable($table);
-
-        return $rule;
+        return $this->fetchOne('`id`=?', [$id], Rule::class);
     }
 
     /**
-     * @throws DateTimeError
-     *
-     * @return Generator<Rule>|Rule[]
+     * @throws SelectError
      */
-    public function getAll(): iterable
+    public function getAll(): array
     {
-        $table = $this->getTable(Rule::getTableName());
-        $table->setOrderBy('`active` DESC');
-
-        if (!$table->select()) {
-            return [];
-        }
-
-        do {
-            $model = new Rule();
-            $model->loadFromMysqlTable($table);
-
-            yield $model;
-        } while ($table->next());
+        return $this->fetchAll('', [], Rule::class, null, null, '`active` DESC');
     }
 
     public function hasActive(string $observedDirectory, string $observedFilename = null): bool

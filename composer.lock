@@ -131,7 +131,7 @@
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Core.git",
-                "reference": "53bc03fcfdefb68816d1c5d606d74d618bffb41a"
+                "reference": "f900e2274b86dbc73d24d1db7cc102abf65a25a9"
             },
             "require": {
                 "ext-curl": "*",
@@ -200,7 +200,7 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2021-10-30T07:32:01+00:00"
+            "time": "2021-11-01T09:33:56+00:00"
         },
         {
             "name": "gibson-os/explorer",
@@ -208,7 +208,7 @@
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Explorer.git",
-                "reference": "2cc23b155b75cf138ec10ad797c91ae9e74d546b"
+                "reference": "18afc2fd334d74649bae15fe8ecce324221229d7"
             },
             "require": {
                 "ext-exif": "*",
@@ -217,15 +217,17 @@
                 "ext-mbstring": "*",
                 "ext-sqlite3": "*",
                 "gibson-os/core": "dev-master",
-                "mdo/mdo": "dev-master"
+                "mdo/mdo": "dev-master",
+                "php": " ^8.0"
             },
             "require-dev": {
                 "captainhook/captainhook": "^5.0",
                 "captainhook/plugin-composer": "^5.0",
                 "codeception/codeception": "^4.0",
                 "codeception/module-asserts": "^1.3",
-                "friendsofphp/php-cs-fixer": "^2.15",
+                "friendsofphp/php-cs-fixer": "^3.0",
                 "phpmd/phpmd": "^2.7",
+                "rector/rector": "^0.11.57",
                 "vimeo/psalm": "^4.0"
             },
             "default-branch": true,
@@ -236,6 +238,15 @@
                 }
             },
             "scripts": {
+                "fix": [
+                    "@php-cs"
+                ],
+                "test": [
+                    "@php-cs-dry",
+                    "@php-psalm",
+                    "@php-md",
+                    "@php-unit"
+                ],
                 "php-cs": [
                     "php ./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix src --verbose"
                 ],
@@ -255,7 +266,7 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2021-10-08T22:08:22+00:00"
+            "time": "2021-10-30T07:41:31+00:00"
         },
         {
             "name": "mdo/mdo",
@@ -263,7 +274,7 @@
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/mdo.git",
-                "reference": "953e31a4e5b5400cbbedf801d54167f6e08af14e"
+                "reference": "38ae7657a07af899050ab449ad9dac300f634054"
             },
             "require": {
                 "ext-mbstring": "*",
@@ -319,7 +330,7 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2021-10-30T07:28:45+00:00"
+            "time": "2021-10-31T22:54:50+00:00"
         },
         {
             "name": "psr/log",
@@ -3300,23 +3311,23 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "9.2.7",
+            "version": "9.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "d4c798ed8d51506800b441f7a13ecb0f76f12218"
+                "reference": "cf04e88a2e3c56fc1a65488afd493325b4c1bc3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/d4c798ed8d51506800b441f7a13ecb0f76f12218",
-                "reference": "d4c798ed8d51506800b441f7a13ecb0f76f12218",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/cf04e88a2e3c56fc1a65488afd493325b4c1bc3e",
+                "reference": "cf04e88a2e3c56fc1a65488afd493325b4c1bc3e",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-libxml": "*",
                 "ext-xmlwriter": "*",
-                "nikic/php-parser": "^4.12.0",
+                "nikic/php-parser": "^4.13.0",
                 "php": ">=7.3",
                 "phpunit/php-file-iterator": "^3.0.3",
                 "phpunit/php-text-template": "^2.0.2",
@@ -3365,7 +3376,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.7"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.8"
             },
             "funding": [
                 {
@@ -3373,7 +3384,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-09-17T05:39:03+00:00"
+            "time": "2021-10-30T08:01:38+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",

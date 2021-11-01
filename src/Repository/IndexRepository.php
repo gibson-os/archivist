@@ -3,13 +3,16 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Repository;
 
-use DateTimeImmutable;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Repository\AbstractRepository;
 use GibsonOS\Module\Archivist\Model\Index;
 use GibsonOS\Module\Archivist\Model\Rule;
+use mysqlTable;
 use stdClass;
 
+/**
+ * @method Index getModel(mysqlTable $table, string $abstractModelClassName)
+ */
 class IndexRepository extends AbstractRepository
 {
     /**
@@ -56,14 +59,7 @@ class IndexRepository extends AbstractRepository
             throw (new SelectError())->setTable($table);
         }
 
-        $model = (new Index())
-            ->setId((int) $record->index_id)
-            ->setInputPath($record->input_path)
-            ->setOutputPath($record->output_path)
-            ->setSize((int) $record->size)
-            ->setError($record->error)
-            ->setChanged(new DateTimeImmutable($record->changed))
-        ;
+        $model = $this->getModel($table, Index::class);
 
         if (!empty($record->rule_id)) {
             $model->setRule(
