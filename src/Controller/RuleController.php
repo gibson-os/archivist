@@ -3,17 +3,16 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Controller;
 
+use GibsonOS\Core\Attribute\CheckPermission;
 use GibsonOS\Core\Controller\AbstractController;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\GetError;
-use GibsonOS\Core\Exception\LoginRequired;
 use GibsonOS\Core\Exception\Model\SaveError;
-use GibsonOS\Core\Exception\PermissionDenied;
 use GibsonOS\Core\Exception\Repository\SelectError;
+use GibsonOS\Core\Model\User\Permission;
 use GibsonOS\Core\Service\CommandService;
-use GibsonOS\Core\Service\PermissionService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Core\Service\ServiceManagerService;
 use GibsonOS\Core\Utility\JsonUtility;
@@ -31,13 +30,11 @@ class RuleController extends AbstractController
     /**
      * @throws DateTimeError
      * @throws GetError
-     * @throws LoginRequired
-     * @throws PermissionDenied
+     * @throws FactoryError
      */
+    #[CheckPermission(Permission::READ)]
     public function index(RuleStore $ruleStore, int $start = 0, int $limit = 100, array $sort = []): AjaxResponse
     {
-        $this->checkPermission(PermissionService::READ);
-
         $ruleStore->setLimit($limit, $start);
         $ruleStore->setSortByExt($sort);
 
@@ -45,23 +42,20 @@ class RuleController extends AbstractController
     }
 
     /**
-     * @throws DateTimeError
      * @throws FactoryError
      * @throws JsonException
-     * @throws LoginRequired
-     * @throws PermissionDenied
      * @throws SelectError
      */
+    #[CheckPermission(Permission::WRITE)]
     public function edit(
         ServiceManagerService $serviceManagerService,
-        RuleRepository        $ruleRepository,
-        string                $strategy,
-        array                 $configuration,
-        array                 $parameters,
-        int                   $configurationStep = 0,
-        int                   $id = null
+        RuleRepository $ruleRepository,
+        string $strategy,
+        array $configuration,
+        array $parameters,
+        int $configurationStep = 0,
+        int $id = null
     ): AjaxResponse {
-        $this->checkPermission(PermissionService::WRITE);
         $rule = null;
 
         if ($id !== null) {
@@ -93,29 +87,27 @@ class RuleController extends AbstractController
         return $this->returnSuccess([
             'parameters' => [
                 'name' => (new StringParameter('Name'))
-                    ->setValue($rule === null ? null : $rule->getName()),
+                    ->setValue($rule?->getName()),
                 'observedFilename' => (new StringParameter('Beobachtungsregel'))
-                    ->setValue($rule === null ? null : $rule->getObservedFilename()),
+                    ->setValue($rule?->getObservedFilename()),
                 'moveDirectory' => (new DirectoryParameter('Ablage Verzeichnis'))
-                    ->setValue($rule === null ? null : $rule->getMoveDirectory()),
+                    ->setValue($rule?->getMoveDirectory()),
                 'moveFilename' => (new StringParameter('Ablage Dateiname'))
-                    ->setValue($rule === null ? null : $rule->getMoveFilename()),
+                    ->setValue($rule?->getMoveFilename()),
             ],
             'configuration' => $strategyDto->getConfiguration(),
             'className' => $strategy,
             'lastStep' => true,
-            'id' => $rule === null ? null : $rule->getId(),
+            'id' => $rule?->getId(),
         ]);
     }
 
     /**
-     * @throws DateTimeError
      * @throws JsonException
-     * @throws LoginRequired
-     * @throws PermissionDenied
      * @throws SaveError
      * @throws SelectError
      */
+    #[CheckPermission(Permission::WRITE)]
     public function save(
         RuleRepository $ruleRepository,
         string $strategy,
@@ -126,8 +118,6 @@ class RuleController extends AbstractController
         string $moveFilename,
         int $id = null
     ): AjaxResponse {
-        $this->checkPermission(PermissionService::WRITE);
-
         $rule = new Rule();
 
         if ($id !== null) {
@@ -152,6 +142,7 @@ class RuleController extends AbstractController
     /**
      * @param int[] $ruleIds
      */
+    #[CheckPermission(Permission::DELETE)]
     public function delete(RuleRepository $ruleRepository, array $ruleIds): AjaxResponse
     {
         $ruleRepository->deleteByIds($ruleIds);
@@ -160,13 +151,11 @@ class RuleController extends AbstractController
     }
 
     /**
-     * @throws DateTimeError
      * @throws JsonException
-     * @throws LoginRequired
-     * @throws PermissionDenied
      * @throws SaveError
      * @throws SelectError
      */
+    #[CheckPermission(Permission::WRITE)]
     public function execute(
         RuleRepository $ruleRepository,
         CommandService $commandService,
@@ -178,8 +167,6 @@ class RuleController extends AbstractController
         string $moveFilename,
         int $id
     ): AjaxResponse {
-        $this->checkPermission(PermissionService::WRITE);
-
         $rule = $ruleRepository->getById($id)->setConfiguration(JsonUtility::encode($configuration));
         $rule
             ->setActive(true)
@@ -197,6 +184,10 @@ class RuleController extends AbstractController
         return $this->returnSuccess($rule);
     }
 
+    /**
+     * @throws SelectError
+     */
+    #[CheckPermission(Permission::READ)]
     public function status(RuleRepository $ruleRepository, int $id): AjaxResponse
     {
         return $this->returnSuccess($ruleRepository->getById($id));
