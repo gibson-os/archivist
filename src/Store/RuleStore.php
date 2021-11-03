@@ -3,14 +3,17 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Store;
 
-use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\FactoryError;
+use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Service\ServiceManagerService;
 use GibsonOS\Core\Store\AbstractDatabaseStore;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use mysqlDatabase;
 
+/**
+ * @method Rule[] getModels()
+ */
 class RuleStore extends AbstractDatabaseStore
 {
     private ?int $userId = null;
@@ -20,14 +23,9 @@ class RuleStore extends AbstractDatabaseStore
         parent::__construct($database);
     }
 
-    protected function getTableName(): string
+    protected function getModelClassName(): string
     {
-        return Rule::getTableName();
-    }
-
-    protected function getCountField(): string
-    {
-        return '`id`';
+        return Rule::class;
     }
 
     protected function getOrderMapping(): array
@@ -41,39 +39,28 @@ class RuleStore extends AbstractDatabaseStore
         ];
     }
 
-    /**
-     * @throws DateTimeError
-     * @throws FactoryError
-     *
-     * @return Rule[]
-     */
-    public function getList(): array
+    protected function setWheres(): void
     {
-        $this->table->setOrderBy($this->getOrderBy());
-
         if ($this->userId !== null) {
-            $this->table
-                ->setWhere('`user_id`=?')
-                ->addWhereParameter($this->userId)
-            ;
+            $this->addWhere('`user_id`=?', [$this->userId]);
         }
+    }
 
-        if (!$this->table->selectPrepared()) {
-            return [];
-        }
-
-        $rules = [];
-
-        do {
-            $rule = new Rule();
-            $rule->loadFromMysqlTable($this->table);
+    /**
+     * @throws FactoryError
+     * @throws SelectError
+     *
+     * @return Rule[]|iterable
+     */
+    public function getList(): iterable
+    {
+        foreach ($this->getModels() as $rule) {
             /** @var StrategyInterface $strategyService */
             $strategyService = $this->serviceManagerService->get($rule->getStrategy());
             $rule->setStrategyByClass($strategyService);
-            $rules[] = $rule;
-        } while ($this->table->next());
 
-        return $rules;
+            yield $rule;
+        }
     }
 
     public function setUserId(?int $userId): RuleStore

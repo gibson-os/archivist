@@ -34,11 +34,10 @@ class RuleRepository extends AbstractRepository
         $table = $this->getTable(Rule::getTableName());
         $table
             ->setWhere(
-                '`observed_directory`=? AND ' .
-                '`active`=1' .
+                '`observed_directory`=? AND `active`=?' .
                 ($observedFilename === null ? '' : ' AND `observed_filename`=?')
             )
-            ->addWhereParameter($observedDirectory)
+            ->setWhereParameters([$observedDirectory, 1])
         ;
 
         if ($observedFilename !== null) {
