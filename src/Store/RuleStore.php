@@ -11,9 +11,6 @@ use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use mysqlDatabase;
 
-/**
- * @method Rule[] getModels()
- */
 class RuleStore extends AbstractDatabaseStore
 {
     private ?int $userId = null;
@@ -54,7 +51,8 @@ class RuleStore extends AbstractDatabaseStore
      */
     public function getList(): iterable
     {
-        foreach ($this->getModels() as $rule) {
+        /** @var Rule $rule */
+        foreach (parent::getList() as $rule) {
             /** @var StrategyInterface $strategyService */
             $strategyService = $this->serviceManagerService->get($rule->getStrategy());
             $rule->setStrategyByClass($strategyService);
