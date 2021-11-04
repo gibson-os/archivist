@@ -131,7 +131,7 @@
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Core.git",
-                "reference": "b52a9c858a8590925d2fb7797a44690e2b89051c"
+                "reference": "9777ba13c2064dc257ac7fc45f8bc49ab3e32642"
             },
             "require": {
                 "ext-curl": "*",
@@ -200,7 +200,7 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2021-11-03T20:59:44+00:00"
+            "time": "2021-11-03T22:54:34+00:00"
         },
         {
             "name": "gibson-os/explorer",
@@ -208,7 +208,7 @@
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Explorer.git",
-                "reference": "fcf15767172a9f711dc698edf78cb374dc2e4460"
+                "reference": "722803f3eb5b2cbfb5da8bab63df779067c50609"
             },
             "require": {
                 "ext-exif": "*",
@@ -266,7 +266,7 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2021-11-03T21:01:18+00:00"
+            "time": "2021-11-04T10:30:58+00:00"
         },
         {
             "name": "mdo/mdo",
