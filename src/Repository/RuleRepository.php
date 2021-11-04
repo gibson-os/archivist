@@ -4,12 +4,11 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Repository;
 
 use GibsonOS\Core\Exception\Repository\SelectError;
-use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Repository\AbstractRepository;
 use GibsonOS\Module\Archivist\Model\Rule;
 
 /**
- * @method Rule fetchOne(string $where, array $parameters, string $abstractModelClassName = AbstractModel::class)
+ * @method Rule fetchOne(string $where, array $parameters, string $modelClassName)
  */
 class RuleRepository extends AbstractRepository
 {

@@ -11,7 +11,7 @@ use mysqlTable;
 use stdClass;
 
 /**
- * @method Index getModel(mysqlTable $table, string $abstractModelClassName)
+ * @method Index getModel(mysqlTable $table, string $modelClassName)
  */
 class IndexRepository extends AbstractRepository
 {
