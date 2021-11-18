@@ -7,9 +7,6 @@ use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Repository\AbstractRepository;
 use GibsonOS\Module\Archivist\Model\Rule;
 
-/**
- * @method Rule fetchOne(string $where, array $parameters, string $modelClassName)
- */
 class RuleRepository extends AbstractRepository
 {
     /**

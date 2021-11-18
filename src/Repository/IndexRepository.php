@@ -7,12 +7,8 @@ use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Repository\AbstractRepository;
 use GibsonOS\Module\Archivist\Model\Index;
 use GibsonOS\Module\Archivist\Model\Rule;
-use mysqlTable;
 use stdClass;
 
-/**
- * @method Index getModel(mysqlTable $table, string $modelClassName)
- */
 class IndexRepository extends AbstractRepository
 {
     /**
