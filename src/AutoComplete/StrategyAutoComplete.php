@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\AutoComplete;
 
 use GibsonOS\Core\AutoComplete\AutoCompleteInterface;
-use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\Repository\SelectError;
@@ -26,7 +25,6 @@ class StrategyAutoComplete implements AutoCompleteInterface
     }
 
     /**
-     * @throws DateTimeError
      * @throws GetError
      * @throws SelectError
      * @throws JsonException
@@ -46,10 +44,11 @@ class StrategyAutoComplete implements AutoCompleteInterface
         }
 
         foreach ($files as $file) {
-            $className = str_replace('.php', '', $this->fileService->getFilename($file));
+            /** @var class-string $className */
+            $className = $namespace . str_replace('.php', '', $this->fileService->getFilename($file));
 
             try {
-                $strategyService = $this->serviceManagerService->get($namespace . $className);
+                $strategyService = $this->serviceManagerService->get($className);
             } catch (FactoryError) {
                 continue;
             }
@@ -64,9 +63,9 @@ class StrategyAutoComplete implements AutoCompleteInterface
                 continue;
             }
 
-            $strategy = new Strategy($name, $namespace . $className);
+            $strategy = new Strategy($name, $className);
 
-            if ($rule !== null && $rule->getStrategy() === $namespace . $className) {
+            if ($rule !== null && $rule->getStrategy() === $className) {
                 $strategy->setConfiguration(JsonUtility::decode($rule->getConfiguration()));
             }
 
@@ -78,16 +77,24 @@ class StrategyAutoComplete implements AutoCompleteInterface
         return array_values($strategies);
     }
 
+    /**
+     * @throws FactoryError
+     * @throws JsonException
+     * @throws SelectError
+     */
     public function getById(string $id, array $parameters): Strategy
     {
+        /** @var class-string $className */
+        $className = $id;
+
         /** @var StrategyInterface $strategyService */
-        $strategyService = $this->serviceManagerService->get($id);
-        $strategy = new Strategy($strategyService->getName(), $id);
+        $strategyService = $this->serviceManagerService->get($className);
+        $strategy = new Strategy($strategyService->getName(), $className);
 
         if (!empty($parameters[self::PARAMETER_RULE_ID])) {
             $rule = $this->ruleRepository->getById((int) $parameters[self::PARAMETER_RULE_ID]);
 
-            if ($rule->getStrategy() === $id) {
+            if ($rule->getStrategy() === $className) {
                 $strategy->setConfiguration(JsonUtility::decode($rule->getConfiguration()));
             }
         }

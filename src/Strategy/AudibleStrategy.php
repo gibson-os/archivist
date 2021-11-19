@@ -255,7 +255,6 @@ class AudibleStrategy extends AbstractWebStrategy
     }
 
     /**
-     * @throws DateTimeError
      * @throws DeleteError
      * @throws DriverException
      * @throws FfmpegException

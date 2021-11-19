@@ -5,7 +5,6 @@ namespace GibsonOS\Module\Archivist\Model;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Model\AbstractModel;
 use mysqlDatabase;
 
@@ -123,9 +122,6 @@ class Index extends AbstractModel
         return $this;
     }
 
-    /**
-     * @throws DateTimeError
-     */
     public function getRule(): ?Rule
     {
         $ruleId = $this->getRuleId();

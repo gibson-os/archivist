@@ -6,9 +6,7 @@ namespace GibsonOS\Module\Archivist\Controller;
 use GibsonOS\Core\Attribute\CheckPermission;
 use GibsonOS\Core\Controller\AbstractController;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
-use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\FactoryError;
-use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Model\User\Permission;
@@ -28,8 +26,6 @@ use JsonException;
 class RuleController extends AbstractController
 {
     /**
-     * @throws DateTimeError
-     * @throws GetError
      * @throws FactoryError
      */
     #[CheckPermission(Permission::READ)]
@@ -42,6 +38,8 @@ class RuleController extends AbstractController
     }
 
     /**
+     * @param class-string $strategy
+     *
      * @throws FactoryError
      * @throws JsonException
      * @throws SelectError
@@ -103,6 +101,8 @@ class RuleController extends AbstractController
     }
 
     /**
+     * @param class-string $strategy
+     *
      * @throws JsonException
      * @throws SaveError
      * @throws SelectError
@@ -151,6 +151,8 @@ class RuleController extends AbstractController
     }
 
     /**
+     * @param class-string $strategy
+     *
      * @throws JsonException
      * @throws SaveError
      * @throws SelectError

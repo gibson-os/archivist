@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Service;
 
 use GibsonOS\Core\Exception\CreateError;
-use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\Flock\LockError;
 use GibsonOS\Core\Exception\Flock\UnlockError;
@@ -52,7 +51,6 @@ class RuleService extends AbstractService
      * @throws JsonException
      * @throws RuleException
      * @throws CreateError
-     * @throws DateTimeError
      * @throws LockError
      * @throws UnlockError
      * @throws SaveError

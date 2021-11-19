@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Model;
 
-use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Model\User;
 use GibsonOS\Core\Utility\JsonUtility;
@@ -16,6 +15,9 @@ class Rule extends AbstractModel implements JsonSerializable
 
     private string $name;
 
+    /**
+     * @var class-string
+     */
     private string $strategy;
 
     private ?string $strategyName = null;
@@ -70,11 +72,17 @@ class Rule extends AbstractModel implements JsonSerializable
         return $this;
     }
 
+    /**
+     * @return class-string
+     */
     public function getStrategy(): string
     {
         return $this->strategy;
     }
 
+    /**
+     * @param class-string $strategy
+     */
     public function setStrategy(string $strategy): Rule
     {
         $this->strategy = $strategy;
@@ -187,9 +195,6 @@ class Rule extends AbstractModel implements JsonSerializable
         return $this;
     }
 
-    /**
-     * @throws DateTimeError
-     */
     public function loadIndexed()
     {
         /** @var Index[] $indexed */
@@ -227,9 +232,6 @@ class Rule extends AbstractModel implements JsonSerializable
         return $this;
     }
 
-    /**
-     * @throws DateTimeError
-     */
     public function getUser(): User
     {
         $this->loadForeignRecord($this->user, $this->getUserId());
