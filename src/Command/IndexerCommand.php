@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Command;
 
+use GibsonOS\Core\Attribute\Install\Cronjob;
 use GibsonOS\Core\Command\AbstractCommand;
 use GibsonOS\Core\Exception\ArgumentError;
 use GibsonOS\Core\Exception\CreateError;
@@ -22,6 +23,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
+#[Cronjob]
 class IndexerCommand extends AbstractCommand
 {
     public function __construct(
