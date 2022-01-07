@@ -23,7 +23,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
-#[Cronjob]
+#[Cronjob(user: 'root')]
 class IndexerCommand extends AbstractCommand
 {
     public function __construct(
