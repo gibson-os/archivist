@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Command;
 
+use GibsonOS\Core\Attribute\Command\Argument;
 use GibsonOS\Core\Attribute\Install\Cronjob;
 use GibsonOS\Core\Command\AbstractCommand;
 use GibsonOS\Core\Exception\ArgumentError;
@@ -29,14 +30,15 @@ use Twig\Error\SyntaxError;
 #[Cronjob(user: 'root')]
 class IndexerCommand extends AbstractCommand
 {
+    #[Argument]
+    private int $ruleId;
+
     public function __construct(
         private RuleRepository $ruleRepository,
         private RuleService $ruleService,
         LoggerInterface $logger
     ) {
         parent::__construct($logger);
-
-        $this->setArgument('ruleId', true);
     }
 
     /**
@@ -57,8 +59,7 @@ class IndexerCommand extends AbstractCommand
      */
     protected function run(): int
     {
-        $ruleId = (int) $this->getArgument('ruleId');
-        $rule = $this->ruleRepository->getById($ruleId);
+        $rule = $this->ruleRepository->getById($this->ruleId);
 
         try {
             $this->ruleService->executeRule($rule);
@@ -80,5 +81,10 @@ class IndexerCommand extends AbstractCommand
         }
 
         return 0;
+    }
+
+    public function setRuleId(int $ruleId): void
+    {
+        $this->ruleId = $ruleId;
     }
 }
