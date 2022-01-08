@@ -30,7 +30,7 @@ use Twig\Error\SyntaxError;
 #[Cronjob(user: 'root')]
 class IndexerCommand extends AbstractCommand
 {
-    #[Argument]
+    #[Argument('Rule ID to index')]
     private int $ruleId;
 
     public function __construct(
