@@ -80,7 +80,7 @@ class IndexerCommand extends AbstractCommand
             throw $exception;
         }
 
-        return 0;
+        return self::SUCCESS;
     }
 
     public function setRuleId(int $ruleId): void
