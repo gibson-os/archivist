@@ -23,6 +23,9 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
+/**
+ * @description Index new founded files by rules
+ */
 #[Cronjob(user: 'root')]
 class IndexerCommand extends AbstractCommand
 {
