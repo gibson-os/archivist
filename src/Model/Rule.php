@@ -3,37 +3,50 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Model;
 
+use GibsonOS\Core\Attribute\Install\Database\Column;
+use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Model\User;
 use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonSerializable;
 
+#[Table]
 class Rule extends AbstractModel implements JsonSerializable
 {
+    #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED], autoIncrement: true)]
     private ?int $id = null;
 
+    #[Column(length: 128)]
     private string $name;
 
     /**
      * @var class-string
      */
+    #[Column(length: 255)]
     private string $strategy;
 
     private ?string $strategyName = null;
 
+    #[Column(type: Column::TYPE_JSON)]
     private string $configuration = '[]';
 
+    #[Column(length: 255)]
     private ?string $observedFilename = null;
 
-    private string $moveDirectory = '';
+    #[Column(length: 255)]
+    private string $moveDirectory;
 
-    private string $moveFilename = '';
+    #[Column(length: 255)]
+    private string $moveFilename;
 
+    #[Column]
     private bool $active = false;
 
+    #[Column(type: Column::TYPE_TEXT)]
     private ?string $message = null;
 
+    #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED])]
     private int $userId;
 
     private User $user;

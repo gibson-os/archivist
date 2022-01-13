@@ -5,23 +5,33 @@ namespace GibsonOS\Module\Archivist\Model;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use GibsonOS\Core\Attribute\Install\Database\Column;
+use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
 use mysqlDatabase;
 
+#[Table]
 class Index extends AbstractModel
 {
+    #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED], autoIncrement: true)]
     private ?int $id = null;
 
+    #[Column(length: 512)]
     private string $inputPath;
 
+    #[Column(length: 512)]
     private ?string $outputPath = null;
 
+    #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED])]
     private int $size = 0;
 
+    #[Column]
     private ?int $ruleId = null;
 
+    #[Column(type: Column::TYPE_TEXT)]
     private ?string $error = null;
 
+    #[Column(default: Column::DEFAULT_CURRENT_TIMESTAMP)]
     private DateTimeInterface $changed;
 
     private ?Rule $rule = null;
