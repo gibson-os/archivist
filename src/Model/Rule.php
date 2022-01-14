@@ -56,7 +56,7 @@ class Rule extends AbstractModel implements JsonSerializable
     private int $userId;
 
     #[Constraint]
-    private User $user;
+    protected User $user;
 
     #[Column]
     private ?DateTimeImmutable $lastRun = null;
@@ -65,7 +65,7 @@ class Rule extends AbstractModel implements JsonSerializable
      * @var Index[]
      */
     #[Constraint('ruleId', Index::class)]
-    private array $indexed = [];
+    protected array $indexed = [];
 
     public function getId(): ?int
     {
