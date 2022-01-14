@@ -3,12 +3,17 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Repository;
 
+use GibsonOS\Core\Attribute\GetTableName;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Repository\AbstractRepository;
 use GibsonOS\Module\Archivist\Model\Rule;
 
 class RuleRepository extends AbstractRepository
 {
+    public function __construct(#[GetTableName(Rule::class)] private string $ruleTableName)
+    {
+    }
+
     /**
      * @throws SelectError
      */
@@ -27,7 +32,7 @@ class RuleRepository extends AbstractRepository
 
     public function hasActive(string $observedDirectory, string $observedFilename = null): bool
     {
-        $table = $this->getTable(Rule::getTableName());
+        $table = $this->getTable($this->ruleTableName);
         $table
             ->setWhere(
                 '`observed_directory`=? AND `active`=?' .
@@ -48,7 +53,7 @@ class RuleRepository extends AbstractRepository
      */
     public function deleteByIds(array $ids): void
     {
-        $table = $this->getTable(Rule::getTableName());
+        $table = $this->getTable($this->ruleTableName);
 
         $table
             ->setWhere('`id` IN (' . implode(', ', array_map(fn ($id) => '?', $ids)) . ')')

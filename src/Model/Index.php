@@ -6,10 +6,14 @@ namespace GibsonOS\Module\Archivist\Model;
 use DateTimeImmutable;
 use DateTimeInterface;
 use GibsonOS\Core\Attribute\Install\Database\Column;
+use GibsonOS\Core\Attribute\Install\Database\Constraint;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
 use mysqlDatabase;
 
+/**
+ * @method ?Rule getRule()
+ */
 #[Table]
 class Index extends AbstractModel
 {
@@ -34,18 +38,14 @@ class Index extends AbstractModel
     #[Column(type: Column::TYPE_TIMESTAMP, default: Column::DEFAULT_CURRENT_TIMESTAMP)]
     private DateTimeInterface $changed;
 
-    private ?Rule $rule = null;
+    #[Constraint]
+    protected ?Rule $rule = null;
 
     public function __construct(mysqlDatabase $database = null)
     {
-        $this->setChanged(new DateTimeImmutable());
-
         parent::__construct($database);
-    }
 
-    public static function getTableName(): string
-    {
-        return 'archivist_index';
+        $this->changed = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -130,21 +130,6 @@ class Index extends AbstractModel
         $this->changed = $changed;
 
         return $this;
-    }
-
-    public function getRule(): ?Rule
-    {
-        $ruleId = $this->getRuleId();
-
-        if ($ruleId !== null) {
-            if ($this->rule === null) {
-                $this->rule = new Rule();
-            }
-
-            $this->loadForeignRecord($this->rule, $ruleId);
-        }
-
-        return $this->rule;
     }
 
     public function setRule(?Rule $rule): Index

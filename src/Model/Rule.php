@@ -5,6 +5,7 @@ namespace GibsonOS\Module\Archivist\Model;
 
 use DateTimeImmutable;
 use GibsonOS\Core\Attribute\Install\Database\Column;
+use GibsonOS\Core\Attribute\Install\Database\Constraint;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Model\User;
@@ -12,6 +13,10 @@ use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonSerializable;
 
+/**
+ * @method User    getUser()
+ * @method Index[] getIndexed()
+ */
 #[Table]
 class Rule extends AbstractModel implements JsonSerializable
 {
@@ -50,6 +55,7 @@ class Rule extends AbstractModel implements JsonSerializable
     #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED])]
     private int $userId;
 
+    #[Constraint]
     private User $user;
 
     #[Column]
@@ -58,12 +64,8 @@ class Rule extends AbstractModel implements JsonSerializable
     /**
      * @var Index[]
      */
+    #[Constraint('ruleId', Index::class)]
     private array $indexed = [];
-
-    public static function getTableName(): string
-    {
-        return 'archivist_rule';
-    }
 
     public function getId(): ?int
     {
@@ -188,14 +190,6 @@ class Rule extends AbstractModel implements JsonSerializable
     }
 
     /**
-     * @return Index[]
-     */
-    public function getIndexed(): array
-    {
-        return $this->indexed;
-    }
-
-    /**
      * @param Index[] $indexed
      */
     public function setIndexed(array $indexed): Rule
@@ -210,19 +204,6 @@ class Rule extends AbstractModel implements JsonSerializable
         $this->indexed[] = $index;
 
         return $this;
-    }
-
-    public function loadIndexed()
-    {
-        /** @var Index[] $indexed */
-        $indexed = $this->loadForeignRecords(
-            Index::class,
-            $this->getId(),
-            Index::getTableName(),
-            'rule_id'
-        );
-
-        $this->setIndexed($indexed);
     }
 
     public function getMessage(): ?string
@@ -247,13 +228,6 @@ class Rule extends AbstractModel implements JsonSerializable
         $this->userId = $userId;
 
         return $this;
-    }
-
-    public function getUser(): User
-    {
-        $this->loadForeignRecord($this->user, $this->getUserId());
-
-        return $this->user;
     }
 
     public function setUser(User $user): Rule

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Repository;
 
+use GibsonOS\Core\Attribute\GetTableName;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Repository\AbstractRepository;
 use GibsonOS\Module\Archivist\Model\Index;
@@ -11,37 +12,43 @@ use stdClass;
 
 class IndexRepository extends AbstractRepository
 {
+    public function __construct(
+        #[GetTableName(Rule::class)] private string $ruleTableName,
+        #[GetTableName(Index::class)] private string $indexTableName
+    ) {
+    }
+
     /**
      * @throws SelectError
      */
     public function getByInputPath(int $ruleId, string $inputPath): Index
     {
-        $table = $this->getTable(Index::getTableName());
+        $table = $this->getTable($this->indexTableName);
         $table
             ->appendJoinLeft(
-                '`' . Rule::getTableName() . '`',
-                '`' . Index::getTableName() . '`.`rule_id`=`' . Rule::getTableName() . '`.`id`'
+                '`' . $this->ruleTableName . '`',
+                '`' . $this->indexTableName . '`.`rule_id`=`' . $this->ruleTableName . '`.`id`'
             )
             ->setWhere(
-                '`' . Index::getTableName() . '`.`input_path`=? AND ' .
-                '`' . Index::getTableName() . '`.`rule_id`=?'
+                '`' . $this->indexTableName . '`.`input_path`=? AND ' .
+                '`' . $this->indexTableName . '`.`rule_id`=?'
             )
             ->setWhereParameters([$inputPath, $ruleId])
             ->setSelectString(
-                '`' . Index::getTableName() . '`.`id` AS `index_id`, ' .
-                '`' . Index::getTableName() . '`.`input_path`, ' .
-                '`' . Index::getTableName() . '`.`output_path`, ' .
-                '`' . Index::getTableName() . '`.`size`, ' .
-                '`' . Index::getTableName() . '`.`rule_id`, ' .
-                '`' . Index::getTableName() . '`.`error`, ' .
-                '`' . Index::getTableName() . '`.`changed`, ' .
-                '`' . Rule::getTableName() . '`.`name`, ' .
-                '`' . Rule::getTableName() . '`.`observed_filename`, ' .
-                '`' . Rule::getTableName() . '`.`move_directory`, ' .
-                '`' . Rule::getTableName() . '`.`move_filename`, ' .
-                '`' . Rule::getTableName() . '`.`active`, ' .
-                '`' . Rule::getTableName() . '`.`message`, ' .
-                '`' . Rule::getTableName() . '`.`user_id`'
+                '`' . $this->indexTableName . '`.`id` AS `index_id`, ' .
+                '`' . $this->indexTableName . '`.`input_path`, ' .
+                '`' . $this->indexTableName . '`.`output_path`, ' .
+                '`' . $this->indexTableName . '`.`size`, ' .
+                '`' . $this->indexTableName . '`.`rule_id`, ' .
+                '`' . $this->indexTableName . '`.`error`, ' .
+                '`' . $this->indexTableName . '`.`changed`, ' .
+                '`' . $this->ruleTableName . '`.`name`, ' .
+                '`' . $this->ruleTableName . '`.`observed_filename`, ' .
+                '`' . $this->ruleTableName . '`.`move_directory`, ' .
+                '`' . $this->ruleTableName . '`.`move_filename`, ' .
+                '`' . $this->ruleTableName . '`.`active`, ' .
+                '`' . $this->ruleTableName . '`.`message`, ' .
+                '`' . $this->ruleTableName . '`.`user_id`'
             )
         ;
 
