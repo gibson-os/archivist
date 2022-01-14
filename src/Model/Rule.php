@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Model;
 
+use DateTimeImmutable;
 use GibsonOS\Core\Attribute\Install\Database\Column;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
@@ -50,6 +51,9 @@ class Rule extends AbstractModel implements JsonSerializable
     private int $userId;
 
     private User $user;
+
+    #[Column]
+    private ?DateTimeImmutable $lastRun = null;
 
     /**
      * @var Index[]

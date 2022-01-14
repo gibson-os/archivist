@@ -25,13 +25,13 @@ class Index extends AbstractModel
     #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED])]
     private int $size = 0;
 
-    #[Column]
+    #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED])]
     private ?int $ruleId = null;
 
     #[Column(type: Column::TYPE_TEXT)]
     private ?string $error = null;
 
-    #[Column(default: Column::DEFAULT_CURRENT_TIMESTAMP)]
+    #[Column(type: Column::TYPE_TIMESTAMP, default: Column::DEFAULT_CURRENT_TIMESTAMP)]
     private DateTimeInterface $changed;
 
     private ?Rule $rule = null;
