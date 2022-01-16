@@ -15,7 +15,10 @@ use JsonSerializable;
 
 /**
  * @method User    getUser()
+ * @method Rule    setUser(User $user)
  * @method Index[] getIndexed()
+ * @method Rule    addIndexed(Index[] $indexed)
+ * @method Rule    setIndexed(Index[] $indexed)
  */
 #[Table]
 class Rule extends AbstractModel implements JsonSerializable
@@ -55,16 +58,16 @@ class Rule extends AbstractModel implements JsonSerializable
     #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED])]
     private int $userId;
 
-    #[Constraint]
-    protected User $user;
-
     #[Column]
     private ?DateTimeImmutable $lastRun = null;
+
+    #[Constraint]
+    protected User $user;
 
     /**
      * @var Index[]
      */
-    #[Constraint('ruleId', Index::class)]
+    #[Constraint('rule', Index::class)]
     protected array $indexed = [];
 
     public function getId(): ?int
@@ -189,23 +192,6 @@ class Rule extends AbstractModel implements JsonSerializable
         return $this;
     }
 
-    /**
-     * @param Index[] $indexed
-     */
-    public function setIndexed(array $indexed): Rule
-    {
-        $this->indexed = $indexed;
-
-        return $this;
-    }
-
-    public function addIndex(Index $index): Rule
-    {
-        $this->indexed[] = $index;
-
-        return $this;
-    }
-
     public function getMessage(): ?string
     {
         return $this->message;
@@ -230,10 +216,14 @@ class Rule extends AbstractModel implements JsonSerializable
         return $this;
     }
 
-    public function setUser(User $user): Rule
+    public function getLastRun(): ?DateTimeImmutable
     {
-        $this->user = $user;
-        $this->setUserId((int) $user->getId());
+        return $this->lastRun;
+    }
+
+    public function setLastRun(?DateTimeImmutable $lastRun): Rule
+    {
+        $this->lastRun = $lastRun;
 
         return $this;
     }
@@ -251,6 +241,7 @@ class Rule extends AbstractModel implements JsonSerializable
             'moveFilename' => $this->getMoveFilename(),
             'active' => $this->isActive(),
             'message' => $this->getMessage(),
+            'lastRun' => $this->getLastRun()?->format('Y-m-d H:i:s'),
         ];
     }
 }

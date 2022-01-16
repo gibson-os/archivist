@@ -12,7 +12,8 @@ use GibsonOS\Core\Model\AbstractModel;
 use mysqlDatabase;
 
 /**
- * @method ?Rule getRule()
+ * @method Rule|null getRule()
+ * @method Index     setRule(?Rule $rule)
  */
 #[Table]
 class Index extends AbstractModel
@@ -128,14 +129,6 @@ class Index extends AbstractModel
     public function setChanged(DateTimeInterface $changed): Index
     {
         $this->changed = $changed;
-
-        return $this;
-    }
-
-    public function setRule(?Rule $rule): Index
-    {
-        $this->rule = $rule;
-        $this->setRuleId($rule instanceof Rule ? $rule->getId() : null);
 
         return $this;
     }
