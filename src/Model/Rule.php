@@ -6,6 +6,7 @@ namespace GibsonOS\Module\Archivist\Model;
 use DateTimeImmutable;
 use GibsonOS\Core\Attribute\Install\Database\Column;
 use GibsonOS\Core\Attribute\Install\Database\Constraint;
+use GibsonOS\Core\Attribute\Install\Database\Key;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Model\User;
@@ -21,6 +22,7 @@ use JsonSerializable;
  * @method Rule    setIndexed(Index[] $indexed)
  */
 #[Table]
+#[Key(unique: true, columns: ['strategy', 'observerd_filename'])]
 class Rule extends AbstractModel implements JsonSerializable
 {
     #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED], autoIncrement: true)]
