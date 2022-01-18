@@ -52,6 +52,7 @@ class Rule extends AbstractModel implements JsonSerializable
     private string $moveFilename;
 
     #[Column]
+    #[Key]
     private bool $active = false;
 
     #[Column(type: Column::TYPE_TEXT)]
