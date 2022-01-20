@@ -131,7 +131,7 @@
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Core.git",
-                "reference": "5a2e3567e62679709ee6b273f1c49794fd20a38a"
+                "reference": "3d42edd8480c8875bb3f690fce97e01d66c31abf"
             },
             "require": {
                 "ext-curl": "*",
@@ -200,7 +200,7 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2022-01-18T16:59:22+00:00"
+            "time": "2022-01-20T16:33:04+00:00"
         },
         {
             "name": "gibson-os/explorer",
@@ -208,7 +208,7 @@
             "source": {
                 "type": "git",
                 "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Explorer.git",
-                "reference": "6c09ca8662ace63007ede2a66d9347786c34f522"
+                "reference": "5d0382c1cdff393618f7f87e33f0fd5995479fad"
             },
             "require": {
                 "ext-exif": "*",
@@ -266,7 +266,7 @@
                     "php ./vendor/codeception/codeception/codecept generate:test unit"
                 ]
             },
-            "time": "2022-01-18T17:02:37+00:00"
+            "time": "2022-01-20T16:39:06+00:00"
         },
         {
             "name": "mdo/mdo",
@@ -2352,9 +2352,6 @@
             },
             "require": {
                 "php": "^7.1 || ^8.0"
-            },
-            "replace": {
-                "myclabs/deep-copy": "self.version"
             },
             "require-dev": {
                 "doctrine/collections": "^1.0",
@@ -6960,5 +6957,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.2.0"
 }
