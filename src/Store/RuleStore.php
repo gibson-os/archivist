@@ -5,7 +5,6 @@ namespace GibsonOS\Module\Archivist\Store;
 
 use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\Repository\SelectError;
-use GibsonOS\Core\Service\AttributeService;
 use GibsonOS\Core\Service\ServiceManagerService;
 use GibsonOS\Core\Store\AbstractDatabaseStore;
 use GibsonOS\Module\Archivist\Model\Rule;
@@ -18,10 +17,9 @@ class RuleStore extends AbstractDatabaseStore
 
     public function __construct(
         private ServiceManagerService $serviceManagerService,
-        AttributeService $attributeService,
         mysqlDatabase $database = null
     ) {
-        parent::__construct($attributeService, $database);
+        parent::__construct($database);
     }
 
     protected function getModelClassName(): string
