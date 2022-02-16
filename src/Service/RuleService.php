@@ -10,7 +10,6 @@ use GibsonOS\Core\Exception\Flock\UnlockError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Manager\ServiceManager;
-use GibsonOS\Core\Service\AbstractService;
 use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
 use GibsonOS\Core\Service\LockService;
@@ -30,7 +29,7 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Extension\StringLoaderExtension;
 
-class RuleService extends AbstractService
+class RuleService
 {
     public const RULE_LOCK_PREFIX = 'archivistIndexer';
 

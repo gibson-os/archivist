@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Controller;
 
 use GibsonOS\Core\Attribute\CheckPermission;
+use GibsonOS\Core\Attribute\GetModel;
 use GibsonOS\Core\Controller\AbstractController;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Exception\FactoryError;
@@ -27,6 +28,7 @@ class RuleController extends AbstractController
 {
     /**
      * @throws FactoryError
+     * @throws SelectError
      */
     #[CheckPermission(Permission::READ)]
     public function index(RuleStore $ruleStore, int $start = 0, int $limit = 100, array $sort = []): AjaxResponse
@@ -42,22 +44,17 @@ class RuleController extends AbstractController
      *
      * @throws FactoryError
      * @throws JsonException
-     * @throws SelectError
      */
     #[CheckPermission(Permission::WRITE)]
     public function edit(
         ServiceManager $serviceManager,
-        RuleRepository $ruleRepository,
         string $strategy,
         array $configuration,
         array $parameters,
         int $configurationStep = 0,
-        int $id = null
+        #[GetModel] Rule $rule = null
     ): AjaxResponse {
-        $rule = null;
-
-        if ($id !== null) {
-            $rule = $ruleRepository->getById($id);
+        if ($rule !== null) {
             $configuration = array_merge(JsonUtility::decode($rule->getConfiguration()), $configuration);
         }
 
@@ -105,27 +102,22 @@ class RuleController extends AbstractController
      *
      * @throws JsonException
      * @throws SaveError
-     * @throws SelectError
      */
     #[CheckPermission(Permission::WRITE)]
     public function save(
-        RuleRepository $ruleRepository,
         string $strategy,
         array $configuration,
         string $name,
         string $observedFilename,
         string $moveDirectory,
         string $moveFilename,
-        int $id = null
+        #[GetModel] Rule $rule = null
     ): AjaxResponse {
-        $rule = new Rule();
-
-        if ($id !== null) {
-            $rule = $ruleRepository->getById($id);
+        if ($rule === null) {
+            $rule = new Rule();
         }
 
         $rule
-            ->setId($id)
             ->setName($name)
             ->setStrategy($strategy)
             ->setConfiguration(JsonUtility::encode($configuration))
@@ -155,11 +147,9 @@ class RuleController extends AbstractController
      *
      * @throws JsonException
      * @throws SaveError
-     * @throws SelectError
      */
     #[CheckPermission(Permission::WRITE)]
     public function execute(
-        RuleRepository $ruleRepository,
         CommandService $commandService,
         string $strategy,
         array $configuration,
@@ -167,10 +157,10 @@ class RuleController extends AbstractController
         string $observedFilename,
         string $moveDirectory,
         string $moveFilename,
-        int $id
+        #[GetModel] Rule $rule
     ): AjaxResponse {
-        $rule = $ruleRepository->getById($id)->setConfiguration(JsonUtility::encode($configuration));
         $rule
+            ->setConfiguration(JsonUtility::encode($configuration))
             ->setActive(true)
             ->setMessage('Starte')
             ->setName($name)
@@ -181,17 +171,14 @@ class RuleController extends AbstractController
             ->setMoveFilename($moveFilename)
             ->save()
         ;
-        $commandService->executeAsync(IndexerCommand::class, ['ruleId' => $id]);
+        $commandService->executeAsync(IndexerCommand::class, ['ruleId' => $rule->getId()]);
 
         return $this->returnSuccess($rule);
     }
 
-    /**
-     * @throws SelectError
-     */
     #[CheckPermission(Permission::READ)]
-    public function status(RuleRepository $ruleRepository, int $id): AjaxResponse
+    public function status(#[GetModel] Rule $rule): AjaxResponse
     {
-        return $this->returnSuccess($ruleRepository->getById($id));
+        return $this->returnSuccess($rule);
     }
 }
