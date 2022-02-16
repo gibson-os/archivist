@@ -9,11 +9,11 @@ use GibsonOS\Core\Exception\Flock\LockError;
 use GibsonOS\Core\Exception\Flock\UnlockError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
+use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Service\AbstractService;
 use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
 use GibsonOS\Core\Service\LockService;
-use GibsonOS\Core\Service\ServiceManagerService;
 use GibsonOS\Core\Service\TwigService;
 use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Dto\File;
@@ -38,7 +38,7 @@ class RuleService extends AbstractService
         private FileService $fileService,
         private DirService $dirService,
         private IndexRepository $indexRepository,
-        private ServiceManagerService $serviceManagerService,
+        private ServiceManager $serviceManager,
         private TwigService $twigService,
         private LoggerInterface $logger,
         private LockService $lockService
@@ -62,7 +62,7 @@ class RuleService extends AbstractService
     {
         $this->logger->info(sprintf('Start indexing for rule %s', $rule->getName()));
         /** @var StrategyInterface $strategyService */
-        $strategyService = $this->serviceManagerService->get($rule->getStrategy(), StrategyInterface::class);
+        $strategyService = $this->serviceManager->get($rule->getStrategy(), StrategyInterface::class);
 
         $lockName = self::RULE_LOCK_PREFIX . $strategyService->getLockName($rule);
         $this->lockService->lock($lockName);

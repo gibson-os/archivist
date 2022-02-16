@@ -9,10 +9,10 @@ use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
+use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Model\User\Permission;
 use GibsonOS\Core\Service\CommandService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
-use GibsonOS\Core\Service\ServiceManagerService;
 use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Command\IndexerCommand;
 use GibsonOS\Module\Archivist\Dto\Strategy;
@@ -46,7 +46,7 @@ class RuleController extends AbstractController
      */
     #[CheckPermission(Permission::WRITE)]
     public function edit(
-        ServiceManagerService $serviceManagerService,
+        ServiceManager $serviceManager,
         RuleRepository $ruleRepository,
         string $strategy,
         array $configuration,
@@ -62,7 +62,7 @@ class RuleController extends AbstractController
         }
 
         /** @var StrategyInterface $strategyService */
-        $strategyService = $serviceManagerService->get($strategy, StrategyInterface::class);
+        $strategyService = $serviceManager->get($strategy, StrategyInterface::class);
         $strategyDto = (new Strategy($strategyService->getName(), $strategy))
             ->setConfiguration($configuration)
             ->setConfigurationStep($configurationStep)

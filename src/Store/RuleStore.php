@@ -5,7 +5,7 @@ namespace GibsonOS\Module\Archivist\Store;
 
 use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\Repository\SelectError;
-use GibsonOS\Core\Service\ServiceManagerService;
+use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Store\AbstractDatabaseStore;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
@@ -16,7 +16,7 @@ class RuleStore extends AbstractDatabaseStore
     private ?int $userId = null;
 
     public function __construct(
-        private ServiceManagerService $serviceManagerService,
+        private ServiceManager $serviceManager,
         mysqlDatabase $database = null
     ) {
         parent::__construct($database);
@@ -56,7 +56,7 @@ class RuleStore extends AbstractDatabaseStore
         /** @var Rule $rule */
         foreach (parent::getList() as $rule) {
             /** @var StrategyInterface $strategyService */
-            $strategyService = $this->serviceManagerService->get($rule->getStrategy());
+            $strategyService = $this->serviceManager->get($rule->getStrategy());
             $rule->setStrategyByClass($strategyService);
 
             yield $rule;

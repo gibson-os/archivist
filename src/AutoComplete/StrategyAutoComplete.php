@@ -7,9 +7,9 @@ use GibsonOS\Core\AutoComplete\AutoCompleteInterface;
 use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\Repository\SelectError;
+use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
-use GibsonOS\Core\Service\ServiceManagerService;
 use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Repository\RuleRepository;
@@ -20,8 +20,12 @@ class StrategyAutoComplete implements AutoCompleteInterface
 {
     private const PARAMETER_RULE_ID = 'ruleId';
 
-    public function __construct(private ServiceManagerService $serviceManagerService, private DirService $dirService, private FileService $fileService, private RuleRepository $ruleRepository)
-    {
+    public function __construct(
+        private ServiceManager $serviceManager,
+        private DirService $dirService,
+        private FileService $fileService,
+        private RuleRepository $ruleRepository
+    ) {
     }
 
     /**
@@ -48,7 +52,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
             $className = $namespace . str_replace('.php', '', $this->fileService->getFilename($file));
 
             try {
-                $strategyService = $this->serviceManagerService->get($className);
+                $strategyService = $this->serviceManager->get($className);
             } catch (FactoryError) {
                 continue;
             }
@@ -88,7 +92,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
         $className = $id;
 
         /** @var StrategyInterface $strategyService */
-        $strategyService = $this->serviceManagerService->get($className);
+        $strategyService = $this->serviceManager->get($className);
         $strategy = new Strategy($strategyService->getName(), $className);
 
         if (!empty($parameters[self::PARAMETER_RULE_ID])) {
