@@ -248,7 +248,7 @@ class AudibleStrategy extends AbstractWebStrategy
             $title = $this->cleanTitle($titleParts);
             $this->logger->info(sprintf('Find %s', $title));
 
-            yield new File($title, $matches[6], $this->dateTimeService->get(), $strategy);
+            yield new File($title, self::URL . $matches[6], $this->dateTimeService->get(), $strategy);
         }
 
         yield null;
