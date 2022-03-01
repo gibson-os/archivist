@@ -4,17 +4,18 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Controller;
 
 use GibsonOS\Core\Attribute\CheckPermission;
+use GibsonOS\Core\Attribute\GetMappedModel;
 use GibsonOS\Core\Attribute\GetModel;
 use GibsonOS\Core\Controller\AbstractController;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
+use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Model\User\Permission;
 use GibsonOS\Core\Service\CommandService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
-use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Command\IndexerCommand;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Model\Rule;
@@ -23,6 +24,7 @@ use GibsonOS\Module\Archivist\Store\RuleStore;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 use JsonException;
+use ReflectionException;
 
 class RuleController extends AbstractController
 {
@@ -43,7 +45,6 @@ class RuleController extends AbstractController
      * @param class-string $strategy
      *
      * @throws FactoryError
-     * @throws JsonException
      */
     #[CheckPermission(Permission::WRITE)]
     public function edit(
@@ -55,7 +56,7 @@ class RuleController extends AbstractController
         #[GetModel] Rule $rule = null
     ): AjaxResponse {
         if ($rule !== null) {
-            $configuration = array_merge(JsonUtility::decode($rule->getConfiguration()), $configuration);
+            $configuration = array_merge($rule->getConfiguration(), $configuration);
         }
 
         /** @var StrategyInterface $strategyService */
@@ -98,35 +99,16 @@ class RuleController extends AbstractController
     }
 
     /**
-     * @param class-string $strategy
-     *
      * @throws JsonException
      * @throws SaveError
+     * @throws ReflectionException
      */
     #[CheckPermission(Permission::WRITE)]
     public function save(
-        string $strategy,
-        array $configuration,
-        string $name,
-        string $observedFilename,
-        string $moveDirectory,
-        string $moveFilename,
-        #[GetModel] Rule $rule = null
+        ModelManager $modelManager,
+        #[GetMappedModel] Rule $rule
     ): AjaxResponse {
-        if ($rule === null) {
-            $rule = new Rule();
-        }
-
-        $rule
-            ->setName($name)
-            ->setStrategy($strategy)
-            ->setConfiguration(JsonUtility::encode($configuration))
-            ->setObservedFilename($observedFilename)
-            ->setMoveDirectory($moveDirectory)
-            ->setMoveFilename($moveFilename)
-            ->setUserId($this->sessionService->getUserId() ?? 0)
-            ->save()
-        ;
+        $modelManager->save($rule->setUserId($this->sessionService->getUserId() ?? 0));
 
         return $this->returnSuccess($rule);
     }
@@ -143,34 +125,17 @@ class RuleController extends AbstractController
     }
 
     /**
-     * @param class-string $strategy
-     *
      * @throws JsonException
      * @throws SaveError
+     * @throws ReflectionException
      */
     #[CheckPermission(Permission::WRITE)]
     public function execute(
         CommandService $commandService,
-        string $strategy,
-        array $configuration,
-        string $name,
-        string $observedFilename,
-        string $moveDirectory,
-        string $moveFilename,
-        #[GetModel] Rule $rule
+        ModelManager $modelManager,
+        #[GetMappedModel] Rule $rule
     ): AjaxResponse {
-        $rule
-            ->setConfiguration(JsonUtility::encode($configuration))
-            ->setActive(true)
-            ->setMessage('Starte')
-            ->setName($name)
-            ->setStrategy($strategy)
-            ->setConfiguration(JsonUtility::encode($configuration))
-            ->setObservedFilename($observedFilename)
-            ->setMoveDirectory($moveDirectory)
-            ->setMoveFilename($moveFilename)
-            ->save()
-        ;
+        $modelManager->save($rule->setActive(true)->setMessage('Starte'));
         $commandService->executeAsync(IndexerCommand::class, ['ruleId' => $rule->getId()]);
 
         return $this->returnSuccess($rule);

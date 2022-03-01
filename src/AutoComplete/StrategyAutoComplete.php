@@ -10,7 +10,6 @@ use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
-use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Repository\RuleRepository;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
@@ -70,7 +69,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
             $strategy = new Strategy($name, $className);
 
             if ($rule !== null && $rule->getStrategy() === $className) {
-                $strategy->setConfiguration(JsonUtility::decode($rule->getConfiguration()));
+                $strategy->setConfiguration($rule->getConfiguration());
             }
 
             $strategies[$name] = $strategy->setParameters($strategyService->getConfigurationParameters($strategy));
@@ -99,7 +98,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
             $rule = $this->ruleRepository->getById((int) $parameters[self::PARAMETER_RULE_ID]);
 
             if ($rule->getStrategy() === $className) {
-                $strategy->setConfiguration(JsonUtility::decode($rule->getConfiguration()));
+                $strategy->setConfiguration($rule->getConfiguration());
             }
         }
 

@@ -9,12 +9,12 @@ use GibsonOS\Core\Exception\Flock\LockError;
 use GibsonOS\Core\Exception\Flock\UnlockError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
+use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
 use GibsonOS\Core\Service\LockService;
 use GibsonOS\Core\Service\TwigService;
-use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\RuleException;
@@ -24,6 +24,7 @@ use GibsonOS\Module\Archivist\Repository\IndexRepository;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonException;
 use Psr\Log\LoggerInterface;
+use ReflectionException;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -40,7 +41,8 @@ class RuleService
         private ServiceManager $serviceManager,
         private TwigService $twigService,
         private LoggerInterface $logger,
-        private LockService $lockService
+        private LockService $lockService,
+        private ModelManager $modelManager
     ) {
         $this->twigService->getTwig()->addExtension(new StringLoaderExtension());
     }
@@ -56,6 +58,7 @@ class RuleService
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
+     * @throws ReflectionException
      */
     public function executeRule(Rule $rule): void
     {
@@ -67,9 +70,9 @@ class RuleService
         $this->lockService->lock($lockName);
 
         $strategy = (new Strategy($strategyService->getName(), $rule->getStrategy()))
-            ->setConfiguration(JsonUtility::decode($rule->getConfiguration()))
+            ->setConfiguration($rule->getConfiguration())
         ;
-        $rule->setMessage('Ermittel Dateien')->save();
+        $this->modelManager->save($rule->setMessage('Ermittel Dateien'));
         $this->logger->info(sprintf('Get files with %s strategy', $strategyService->getName()));
 
         foreach ($strategyService->getFiles($strategy, $rule) as $file) {
@@ -85,7 +88,7 @@ class RuleService
             }
 
             $this->logger->info(sprintf('Indexing file "%s"', $file->getName()));
-            $rule->setMessage(sprintf('Indexiere "%s"', $file->getName()))->save();
+            $this->modelManager->save($rule->setMessage(sprintf('Indexiere "%s"', $file->getName())));
 
             $context = [
                 'template' => $this->dirService->addEndSlash($rule->getMoveDirectory()) . $rule->getMoveFilename(),
@@ -110,20 +113,20 @@ class RuleService
                     $this->indexRepository->getByInputPath($rule->getId() ?? 0, $inputPath);
                 } catch (SelectError) {
                     $this->logger->warning(sprintf('File %s already exists!', $newFileName));
-                    $index->setError('Datei existiert bereits!')->save();
+                    $this->modelManager->save($index->setError('Datei existiert bereits!'));
                 }
 
                 continue;
             }
 
             $this->logger->info(sprintf('Load file %s', $file->getName()));
-            $rule->setMessage(sprintf('Lade Datei %s', $file->getName()))->save();
+            $this->modelManager->save($rule->setMessage(sprintf('Lade Datei %s', $file->getName())));
             $strategyService->setFileResource($file, $rule);
             $resource = $file->getResource();
 
             if ($resource === null) {
                 $this->logger->warning(sprintf('Resource for %s not set!', $file->getName()));
-                $index->setError('Datei konnte nicht geladen werden!')->save();
+                $this->modelManager->save($index->setError('Datei konnte nicht geladen werden!'));
 
                 throw new RuleException(sprintf('Resource for %s not set', $file->getName()));
             }
@@ -137,17 +140,10 @@ class RuleService
             $newFile = fopen($newFileName, 'w');
             stream_copy_to_stream($resource, $newFile);
             fclose($newFile);
-            $index
-                ->setSize(filesize($newFileName))
-                ->save()
-            ;
+            $this->modelManager->save($index->setSize(filesize($newFileName)));
         }
 
-        $rule
-            ->setActive(false)
-            ->setMessage('Fertig')
-            ->save()
-        ;
+        $this->modelManager->save($rule->setActive(false)->setMessage('Fertig'));
         $strategyService->unload($strategy);
         $this->lockService->unlock($lockName);
     }

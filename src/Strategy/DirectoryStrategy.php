@@ -8,11 +8,11 @@ use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\Flock\LockError;
 use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\Model\SaveError;
+use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Service\DateTimeService;
 use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
 use GibsonOS\Core\Service\LockService;
-use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Model\Rule;
@@ -20,6 +20,7 @@ use GibsonOS\Module\Archivist\Service\RuleService;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 use GibsonOS\Module\Explorer\Service\TrashService;
 use JsonException;
+use ReflectionException;
 
 class DirectoryStrategy implements StrategyInterface
 {
@@ -27,8 +28,14 @@ class DirectoryStrategy implements StrategyInterface
 
     private const WAIT_PER_LOOP_SECONDS = 3;
 
-    public function __construct(private DirService $dirService, private FileService $fileService, private DateTimeService $dateTimeService, private TrashService $trashService, private LockService $lockService)
-    {
+    public function __construct(
+        private DirService $dirService,
+        private FileService $fileService,
+        private DateTimeService $dateTimeService,
+        private TrashService $trashService,
+        private LockService $lockService,
+        private ModelManager $modelManager
+    ) {
     }
 
     public function getName(): string
@@ -54,6 +61,7 @@ class DirectoryStrategy implements StrategyInterface
      * @throws LockError
      * @throws SaveError
      * @throws DateTimeError
+     * @throws ReflectionException
      */
     public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
@@ -63,7 +71,7 @@ class DirectoryStrategy implements StrategyInterface
         foreach ($this->dirService->getFiles($directory) as $file) {
             $lockName =
                 RuleService::RULE_LOCK_PREFIX . 'directory' .
-                JsonUtility::decode($rule->getConfiguration())['directory']
+                $rule->getConfiguration()['directory']
             ;
 
             if ($this->lockService->shouldStop($lockName)) {
@@ -78,7 +86,7 @@ class DirectoryStrategy implements StrategyInterface
             }
 
             $strategy->setConfigurationValue('waitTime', 0);
-            $rule->setMessage(sprintf('Prüfe ob Datei %s noch größer wird', $file))->save();
+            $this->modelManager->save($rule->setMessage(sprintf('Prüfe ob Datei %s noch größer wird', $file)));
             $fileSize = filesize($file);
             sleep(1);
 
@@ -98,7 +106,7 @@ class DirectoryStrategy implements StrategyInterface
         }
 
         if (!$strategy->hasConfigurationValue('loadedFiles')) {
-            $rule->setMessage('Warte auf neue Dateien')->save();
+            $this->modelManager->save($rule->setMessage('Warte auf neue Dateien'));
             $waitTime =
                 ($strategy->hasConfigurationValue('waitTime')
                     ? ((int) $strategy->getConfigurationValue('waitTime')) :
@@ -148,10 +156,11 @@ class DirectoryStrategy implements StrategyInterface
     /**
      * @throws JsonException
      * @throws SaveError
+     * @throws ReflectionException
      */
     public function getLockName(Rule $rule): string
     {
-        $lockName = 'directory' . JsonUtility::decode($rule->getConfiguration())['directory'];
+        $lockName = 'directory' . $rule->getConfiguration()['directory'];
         $this->lockService->stop(RuleService::RULE_LOCK_PREFIX . $lockName);
 
         while ($this->lockService->isLocked(RuleService::RULE_LOCK_PREFIX . $lockName)) {

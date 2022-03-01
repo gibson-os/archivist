@@ -20,6 +20,7 @@ use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Exception\WebException;
+use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Service\CryptService;
 use GibsonOS\Core\Service\DateTimeService;
 use GibsonOS\Core\Service\FfmpegService;
@@ -32,7 +33,9 @@ use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Service\BrowserService;
+use JsonException;
 use Psr\Log\LoggerInterface;
+use ReflectionException;
 
 class AudibleStrategy extends AbstractWebStrategy
 {
@@ -66,10 +69,11 @@ class AudibleStrategy extends AbstractWebStrategy
         LoggerInterface $logger,
         CryptService $cryptService,
         DateTimeService $dateTimeService,
+        ModelManager $modelManager,
         private FfmpegService $ffmpegService,
         private ProcessService $processService
     ) {
-        parent::__construct($browserService, $webService, $logger, $cryptService, $dateTimeService);
+        parent::__construct($browserService, $webService, $logger, $cryptService, $dateTimeService, $modelManager);
     }
 
     public function getName(): string
@@ -138,6 +142,8 @@ class AudibleStrategy extends AbstractWebStrategy
     /**
      * @throws BrowserException
      * @throws DateTimeError
+     * @throws JsonException
+     * @throws ReflectionException
      * @throws SaveError
      */
     public function getFiles(Strategy $strategy, Rule $rule, string $type = null): Generator
@@ -175,6 +181,8 @@ class AudibleStrategy extends AbstractWebStrategy
      * @throws BrowserException
      * @throws DateTimeError
      * @throws SaveError
+     * @throws JsonException
+     * @throws ReflectionException
      */
     private function getFilesFromPage(Strategy $strategy, Rule $rule, string $type): Generator
     {
@@ -206,7 +214,7 @@ class AudibleStrategy extends AbstractWebStrategy
             $titleParts = new TitleParts($matches[1], $matches[3], $matches[5]);
 
             if ($type === self::TYPE_PODCAST) {
-                $rule->setMessage(sprintf('Überprüfe %s', $matches[1]))->save();
+                $this->modelManager->save($rule->setMessage(sprintf('Überprüfe %s', $matches[1])));
                 $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[6]));
                 $currentUrl = $session->getCurrentUrl();
                 $this->browserService->goto($session, $matches[6]);
@@ -223,7 +231,7 @@ class AudibleStrategy extends AbstractWebStrategy
                     yield new File($this->cleanTitle($titleParts), $file->getPath(), $file->getCreateDate(), $strategy);
                 }
 
-                $rule->setMessage('Gehe zurück zur Bibliothek')->save();
+                $this->modelManager->save($rule->setMessage('Gehe zurück zur Bibliothek'));
                 $this->logger->info(sprintf('Go back to %s', $currentUrl));
                 $this->browserService->goto($session, $currentUrl);
                 $this->browserService->waitForElementById($session, 'lib-subheader-actions');
@@ -260,10 +268,12 @@ class AudibleStrategy extends AbstractWebStrategy
      * @throws FfmpegException
      * @throws FileNotFound
      * @throws GetError
+     * @throws JsonException
      * @throws ProcessError
+     * @throws ReflectionException
+     * @throws SaveError
      * @throws StrategyException
      * @throws WebException
-     * @throws SaveError
      */
     public function setFileResource(File $file, Rule $rule): File
     {
@@ -295,16 +305,20 @@ class AudibleStrategy extends AbstractWebStrategy
         stream_copy_to_stream($resource, $newFile);
         fclose($newFile);
 
-        $rule->setMessage(sprintf('Ermittel Checksumme für %s', $file->getName()))->save();
+        $this->modelManager->save($rule->setMessage(sprintf('Ermittel Checksumme für %s', $file->getName())));
         $this->logger->info(sprintf('Get checksum for %s', $file->getName()));
         $checksum = $this->ffmpegService->getChecksum($tmpFileName);
 
-        $rule->setMessage(sprintf('Ermittel Activation Bytes mit Checksumme %s für %s', $checksum, $file->getName()))->save();
+        $this->modelManager->save($rule->setMessage(sprintf(
+            'Ermittel Activation Bytes mit Checksumme %s für %s',
+            $checksum,
+            $file->getName()
+        )));
         $this->logger->info(sprintf('Get activation bytes for checksum %s', $checksum));
         $activationBytes = $this->getActivationBytes($checksum);
         $file->setResource($resource, $response->getBody()->getLength());
 
-        $rule->setMessage(sprintf('Konvertiere %s', $file->getName()))->save();
+        $this->modelManager->save($rule->setMessage(sprintf('Konvertiere %s', $file->getName())));
         $this->logger->info('Convert');
         $this->ffmpegService->convert(
             (new Media($tmpFileName))->setAudioStreams(['0:a' => new Audio()])->selectAudioStream('0:a'),

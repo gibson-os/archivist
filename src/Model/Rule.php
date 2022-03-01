@@ -10,7 +10,6 @@ use GibsonOS\Core\Attribute\Install\Database\Key;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Model\User;
-use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonSerializable;
 
@@ -40,7 +39,7 @@ class Rule extends AbstractModel implements JsonSerializable
     private ?string $strategyName = null;
 
     #[Column(type: Column::TYPE_JSON)]
-    private string $configuration = '[]';
+    private array $configuration = [];
 
     #[Column(length: 255)]
     private ?string $observedFilename = null;
@@ -135,12 +134,12 @@ class Rule extends AbstractModel implements JsonSerializable
         return $this;
     }
 
-    public function getConfiguration(): string
+    public function getConfiguration(): array
     {
         return $this->configuration;
     }
 
-    public function setConfiguration(string $configuration): Rule
+    public function setConfiguration(array $configuration): Rule
     {
         $this->configuration = $configuration;
 
@@ -238,7 +237,7 @@ class Rule extends AbstractModel implements JsonSerializable
             'name' => $this->getName(),
             'strategy' => $this->getStrategy(),
             'strategyName' => $this->getStrategyName(),
-            'configuration' => JsonUtility::decode($this->getConfiguration()),
+            'configuration' => $this->getConfiguration(),
             'observedFilename' => $this->getObservedFilename(),
             'moveDirectory' => $this->getMoveDirectory(),
             'moveFilename' => $this->getMoveFilename(),

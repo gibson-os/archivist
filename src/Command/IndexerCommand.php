@@ -14,6 +14,7 @@ use GibsonOS\Core\Exception\Flock\LockError;
 use GibsonOS\Core\Exception\Flock\UnlockError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
+use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Module\Archivist\Exception\RuleException;
 use GibsonOS\Module\Archivist\Repository\RuleRepository;
 use GibsonOS\Module\Archivist\Service\RuleService;
@@ -36,6 +37,7 @@ class IndexerCommand extends AbstractCommand
     public function __construct(
         private RuleRepository $ruleRepository,
         private RuleService $ruleService,
+        private ModelManager $modelManager,
         LoggerInterface $logger
     ) {
         parent::__construct($logger);
@@ -65,17 +67,17 @@ class IndexerCommand extends AbstractCommand
             $this->ruleService->executeRule($rule);
         } catch (LockError) {
             $this->logger->warning('Indexing for this strategy already runs!');
-            $rule
-                ->setActive(false)
-                ->setMessage('Eine Indexierung für diese Strategy läuft bereits')
-                ->save()
-            ;
+            $this->modelManager->save(
+                $rule
+                    ->setActive(false)
+                    ->setMessage('Eine Indexierung für diese Strategy läuft bereits')
+            );
         } catch (Throwable $exception) {
-            $rule
-                ->setActive(false)
-                ->setMessage(sprintf('Exception: %s', $exception->getMessage()))
-                ->save()
-            ;
+            $this->modelManager->save(
+                $rule
+                    ->setActive(false)
+                    ->setMessage(sprintf('Exception: %s', $exception->getMessage()))
+            );
 
             throw $exception;
         }
