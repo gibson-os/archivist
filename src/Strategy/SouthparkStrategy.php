@@ -31,7 +31,12 @@ class SouthparkStrategy extends AbstractWebStrategy
     public function getFiles(Strategy $strategy, Rule $rule): Generator
     {
         foreach ($this->getSessions() as $session) {
-            yield 'https://www.southpark.de/folgen/940f8z/south-park-cartman-und-die-analsonde-staffel-1-ep-1';
+            yield new File(
+                'Cartman und die Analsonde',
+                'https://www.southpark.de/folgen/940f8z/south-park-cartman-und-die-analsonde-staffel-1-ep-1',
+                $this->dateTimeService->get(),
+                $strategy
+            );
         }
     }
 
@@ -57,7 +62,7 @@ class SouthparkStrategy extends AbstractWebStrategy
         }
 
         $fileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('Southpark', true) . '.ts';
-        $newFile = fopen($fileName, 'w');
+        $newFile = fopen($fileName, 'wb');
         $offset = 0;
 
         for ($i = 0; true; ++$i) {
@@ -78,8 +83,9 @@ class SouthparkStrategy extends AbstractWebStrategy
                 throw new StrategyException(sprintf('No response for "%s"!', $url));
             }
 
-            stream_copy_to_stream($resource, $newFile, null, $offset);
-            $offset += $response->getBody()->getLength();
+            $length = $response->getBody()->getLength();
+            stream_copy_to_stream($resource, $newFile);
+            $offset += $length;
         }
 
         fclose($newFile);
