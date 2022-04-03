@@ -106,9 +106,9 @@ class RuleController extends AbstractController
     #[CheckPermission(Permission::WRITE)]
     public function save(
         ModelManager $modelManager,
-        #[GetMappedModel] Rule $rule
+        #[GetMappedModel(['user_id' => 'session.user.id'], ['user' => 'session.user'])] Rule $rule
     ): AjaxResponse {
-        $modelManager->save($rule->setUserId($this->sessionService->getUserId() ?? 0));
+        $modelManager->save($rule);
 
         return $this->returnSuccess($rule);
     }
@@ -133,7 +133,7 @@ class RuleController extends AbstractController
     public function execute(
         CommandService $commandService,
         ModelManager $modelManager,
-        #[GetMappedModel] Rule $rule
+        #[GetMappedModel(['user_id' => 'session.user.id'], ['user' => 'session.user'])] Rule $rule
     ): AjaxResponse {
         $modelManager->save($rule->setActive(true)->setMessage('Starte'));
         $commandService->executeAsync(IndexerCommand::class, ['ruleId' => $rule->getId()]);
