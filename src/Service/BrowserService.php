@@ -22,7 +22,7 @@ class BrowserService
 
     public function getSession(): Session
     {
-        return new Session(new ChromeDriver('http://localhost:9222', null, ''));
+        return new Session(new ChromeDriver('http://localhost:9222', null, 'chrome://new-tab-page'));
     }
 
     /**
