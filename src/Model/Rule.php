@@ -19,7 +19,7 @@ use JsonSerializable;
  * @method Rule    setIndexed(Index[] $indexed)
  */
 #[Table]
-#[Key(unique: true, columns: ['strategy', 'observed_filename'])]
+#[Key(unique: true, columns: ['account_id', 'observed_filename'])]
 class Rule extends AbstractModel implements JsonSerializable
 {
     #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED], autoIncrement: true)]
@@ -39,6 +39,9 @@ class Rule extends AbstractModel implements JsonSerializable
 
     #[Column(length: 255)]
     private string $moveFilename;
+
+    #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED])]
+    private int $accountId;
 
     #[Column]
     private ?DateTimeImmutable $lastRun = null;
@@ -132,6 +135,18 @@ class Rule extends AbstractModel implements JsonSerializable
     public function setLastRun(?DateTimeImmutable $lastRun): Rule
     {
         $this->lastRun = $lastRun;
+
+        return $this;
+    }
+
+    public function getAccountId(): int
+    {
+        return $this->accountId;
+    }
+
+    public function setAccountId(int $accountId): Rule
+    {
+        $this->accountId = $accountId;
 
         return $this;
     }

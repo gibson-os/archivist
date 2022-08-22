@@ -1,4 +1,4 @@
-Ext.define('GibsonOS.module.archivist.rule.model.Account', {
+Ext.define('GibsonOS.module.archivist.model.Account', {
     extend: 'GibsonOS.data.Model',
     fields: [{
         name: 'id',

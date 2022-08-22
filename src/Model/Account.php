@@ -20,7 +20,6 @@ use JsonSerializable;
  * @method Account setRules(Rule[] $indexed)
  */
 #[Table]
-#[Key(unique: true, columns: ['strategy', 'observed_filename'])]
 class Account extends AbstractModel implements JsonSerializable
 {
     #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED], autoIncrement: true)]

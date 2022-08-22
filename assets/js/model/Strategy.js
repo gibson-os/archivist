@@ -1,4 +1,4 @@
-Ext.define('GibsonOS.module.archivist.rule.model.Strategy', {
+Ext.define('GibsonOS.module.archivist.model.Strategy', {
     extend: 'GibsonOS.data.Model',
     idProperty: 'strategy',
     fields: [{

@@ -13,7 +13,6 @@ Ext.define('GibsonOS.module.archivist.account.Grid', {
         me.callParent();
     },
     addFunction() {
-        // new GibsonOS.module.archivist.account.Window();
     },
     deleteFunction(records) {
         const me = this;
@@ -52,22 +51,9 @@ Ext.define('GibsonOS.module.archivist.account.Grid', {
         });
     },
     enterFunction(record) {
-        // const window = new GibsonOS.module.archivist.rule.Window({ruleId: record.get('id')});
-        // const formPanel = window.down('gosModuleArchivistRuleForm');
-        // const form = formPanel.getForm();
-        // const configuration = record.get('configuration');
-        //
-        // const beforeAddFieldsFunctions = (parameters) => {
-        //     formPanel.un('beforeAddFields', beforeAddFieldsFunctions);
-        //
-        //     Ext.iterate(parameters, (name, parameter) => {
-        //         console.log('set value ' + configuration[name] + ' for ' + name);
-        //         parameter.value = configuration[name] ?? null;
-        //     });
-        // };
-        // formPanel.on('beforeAddFields', beforeAddFieldsFunctions);
-        // form.findField('strategy').setValue(record.get('strategy'));
-        // form.setValues(record.get('configuration'));
+        new GibsonOS.module.archivist.rule.App({
+            accountId: record.get('id')
+        });
     },
     getColumns() {
         return [{

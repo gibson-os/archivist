@@ -3,7 +3,7 @@ Ext.define('GibsonOS.module.archivist.store.Rule', {
     alias: ['store.gosModuleArchivistRuleStore'],
     pageSize: 100,
     model: 'GibsonOS.module.archivist.model.Rule',
-    constructor: function(data) {
+    constructor(data) {
         let me = this;
 
         me.proxy = {
