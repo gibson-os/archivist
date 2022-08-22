@@ -10,10 +10,11 @@ use GibsonOS\Core\Attribute\Install\Database\Key;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Model\User;
-use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonSerializable;
 
 /**
+ * @method Account getAccount()
+ * @method Rule    setAccount(Account $account)
  * @method User    getUser()
  * @method Rule    setUser(User $user)
  * @method Index[] getIndexed()
@@ -30,17 +31,6 @@ class Rule extends AbstractModel implements JsonSerializable
     #[Column(length: 128)]
     private string $name;
 
-    /**
-     * @var class-string
-     */
-    #[Column(length: 255)]
-    private string $strategy;
-
-    private ?string $strategyName = null;
-
-    #[Column(type: Column::TYPE_JSON)]
-    private array $configuration = [];
-
     #[Column(length: 255)]
     private ?string $observedFilename = null;
 
@@ -50,18 +40,14 @@ class Rule extends AbstractModel implements JsonSerializable
     #[Column(length: 255)]
     private string $moveFilename;
 
-    #[Column]
-    #[Key]
-    private bool $active = false;
-
-    #[Column(type: Column::TYPE_TEXT)]
-    private ?string $message = null;
-
     #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED])]
     private int $userId;
 
     #[Column]
     private ?DateTimeImmutable $lastRun = null;
+
+    #[Constraint]
+    protected Account $account;
 
     #[Constraint]
     protected User $user;
@@ -92,56 +78,6 @@ class Rule extends AbstractModel implements JsonSerializable
     public function setName(string $name): Rule
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return class-string
-     */
-    public function getStrategy(): string
-    {
-        return $this->strategy;
-    }
-
-    /**
-     * @param class-string $strategy
-     */
-    public function setStrategy(string $strategy): Rule
-    {
-        $this->strategy = $strategy;
-
-        return $this;
-    }
-
-    public function setStrategyByClass(StrategyInterface $strategy): Rule
-    {
-        $this->strategy = $strategy::class;
-        $this->strategyName = $strategy->getName();
-
-        return $this;
-    }
-
-    public function getStrategyName(): ?string
-    {
-        return $this->strategyName;
-    }
-
-    public function setStrategyName(?string $strategyName): Rule
-    {
-        $this->strategyName = $strategyName;
-
-        return $this;
-    }
-
-    public function getConfiguration(): array
-    {
-        return $this->configuration;
-    }
-
-    public function setConfiguration(array $configuration): Rule
-    {
-        $this->configuration = $configuration;
 
         return $this;
     }
@@ -182,42 +118,6 @@ class Rule extends AbstractModel implements JsonSerializable
         return $this;
     }
 
-    public function isActive(): bool
-    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): Rule
-    {
-        $this->active = $active;
-
-        return $this;
-    }
-
-    public function getMessage(): ?string
-    {
-        return $this->message;
-    }
-
-    public function setMessage(?string $message): Rule
-    {
-        $this->message = $message;
-
-        return $this;
-    }
-
-    public function getUserId(): int
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(int $userId): Rule
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
     public function getLastRun(): ?DateTimeImmutable
     {
         return $this->lastRun;
@@ -235,14 +135,9 @@ class Rule extends AbstractModel implements JsonSerializable
         return [
             'id' => $this->getId(),
             'name' => $this->getName(),
-            'strategy' => $this->getStrategy(),
-            'strategyName' => $this->getStrategyName(),
-            'configuration' => $this->getConfiguration(),
             'observedFilename' => $this->getObservedFilename(),
             'moveDirectory' => $this->getMoveDirectory(),
             'moveFilename' => $this->getMoveFilename(),
-            'active' => $this->isActive(),
-            'message' => $this->getMessage(),
             'lastRun' => $this->getLastRun()?->format('Y-m-d H:i:s'),
         ];
     }
