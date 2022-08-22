@@ -8,7 +8,7 @@ Ext.define('GibsonOS.module.archivist.rule.Window', {
         module: 'archivist',
         task: 'rule'
     },
-    initComponent: function() {
+    initComponent() {
         let me = this;
 
         me.items = [{

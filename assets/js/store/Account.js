@@ -1,9 +1,9 @@
-Ext.define('GibsonOS.module.archivist.rule.store.Grid', {
+Ext.define('GibsonOS.module.archivist.store.Account', {
     extend: 'GibsonOS.data.Store',
-    alias: ['store.gosModuleArchivistRuleGridStore'],
+    alias: ['store.gosModuleArchivistAccountStore'],
     pageSize: 100,
-    model: 'GibsonOS.module.archivist.rule.model.Grid',
-    constructor: function(data) {
+    model: 'GibsonOS.module.archivist.model.Account',
+    constructor(data) {
         let me = this;
 
         me.proxy = {

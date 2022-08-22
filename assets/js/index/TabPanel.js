@@ -3,11 +3,11 @@ Ext.define('GibsonOS.module.archivist.index.TabPanel', {
     alias: ['widget.gosModuleArchivistIndexTabPanel'],
     itemId: 'archivistIndexPanel',
     layout: 'fit',
-    initComponent: function () {
+    initComponent() {
         let me = this;
 
         me.items = [{
-            xtype: 'gosModuleArchivistRuleGrid',
+            xtype: 'gosModuleArchivistAccountGrid',
             title: 'Regeln'
         },{
             title: 'Indexierte Dateien'

@@ -9,11 +9,11 @@ Ext.define('GibsonOS.module.archivist.index.App', {
         module: 'archivist',
         task: 'index'
     },
-    initComponent: function() {
+    initComponent() {
         let me = this;
 
         me.items = [{
-            xtype: 'gosModuleArchivistIndexTabPanel'
+            xtype: 'gosModuleArchivistAccountGrid'
         }];
 
         me.callParent();

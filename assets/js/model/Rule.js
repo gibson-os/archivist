@@ -1,4 +1,4 @@
-Ext.define('GibsonOS.module.archivist.rule.model.Grid', {
+Ext.define('GibsonOS.module.archivist.model.Rule', {
     extend: 'GibsonOS.data.Model',
     fields: [{
         name: 'id',
@@ -6,15 +6,6 @@ Ext.define('GibsonOS.module.archivist.rule.model.Grid', {
     },{
         name: 'name',
         type: 'string'
-    },{
-        name: 'strategy',
-        type: 'string'
-    },{
-        name: 'strategyName',
-        type: 'string'
-    },{
-        name: 'configuration',
-        type: 'object'
     },{
         name: 'observedFilename',
         type: 'string'
@@ -24,9 +15,6 @@ Ext.define('GibsonOS.module.archivist.rule.model.Grid', {
     },{
         name: 'moveFilename',
         type: 'string'
-    },{
-        name: 'active',
-        type: 'bool'
     },{
         name: 'lastRun',
         type: 'date'

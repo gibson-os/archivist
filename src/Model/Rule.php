@@ -9,14 +9,11 @@ use GibsonOS\Core\Attribute\Install\Database\Constraint;
 use GibsonOS\Core\Attribute\Install\Database\Key;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
-use GibsonOS\Core\Model\User;
 use JsonSerializable;
 
 /**
  * @method Account getAccount()
  * @method Rule    setAccount(Account $account)
- * @method User    getUser()
- * @method Rule    setUser(User $user)
  * @method Index[] getIndexed()
  * @method Rule    addIndexed(Index[] $indexed)
  * @method Rule    setIndexed(Index[] $indexed)
@@ -35,22 +32,19 @@ class Rule extends AbstractModel implements JsonSerializable
     private ?string $observedFilename = null;
 
     #[Column(length: 255)]
+    private ?string $observedContent = null;
+
+    #[Column(length: 255)]
     private string $moveDirectory;
 
     #[Column(length: 255)]
     private string $moveFilename;
-
-    #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED])]
-    private int $userId;
 
     #[Column]
     private ?DateTimeImmutable $lastRun = null;
 
     #[Constraint]
     protected Account $account;
-
-    #[Constraint]
-    protected User $user;
 
     /**
      * @var Index[]
@@ -90,6 +84,18 @@ class Rule extends AbstractModel implements JsonSerializable
     public function setObservedFilename(?string $observedFilename): Rule
     {
         $this->observedFilename = $observedFilename;
+
+        return $this;
+    }
+
+    public function getObservedContent(): ?string
+    {
+        return $this->observedContent;
+    }
+
+    public function setObservedContent(?string $observedContent): Rule
+    {
+        $this->observedContent = $observedContent;
 
         return $this;
     }

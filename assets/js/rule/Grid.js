@@ -8,7 +8,7 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
     initComponent() {
         let me = this;
 
-        me.store = new GibsonOS.module.archivist.rule.store.Grid();
+        me.store = new GibsonOS.module.archivist.rule.store.Rule();
 
         me.callParent();
     },

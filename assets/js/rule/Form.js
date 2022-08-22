@@ -2,7 +2,7 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
     extend: 'GibsonOS.module.core.parameter.Form',
     alias: ['widget.gosModuleArchivistRuleForm'],
     ruleId: null,
-    initComponent: function () {
+    initComponent() {
         let me = this;
 
         me.items = [{
