@@ -133,7 +133,7 @@ class AudibleStrategyTest extends Unit
             ->setConfigurationValue('email', 'Arthur')
             ->setConfigurationValue('password', 'Dent')
         ;
-        $this->audibleStrategy->saveConfigurationParameters($strategy, []);
+        $this->audibleStrategy->setAccountParameters($strategy, []);
     }
 
     public function testLoginWithCaptcha(): void

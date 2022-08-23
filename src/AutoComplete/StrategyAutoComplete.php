@@ -72,7 +72,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
                 $strategy->setConfiguration($rule->getConfiguration());
             }
 
-            $strategies[$name] = $strategy->setParameters($strategyService->getConfigurationParameters($strategy));
+            $strategies[$name] = $strategy->setParameters($strategyService->getAccountParameters($strategy));
         }
 
         ksort($strategies);
@@ -102,7 +102,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
             }
         }
 
-        return $strategy->setParameters($strategyService->getConfigurationParameters($strategy));
+        return $strategy->setParameters($strategyService->getAccountParameters($strategy));
     }
 
     public function getModel(): string

@@ -18,12 +18,12 @@ class SouthparkStrategy extends AbstractWebStrategy
         return 'Southpark';
     }
 
-    public function getConfigurationParameters(Strategy $strategy): array
+    public function getAccountParameters(Strategy $strategy): array
     {
         return [];
     }
 
-    public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
+    public function setAccountParameters(Strategy $strategy, array $parameters): bool
     {
         return true;
     }
@@ -102,5 +102,10 @@ class SouthparkStrategy extends AbstractWebStrategy
     public function getLockName(Rule $rule): string
     {
         return 'southpark';
+    }
+
+    public function getRuleParameters(Strategy $strategy): array
+    {
+        return [];
     }
 }

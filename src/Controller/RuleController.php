@@ -64,8 +64,8 @@ class RuleController extends AbstractController
             ->setConfigurationStep($configurationStep)
         ;
 
-        if (!$strategyService->saveConfigurationParameters($strategyDto, $parameters)) {
-            $configurationParameters = $strategyService->getConfigurationParameters($strategyDto);
+        if (!$strategyService->setAccountParameters($strategyDto, $parameters)) {
+            $configurationParameters = $strategyService->getAccountParameters($strategyDto);
 
             if (!empty($configurationParameters)) {
                 if ($rule !== null) {

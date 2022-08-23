@@ -7,6 +7,7 @@ use Generator;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
+use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 
 interface StrategyInterface
@@ -16,23 +17,41 @@ interface StrategyInterface
     /**
      * @return AbstractParameter[]
      */
-    public function getConfigurationParameters(Strategy $strategy): array;
+    public function getAccountParameters(Strategy $strategy): array;
 
     /**
      * @param array<string, string> $parameters
      */
-    public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool;
+    public function setAccountParameters(Account $account, array $parameters): void;
 
-    public function getRuleParameters(Strategy $strategy): array;
+    /**
+     * @return AbstractParameter[]
+     */
+    public function getRuleParameters(Rule $rule): array;
+
+    /**
+     * @param array<string, string> $parameters
+     */
+    public function setRuleParameters(Rule $rule, array $parameters): void;
+
+    /**
+     * @return AbstractParameter[]
+     */
+    public function getExecuteParameters(Account $account): array;
+
+    /**
+     * @param array<string, string> $parameters
+     */
+    public function setExecuteParameters(Account $account, int $step, array $parameters): bool;
 
     /**
      * @return Generator<File>
      */
     public function getFiles(Strategy $strategy, Rule $rule): Generator;
 
-    public function setFileResource(File $file, Rule $rule): File;
+    public function setFileResource(File $file, Account $account): File;
 
-    public function unload(Strategy $strategy): void;
+    public function unload(Account $account): void;
 
-    public function getLockName(Rule $rule): string;
+    public function getLockName(Account $account): string;
 }

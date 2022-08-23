@@ -8,8 +8,8 @@ use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Service\CryptService;
 use GibsonOS\Core\Service\DateTimeService;
 use GibsonOS\Core\Service\WebService;
-use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
+use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Service\BrowserService;
 use Psr\Log\LoggerInterface;
 
@@ -52,13 +52,13 @@ abstract class AbstractWebStrategy implements StrategyInterface
         return $matches[1];
     }
 
-    protected function getSession(Strategy $strategy = null): Session
+    protected function getSession(Account $account = null): Session
     {
         if (
-            $strategy !== null &&
-            $strategy->hasConfigurationValue(self::KEY_SESSION)
+            $account !== null &&
+            $account->hasConfigurationValue(self::KEY_SESSION)
         ) {
-            return unserialize($strategy->getConfigurationValue(self::KEY_SESSION));
+            return unserialize($account->getConfigurationValue(self::KEY_SESSION));
         }
 
         return $this->browserService->getSession();

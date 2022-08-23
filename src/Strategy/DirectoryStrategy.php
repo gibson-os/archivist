@@ -42,7 +42,7 @@ class DirectoryStrategy implements StrategyInterface
         return 'Ordner';
     }
 
-    public function getConfigurationParameters(Strategy $strategy): array
+    public function getAccountParameters(Strategy $strategy): array
     {
         return ['directory' => new DirectoryParameter()];
     }
@@ -52,7 +52,7 @@ class DirectoryStrategy implements StrategyInterface
         return [];
     }
 
-    public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
+    public function setAccountParameters(Strategy $strategy, array $parameters): bool
     {
         $strategy->setConfigurationValue('directory', $parameters['directory']);
 

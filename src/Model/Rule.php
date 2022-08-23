@@ -34,6 +34,9 @@ class Rule extends AbstractModel implements JsonSerializable
     #[Column(length: 255)]
     private ?string $observedContent = null;
 
+    #[Column(type: Column::TYPE_JSON)]
+    private array $configuration = [];
+
     #[Column(length: 255)]
     private string $moveDirectory;
 
@@ -127,6 +130,18 @@ class Rule extends AbstractModel implements JsonSerializable
         return $this;
     }
 
+    public function getConfiguration(): array
+    {
+        return $this->configuration;
+    }
+
+    public function setConfiguration(array $configuration): Rule
+    {
+        $this->configuration = $configuration;
+
+        return $this;
+    }
+
     public function getLastRun(): ?DateTimeImmutable
     {
         return $this->lastRun;
@@ -159,6 +174,7 @@ class Rule extends AbstractModel implements JsonSerializable
             'observedFilename' => $this->getObservedFilename(),
             'moveDirectory' => $this->getMoveDirectory(),
             'moveFilename' => $this->getMoveFilename(),
+            'configuration' => $this->getConfiguration(),
             'lastRun' => $this->getLastRun()?->format('Y-m-d H:i:s'),
         ];
     }

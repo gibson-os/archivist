@@ -20,8 +20,6 @@ use GibsonOS\Module\Archivist\Model\Rule;
 
 class DkbStrategy extends AbstractWebStrategy
 {
-//    private const URL = 'http://localhost/img/page/dkb/';
-
     private const URL = 'https://www.dkb.de';
 
     private const STEP_LOGIN = 0;
@@ -41,7 +39,7 @@ class DkbStrategy extends AbstractWebStrategy
      *
      * @return AbstractParameter[]
      */
-    public function getConfigurationParameters(Strategy $strategy): array
+    public function getAccountParameters(Strategy $strategy): array
     {
         if (
             $strategy->getConfigurationStep() === self::STEP_LOGIN &&
@@ -65,7 +63,7 @@ class DkbStrategy extends AbstractWebStrategy
      * @throws BrowserException
      * @throws ElementNotFoundException
      */
-    public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool
+    public function setAccountParameters(Strategy $strategy, array $parameters): bool
     {
         switch ($strategy->getConfigurationStep()) {
             case self::STEP_TAN:
@@ -262,5 +260,10 @@ class DkbStrategy extends AbstractWebStrategy
     public function getLockName(Rule $rule): string
     {
         return 'dkb';
+    }
+
+    public function getRuleParameters(Strategy $strategy): array
+    {
+        return [];
     }
 }
