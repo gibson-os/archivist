@@ -23,6 +23,8 @@ interface StrategyInterface
      */
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool;
 
+    public function getRuleParameters(Strategy $strategy): array;
+
     /**
      * @return Generator<File>
      */

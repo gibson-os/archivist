@@ -8,19 +8,17 @@ use GibsonOS\Core\Attribute\GetMappedModel;
 use GibsonOS\Core\Attribute\GetMappedModels;
 use GibsonOS\Core\Attribute\GetModel;
 use GibsonOS\Core\Controller\AbstractController;
-use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Exception\Model\DeleteError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Manager\ModelManager;
-use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Model\User;
 use GibsonOS\Core\Model\User\Permission;
+use GibsonOS\Core\Service\CommandService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
-use GibsonOS\Module\Archivist\Dto\Strategy;
+use GibsonOS\Module\Archivist\Command\IndexerCommand;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Store\AccountStore;
-use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonException;
 use ReflectionException;
 
@@ -39,48 +37,21 @@ class AccountController extends AbstractController
         return $this->returnSuccess($accountStore->getList(), $accountStore->getCount());
     }
 
-    public function edit(
-        ServiceManager $serviceManager,
-        string $strategy,
-        array $configuration,
-        array $parameters,
-        int $configurationStep = 0,
-        #[GetModel] Account $account = null
+    /**
+     * @throws JsonException
+     * @throws SaveError
+     * @throws ReflectionException
+     */
+    #[CheckPermission(Permission::WRITE)]
+    public function execute(
+        CommandService $commandService,
+        ModelManager $modelManager,
+        #[GetModel] Account $account
     ): AjaxResponse {
-        if ($account !== null) {
-            $configuration = array_merge($account->getConfiguration(), $configuration);
-        }
+        $modelManager->save($account->setActive(true)->setMessage('Starte'));
+        $commandService->executeAsync(IndexerCommand::class, ['accountId' => $account->getId()]);
 
-        /** @var StrategyInterface $strategyService */
-        $strategyService = $serviceManager->get($strategy, StrategyInterface::class);
-        $strategyDto = (new Strategy($strategyService->getName(), $strategy))
-            ->setConfiguration($configuration)
-            ->setConfigurationStep($configurationStep)
-        ;
-
-        if (!$strategyService->saveConfigurationParameters($strategyDto, $parameters)) {
-            $configurationParameters = $strategyService->getConfigurationParameters($strategyDto);
-
-            if (!empty($configurationParameters)) {
-                if ($account !== null) {
-                    foreach ($configurationParameters as $parameterName => $configurationParameter) {
-                        $configurationParameter->setValue($configuration[$parameterName]);
-                    }
-                }
-
-                return $this->returnSuccess($strategyDto->setParameters($configurationParameters));
-            }
-        }
-
-        return $this->returnSuccess([
-            'parameters' => [
-                'name' => (new StringParameter('Name'))->setValue($account?->getName()),
-            ],
-            'configuration' => $strategyDto->getConfiguration(),
-            'className' => $strategy,
-            'lastStep' => true,
-            'id' => $account?->getId(),
-        ]);
+        return $this->returnSuccess($account);
     }
 
     /**

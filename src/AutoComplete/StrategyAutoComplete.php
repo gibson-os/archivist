@@ -107,6 +107,6 @@ class StrategyAutoComplete implements AutoCompleteInterface
 
     public function getModel(): string
     {
-        return 'GibsonOS.module.archivist.rule.model.Strategy';
+        return 'GibsonOS.module.archivist.model.Strategy';
     }
 }

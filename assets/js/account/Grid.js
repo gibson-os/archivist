@@ -13,6 +13,7 @@ Ext.define('GibsonOS.module.archivist.account.Grid', {
         me.callParent();
     },
     addFunction() {
+        new GibsonOS.module.archivist.account.Window();
     },
     deleteFunction(records) {
         const me = this;

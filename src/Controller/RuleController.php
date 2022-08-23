@@ -14,9 +14,7 @@ use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Model\User\Permission;
-use GibsonOS\Core\Service\CommandService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
-use GibsonOS\Module\Archivist\Command\IndexerCommand;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Repository\RuleRepository;
@@ -122,28 +120,5 @@ class RuleController extends AbstractController
         $ruleRepository->deleteByIds($ruleIds);
 
         return $this->returnSuccess();
-    }
-
-    /**
-     * @throws JsonException
-     * @throws SaveError
-     * @throws ReflectionException
-     */
-    #[CheckPermission(Permission::WRITE)]
-    public function execute(
-        CommandService $commandService,
-        ModelManager $modelManager,
-        #[GetMappedModel(['user_id' => 'session.user.id'], ['user' => 'session.user'])] Rule $rule
-    ): AjaxResponse {
-        $modelManager->save($rule->setActive(true)->setMessage('Starte'));
-        $commandService->executeAsync(IndexerCommand::class, ['ruleId' => $rule->getId()]);
-
-        return $this->returnSuccess($rule);
-    }
-
-    #[CheckPermission(Permission::READ)]
-    public function status(#[GetModel] Rule $rule): AjaxResponse
-    {
-        return $this->returnSuccess($rule);
     }
 }

@@ -16,7 +16,7 @@ use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Module\Archivist\Exception\RuleException;
-use GibsonOS\Module\Archivist\Repository\RuleRepository;
+use GibsonOS\Module\Archivist\Repository\AccountRepository;
 use GibsonOS\Module\Archivist\Service\RuleService;
 use JsonException;
 use Psr\Log\LoggerInterface;
@@ -31,13 +31,13 @@ use Twig\Error\SyntaxError;
 #[Cronjob(user: 'root')]
 class IndexerCommand extends AbstractCommand
 {
-    #[Argument('Rule ID to index')]
-    private int $ruleId;
+    #[Argument('Account ID to ru rules')]
+    private int $accountId;
 
     public function __construct(
-        private RuleRepository $ruleRepository,
-        private RuleService $ruleService,
-        private ModelManager $modelManager,
+        private readonly AccountRepository $accountRepository,
+        private readonly RuleService $ruleService,
+        private readonly ModelManager $modelManager,
         LoggerInterface $logger
     ) {
         parent::__construct($logger);
@@ -61,20 +61,20 @@ class IndexerCommand extends AbstractCommand
      */
     protected function run(): int
     {
-        $rule = $this->ruleRepository->getById($this->ruleId);
+        $account = $this->accountRepository->getById($this->accountId);
 
         try {
-            $this->ruleService->executeRule($rule);
+//            $this->ruleService->executeRule($rule);
         } catch (LockError) {
-            $this->logger->warning('Indexing for this strategy already runs!');
+            $this->logger->warning('Indexing for this account already runs!');
             $this->modelManager->save(
-                $rule
+                $account
                     ->setActive(false)
-                    ->setMessage('Eine Indexierung für diese Strategy läuft bereits')
+                    ->setMessage('Eine Indexierung für diesen Account läuft bereits')
             );
         } catch (Throwable $exception) {
             $this->modelManager->save(
-                $rule
+                $account
                     ->setActive(false)
                     ->setMessage(sprintf('Exception: %s', $exception->getMessage()))
             );
@@ -85,8 +85,8 @@ class IndexerCommand extends AbstractCommand
         return self::SUCCESS;
     }
 
-    public function setRuleId(int $ruleId): void
+    public function setAccountId(int $accountId): void
     {
-        $this->ruleId = $ruleId;
+        $this->accountId = $accountId;
     }
 }

@@ -1,8 +1,8 @@
 Ext.define('GibsonOS.module.archivist.model.Strategy', {
     extend: 'GibsonOS.data.Model',
-    idProperty: 'strategy',
+    idProperty: 'className',
     fields: [{
-        name: 'strategy',
+        name: 'className',
         type: 'string'
     },{
         name: 'name',

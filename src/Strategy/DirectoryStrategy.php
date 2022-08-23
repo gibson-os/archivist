@@ -29,12 +29,11 @@ class DirectoryStrategy implements StrategyInterface
     private const WAIT_PER_LOOP_SECONDS = 3;
 
     public function __construct(
-        private DirService $dirService,
-        private FileService $fileService,
-        private DateTimeService $dateTimeService,
-        private TrashService $trashService,
-        private LockService $lockService,
-        private ModelManager $modelManager
+        private readonly DirService $dirService,
+        private readonly FileService $fileService,
+        private readonly DateTimeService $dateTimeService,
+        private readonly LockService $lockService,
+        private readonly ModelManager $modelManager
     ) {
     }
 
@@ -46,6 +45,11 @@ class DirectoryStrategy implements StrategyInterface
     public function getConfigurationParameters(Strategy $strategy): array
     {
         return ['directory' => new DirectoryParameter()];
+    }
+
+    public function getRuleParameters(Strategy $strategy): array
+    {
+        return [];
     }
 
     public function saveConfigurationParameters(Strategy $strategy, array $parameters): bool

@@ -70,8 +70,8 @@ class AudibleStrategy extends AbstractWebStrategy
         CryptService $cryptService,
         DateTimeService $dateTimeService,
         ModelManager $modelManager,
-        private FfmpegService $ffmpegService,
-        private ProcessService $processService
+        private readonly FfmpegService $ffmpegService,
+        private readonly ProcessService $processService
     ) {
         parent::__construct($browserService, $webService, $logger, $cryptService, $dateTimeService, $modelManager);
     }
@@ -83,11 +83,11 @@ class AudibleStrategy extends AbstractWebStrategy
 
     public function getConfigurationParameters(Strategy $strategy): array
     {
-        $typeParameter = new OptionParameter('Typ', [
-            'Einzelne Hörbücher' => self::TYPE_SINGLE,
-            'Serien' => self::TYPE_SERIES,
-            'Podcast' => self::TYPE_PODCAST,
-        ]);
+//        $typeParameter = new OptionParameter('Typ', [
+//            'Einzelne Hörbücher' => self::TYPE_SINGLE,
+//            'Serien' => self::TYPE_SERIES,
+//            'Podcast' => self::TYPE_PODCAST,
+//        ]);
 
         if ($strategy->getConfigurationStep() === self::STEP_CAPTCHA) {
             return [
@@ -95,17 +95,17 @@ class AudibleStrategy extends AbstractWebStrategy
             ];
         }
 
-        if (
-            $strategy->hasConfigurationValue(self::KEY_EMAIL) &&
-            $strategy->hasConfigurationValue(self::KEY_PASSWORD)
-        ) {
-            return [self::KEY_TYPE => $typeParameter];
-        }
+//        if (
+//            $strategy->hasConfigurationValue(self::KEY_EMAIL) &&
+//            $strategy->hasConfigurationValue(self::KEY_PASSWORD)
+//        ) {
+//            return [self::KEY_TYPE => $typeParameter];
+//        }
 
         return [
             self::KEY_EMAIL => (new StringParameter('E-Mail'))->setInputType(StringParameter::INPUT_TYPE_EMAIL),
             self::KEY_PASSWORD => (new StringParameter('Passwort'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
-            self::KEY_TYPE => $typeParameter,
+            //self::KEY_TYPE => $typeParameter,
         ];
     }
 
@@ -531,5 +531,25 @@ class AudibleStrategy extends AbstractWebStrategy
     private function waitForLibrary(Session $session): void
     {
         $this->browserService->waitForLink($session, self::LINK_LIBRARY, 30000000);
+    }
+
+    public function getRuleParameters(Strategy $strategy): array
+    {
+        $typeParameter = new OptionParameter('Typ', [
+            'Einzelne Hörbücher' => self::TYPE_SINGLE,
+            'Serien' => self::TYPE_SERIES,
+            'Podcast' => self::TYPE_PODCAST,
+        ]);
+
+        if (
+            $strategy->hasConfigurationValue(self::KEY_EMAIL) &&
+            $strategy->hasConfigurationValue(self::KEY_PASSWORD)
+        ) {
+            return [self::KEY_TYPE => $typeParameter];
+        }
+
+        return [
+            self::KEY_TYPE => $typeParameter,
+        ];
     }
 }
