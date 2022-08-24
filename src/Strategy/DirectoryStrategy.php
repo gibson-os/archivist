@@ -15,6 +15,7 @@ use GibsonOS\Core\Service\FileService;
 use GibsonOS\Core\Service\LockService;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
+use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Service\RuleService;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
@@ -47,15 +48,29 @@ class DirectoryStrategy implements StrategyInterface
         return ['directory' => new DirectoryParameter()];
     }
 
-    public function getRuleParameters(Strategy $strategy): array
+    public function setAccountParameters(Account $account, array $parameters): void
+    {
+        $configuration = $account->getConfiguration();
+        $configuration['directory'] = $parameters['directory'];
+        $account->setConfiguration($configuration);
+    }
+
+    public function getRuleParameters(Rule $rule): array
     {
         return [];
     }
 
-    public function setAccountParameters(Strategy $strategy, array $parameters): bool
+    public function setRuleParameters(Rule $rule, array $parameters): void
     {
-        $strategy->setConfigurationValue('directory', $parameters['directory']);
+    }
 
+    public function getExecuteParameters(Account $account): array
+    {
+        return [];
+    }
+
+    public function setExecuteParameters(Account $account, int $step, array $parameters): bool
+    {
         return true;
     }
 
@@ -67,16 +82,14 @@ class DirectoryStrategy implements StrategyInterface
      * @throws DateTimeError
      * @throws ReflectionException
      */
-    public function getFiles(Strategy $strategy, Rule $rule): Generator
+    public function getFiles(Account $account, Rule $rule): Generator
     {
-        $viewedFiles = $strategy->hasConfigurationValue('viewedFiles') ? $strategy->getConfigurationValue('viewedFiles') : [];
-        $directory = $strategy->getConfigurationValue('directory');
+        $configuration = $account->getConfiguration();
+        $viewedFiles = $configuration['viewedFiles'] ?? [];
+        $directory = $configuration['directory'];
 
         foreach ($this->dirService->getFiles($directory) as $file) {
-            $lockName =
-                RuleService::RULE_LOCK_PREFIX . 'directory' .
-                $rule->getConfiguration()['directory']
-            ;
+            $lockName = RuleService::RULE_LOCK_PREFIX . 'directory' . $configuration['directory'];
 
             if ($this->lockService->shouldStop($lockName)) {
                 return null;
@@ -89,7 +102,7 @@ class DirectoryStrategy implements StrategyInterface
                 continue;
             }
 
-            $strategy->setConfigurationValue('waitTime', 0);
+            $configuration['waitTime'] = 0;
             $this->modelManager->save($rule->setMessage(sprintf('Prüfe ob Datei %s noch größer wird', $file)));
             $fileSize = filesize($file);
             sleep(1);
@@ -99,13 +112,14 @@ class DirectoryStrategy implements StrategyInterface
             }
 
             $viewedFiles[] = $file;
-            $strategy->setConfigurationValue('viewedFiles', $viewedFiles);
+            $configuration['viewedFiles'] = $viewedFiles;
+            $account->setConfiguration($configuration);
 
             yield new File(
                 $this->fileService->getFilename($file),
                 $directory,
                 $this->dateTimeService->get('@' . filemtime($file)),
-                $strategy
+                $account
             );
         }
 
@@ -128,7 +142,7 @@ class DirectoryStrategy implements StrategyInterface
         }
     }
 
-    public function setFileResource(File $file, Rule $rule): File
+    public function setFileResource(File $file, Account $account): File
     {
         $fileName = $this->dirService->addEndSlash($file->getPath()) . $file->getName();
         $file->setResource(fopen($fileName, 'r'), filesize($fileName));
@@ -143,18 +157,21 @@ class DirectoryStrategy implements StrategyInterface
         return $file;
     }
 
-    public function unload(Strategy $strategy): void
+    public function unload(Account $account): void
     {
-        if (!$strategy->hasConfigurationValue('loadedFiles')) {
+        $configuration = $account->getConfiguration();
+
+        if (!isset($configuration['loadedFiles'])) {
             return;
         }
 
-        foreach ($strategy->getConfigurationValue('loadedFiles') as $file) {
+        foreach ($configuration['loadedFiles'] as $file) {
             unlink($file);
 //            $this->trashService->add($file);
         }
 
-        $strategy->setConfigurationValue('loadedFiles', []);
+        $configuration['loadedFiles'] = [];
+        $account->setConfiguration($configuration);
     }
 
     /**
@@ -162,9 +179,9 @@ class DirectoryStrategy implements StrategyInterface
      * @throws SaveError
      * @throws ReflectionException
      */
-    public function getLockName(Rule $rule): string
+    public function getLockName(Account $account): string
     {
-        $lockName = 'directory' . $rule->getConfiguration()['directory'];
+        $lockName = 'directory' . $account->getConfiguration()['directory'];
         $this->lockService->stop(RuleService::RULE_LOCK_PREFIX . $lockName);
 
         while ($this->lockService->isLocked(RuleService::RULE_LOCK_PREFIX . $lockName)) {

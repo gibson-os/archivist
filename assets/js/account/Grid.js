@@ -11,6 +11,16 @@ Ext.define('GibsonOS.module.archivist.account.Grid', {
         me.store = new GibsonOS.module.archivist.store.Account();
 
         me.callParent();
+
+        me.addAction({
+            tbarText: 'Ausführen',
+            selectionNeeded: true,
+            minSelectionNeeded: 1,
+            maxSelectionNeeded: 1,
+            handler() {
+                const records = me.getSelectionModel().getSelection();
+            }
+        });
     },
     addFunction() {
         new GibsonOS.module.archivist.account.Window();
@@ -62,7 +72,7 @@ Ext.define('GibsonOS.module.archivist.account.Grid', {
             text: 'Name',
             flex: 1
         },{
-            dataIndex: 'strategyName',
+            dataIndex: 'strategy',
             text: 'Strategy',
             flex: 1
         },{

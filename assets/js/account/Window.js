@@ -1,7 +1,7 @@
 Ext.define('GibsonOS.module.archivist.account.Window', {
     extend: 'GibsonOS.Window',
     alias: ['widget.gosModuleArchivistAccountWindow'],
-    title: 'Regel',
+    title: 'Account',
     width: 500,
     autoHeight: true,
     requiredPermission: {

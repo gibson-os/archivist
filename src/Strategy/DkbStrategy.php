@@ -16,6 +16,7 @@ use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
+use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 
 class DkbStrategy extends AbstractWebStrategy
@@ -63,28 +64,30 @@ class DkbStrategy extends AbstractWebStrategy
      * @throws BrowserException
      * @throws ElementNotFoundException
      */
-    public function setAccountParameters(Strategy $strategy, array $parameters): bool
+    public function setAccountParameters(Account $account, array $parameters): void
     {
         switch ($strategy->getConfigurationStep()) {
             case self::STEP_TAN:
                 $this->validateTan($strategy, $parameters);
 
-                return false;
+//                return false;
+// no break
             case self::STEP_PATH:
                 $strategy->setConfigurationValue('path', $parameters['path']);
 
-                return true;
+//                return true;
+// no break
             default:
                 $this->login($strategy, $parameters);
 
-                return false;
+//                return false;
         }
     }
 
     /**
      * @throws ElementNotFoundException
      */
-    public function getFiles(Strategy $strategy, Rule $rule): Generator
+    public function getFiles(Account $account, Rule $rule): Generator
     {
         $session = $this->getSession($strategy);
         $page = $session->getPage();
@@ -135,7 +138,7 @@ class DkbStrategy extends AbstractWebStrategy
      * @throws WebException
      * @throws DriverException
      */
-    public function setFileResource(File $file, Rule $rule): File
+    public function setFileResource(File $file, Account $account): File
     {
         $strategy = $file->getStrategy();
 
@@ -220,9 +223,9 @@ class DkbStrategy extends AbstractWebStrategy
     /**
      * @throws ElementNotFoundException
      */
-    public function unload(Strategy $strategy): void
+    public function unload(Account $account): void
     {
-        $session = $this->getSession($strategy);
+        $session = $this->getSession($account);
         $page = $session->getPage();
         $page->clickLink('Abmelden');
         $session->stop();
@@ -257,13 +260,27 @@ class DkbStrategy extends AbstractWebStrategy
         ;
     }
 
-    public function getLockName(Rule $rule): string
+    public function getLockName(Account $account): string
     {
         return 'dkb';
     }
 
-    public function getRuleParameters(Strategy $strategy): array
+    public function getRuleParameters(Rule $rule): array
     {
         return [];
+    }
+
+    public function setRuleParameters(Rule $rule, array $parameters): void
+    {
+    }
+
+    public function getExecuteParameters(Account $account): array
+    {
+        return [];
+    }
+
+    public function setExecuteParameters(Account $account, int $step, array $parameters): bool
+    {
+        return true;
     }
 }

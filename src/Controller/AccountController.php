@@ -64,9 +64,10 @@ class AccountController extends AbstractController
         ModelManager $modelManager,
         #[GetMappedModel] Account $account
     ): AjaxResponse {
+        $account->setUser($this->sessionService->getUser() ?? new User());
         $modelManager->save($account);
 
-        return $this->returnSuccess();
+        return $this->returnSuccess($account);
     }
 
     /**

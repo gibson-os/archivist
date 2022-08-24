@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Archivist\Dto;
 
 use DateTimeInterface;
+use GibsonOS\Module\Archivist\Model\Account;
 
 class File implements \JsonSerializable
 {
@@ -14,8 +15,12 @@ class File implements \JsonSerializable
      */
     private $resource;
 
-    public function __construct(private string $name, private string $path, private DateTimeInterface $createDate, private Strategy $strategy)
-    {
+    public function __construct(
+        private readonly string $name,
+        private readonly string $path,
+        private readonly DateTimeInterface $createDate,
+        private readonly Account $account
+    ) {
     }
 
     public function getName(): string
@@ -23,23 +28,9 @@ class File implements \JsonSerializable
         return $this->name;
     }
 
-    public function setName(string $name): File
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
     public function getPath(): string
     {
         return $this->path;
-    }
-
-    public function setPath(string $path): File
-    {
-        $this->path = $path;
-
-        return $this;
     }
 
     public function getCreateDate(): DateTimeInterface
@@ -47,23 +38,9 @@ class File implements \JsonSerializable
         return $this->createDate;
     }
 
-    public function setCreateDate(DateTimeInterface $createDate): File
+    public function getAccount(): Account
     {
-        $this->createDate = $createDate;
-
-        return $this;
-    }
-
-    public function getStrategy(): Strategy
-    {
-        return $this->strategy;
-    }
-
-    public function setStrategy(Strategy $strategy): File
-    {
-        $this->strategy = $strategy;
-
-        return $this;
+        return $this->account;
     }
 
     /**
@@ -96,7 +73,7 @@ class File implements \JsonSerializable
             'path' => $this->getPath(),
             'name' => $this->getName(),
             'createDate' => $this->getCreateDate()->format('Y-m-d H:i:s'),
-            'strategy' => $this->getStrategy()->getName(),
+            'account' => $this->getAccount()->getId(),
         ];
     }
 }

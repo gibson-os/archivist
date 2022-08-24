@@ -202,9 +202,9 @@ class AudibleStrategy extends AbstractWebStrategy
      * @throws ReflectionException
      * @throws SaveError
      */
-    public function getFiles(Strategy $strategy, Rule $rule, string $type = null): Generator
+    public function getFiles(Account $account, Rule $rule, string $type = null): Generator
     {
-        $session = $this->getSession($strategy);
+        $session = $this->getSession($account);
         $page = $session->getPage();
 
         try {
