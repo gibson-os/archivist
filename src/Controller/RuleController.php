@@ -8,6 +8,7 @@ use GibsonOS\Core\Attribute\GetMappedModel;
 use GibsonOS\Core\Attribute\GetModel;
 use GibsonOS\Core\Attribute\GetModels;
 use GibsonOS\Core\Controller\AbstractController;
+use GibsonOS\Core\Dto\Parameter\BoolParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\Model\DeleteError;
@@ -56,10 +57,9 @@ class RuleController extends AbstractController
     #[CheckPermission(Permission::WRITE)]
     public function edit(
         ServiceManager $serviceManager,
-        string $strategy,
         array $configuration,
         array $parameters,
-        int $configurationStep = 0,
+        #[GetModel] Account $account,
         #[GetModel] Rule $rule = null
     ): AjaxResponse {
         if ($rule !== null) {
@@ -67,14 +67,14 @@ class RuleController extends AbstractController
         }
 
         /** @var StrategyInterface $strategyService */
-        $strategyService = $serviceManager->get($strategy, StrategyInterface::class);
-        $strategyDto = (new Strategy($strategyService->getName(), $strategy))
-            ->setConfiguration($configuration)
-            ->setConfigurationStep($configurationStep)
-        ;
+        $strategyService = $serviceManager->get($account->getStrategy(), StrategyInterface::class);
+//        $strategyDto = (new Strategy($strategyService->getName(), $strategy))
+//            ->setConfiguration($configuration)
+//            ->setConfigurationStep($configurationStep)
+//        ;
 
-        if (!$strategyService->setAccountParameters($strategyDto, $parameters)) {
-            $configurationParameters = $strategyService->getAccountParameters($strategyDto);
+        if (!$strategyService->setRuleParameters($rule, $parameters)) {
+            $configurationParameters = $strategyService->getRuleParameters($rule);
 
             if (!empty($configurationParameters)) {
                 if ($rule !== null) {
@@ -83,7 +83,7 @@ class RuleController extends AbstractController
                     }
                 }
 
-                return $this->returnSuccess($strategyDto->setParameters($configurationParameters));
+                return $this->returnSuccess($strategyService->getRuleParameters($rule));
             }
         }
 
@@ -91,16 +91,18 @@ class RuleController extends AbstractController
             'parameters' => [
                 'name' => (new StringParameter('Name'))
                     ->setValue($rule?->getName()),
-                'observedFilename' => (new StringParameter('Beobachtungsregel'))
+                'observedFilename' => (new StringParameter('Beobachtete Dateinamen'))
+                    ->setValue($rule?->getObservedFilename()),
+                'observedContent' => (new StringParameter('Beobachteter Inhalt'))
                     ->setValue($rule?->getObservedFilename()),
                 'moveDirectory' => (new DirectoryParameter('Ablage Verzeichnis'))
                     ->setValue($rule?->getMoveDirectory()),
                 'moveFilename' => (new StringParameter('Ablage Dateiname'))
                     ->setValue($rule?->getMoveFilename()),
+                'active' => (new BoolParameter('Aktiv'))
+                    ->setValue($rule?->isActive()),
             ],
-            'configuration' => $strategyDto->getConfiguration(),
-            'className' => $strategy,
-            'lastStep' => true,
+            'configuration' => $rule->getConfiguration(),
             'id' => $rule?->getId(),
         ]);
     }

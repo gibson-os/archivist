@@ -145,29 +145,6 @@ class AudibleStrategy extends AbstractWebStrategy
         $rule->setConfiguration([
             self::KEY_TYPE => $parameters[self::KEY_TYPE],
         ]);
-
-//        if (
-//            $strategy->getConfigurationStep() === self::STEP_LOGIN &&
-//            !$this->validateLogin($strategy, $parameters)
-//        ) {
-//            return false;
-//        }
-//
-//        if (
-//            $strategy->getConfigurationStep() === self::STEP_CAPTCHA &&
-//            !$this->validateCaptcha($strategy, $parameters)
-//        ) {
-//            return false;
-//        }
-//
-//        $session = $this->getSession($strategy);
-//        $page = $session->getPage();
-//        $page->clickLink(self::LINK_LIBRARY);
-//        $this->browserService->waitForElementById($session, 'lib-subheader-actions');
-//
-//        $strategy->setConfigurationValue(self::KEY_SESSION, serialize($session));
-//
-//        return true;
     }
 
     public function getExecuteParameters(Account $account): array
@@ -204,15 +181,16 @@ class AudibleStrategy extends AbstractWebStrategy
      */
     public function getFiles(Account $account, Rule $rule, string $type = null): Generator
     {
+        $configuration = $account->getConfiguration();
         $session = $this->getSession($account);
         $page = $session->getPage();
 
         try {
             while (true) {
                 yield from $this->getFilesFromPage(
-                    $strategy,
+                    $account,
                     $rule,
-                    $type ?? $strategy->getConfigurationValue(self::KEY_TYPE)
+                    $type ?? $configuration[self::KEY_TYPE]
                 );
 
                 $link = $page->findLink('Eine Seite vorwärts');
@@ -240,7 +218,7 @@ class AudibleStrategy extends AbstractWebStrategy
      * @throws JsonException
      * @throws ReflectionException
      */
-    private function getFilesFromPage(Strategy $strategy, Rule $rule, string $type): Generator
+    private function getFilesFromPage(Account $account, Rule $rule, string $type): Generator
     {
         $expression = 'adbl-lib-action-download[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
 
@@ -248,7 +226,7 @@ class AudibleStrategy extends AbstractWebStrategy
             $expression = 'adbl-episodes-link[^<]*<[^<]*<[^<]*<[^<]*<[^<]*<[^<]*href="([^"]*)"[^<]*<[^<]*chevron-container.+?</a>.+?';
         }
 
-        $session = $this->getSession($strategy);
+        $session = $this->getSession($account);
         $page = $session->getPage();
 
         $pageParts = explode('class="adbl-library-content-row"', $page->getContent());
@@ -277,14 +255,14 @@ class AudibleStrategy extends AbstractWebStrategy
                 $this->browserService->waitForElementById($session, 'lib-subheader-actions');
                 $titleParts->setSeries($titleParts->getTitle());
 
-                foreach ($this->getFiles($strategy, $rule, self::TYPE_SINGLE) as $file) {
+                foreach ($this->getFiles($account, $rule, self::TYPE_SINGLE) as $file) {
                     if (!$file instanceof File) {
                         continue;
                     }
 
                     $titleParts->setTitle($file->getName());
 
-                    yield new File($this->cleanTitle($titleParts), $file->getPath(), $file->getCreateDate(), $strategy);
+                    yield new File($this->cleanTitle($titleParts), $file->getPath(), $file->getCreateDate(), $account);
                 }
 
                 $this->modelManager->save($rule->setMessage('Gehe zurück zur Bibliothek'));
@@ -312,7 +290,7 @@ class AudibleStrategy extends AbstractWebStrategy
             $title = $this->cleanTitle($titleParts);
             $this->logger->info(sprintf('Find %s', $title));
 
-            yield new File($title, self::URL . $matches[6], $this->dateTimeService->get(), $strategy);
+            yield new File($title, self::URL . $matches[6], $this->dateTimeService->get(), $account);
         }
 
         yield null;

@@ -32,7 +32,7 @@ interface StrategyInterface
     /**
      * @param array<string, string> $parameters
      */
-    public function setRuleParameters(Rule $rule, array $parameters): void;
+    public function setRuleParameters(Rule $rule, array $parameters): bool;
 
     /**
      * @return AbstractParameter[]
