@@ -3,24 +3,13 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Store;
 
-use GibsonOS\Core\Exception\FactoryError;
-use GibsonOS\Core\Exception\Repository\SelectError;
-use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Store\AbstractDatabaseStore;
+use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
-use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
-use mysqlDatabase;
 
 class RuleStore extends AbstractDatabaseStore
 {
-    private ?int $userId = null;
-
-    public function __construct(
-        private ServiceManager $serviceManager,
-        mysqlDatabase $database = null
-    ) {
-        parent::__construct($database);
-    }
+    private Account $account;
 
     protected function getModelClassName(): string
     {
@@ -40,32 +29,12 @@ class RuleStore extends AbstractDatabaseStore
 
     protected function setWheres(): void
     {
-        if ($this->userId !== null) {
-            $this->addWhere('`user_id`=?', [$this->userId]);
-        }
+        $this->addWhere('`account_id`=?', [$this->account->getId()]);
     }
 
-    /**
-     * @throws FactoryError
-     * @throws SelectError
-     *
-     * @return Rule[]|iterable
-     */
-    public function getList(): iterable
+    public function setAccount(Account $account): RuleStore
     {
-        /** @var Rule $rule */
-        foreach (parent::getList() as $rule) {
-            /** @var StrategyInterface $strategyService */
-            $strategyService = $this->serviceManager->get($rule->getStrategy());
-            $rule->setStrategyByClass($strategyService);
-
-            yield $rule;
-        }
-    }
-
-    public function setUserId(?int $userId): RuleStore
-    {
-        $this->userId = $userId;
+        $this->account = $account;
 
         return $this;
     }

@@ -13,7 +13,8 @@ Ext.define('GibsonOS.module.archivist.rule.App', {
         let me = this;
 
         me.items = [{
-            xtype: 'gosModuleArchivistRuleGrid'
+            xtype: 'gosModuleArchivistRuleGrid',
+            accountId: me.accountId
         }];
 
         me.callParent();

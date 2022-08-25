@@ -43,7 +43,6 @@ Ext.define('GibsonOS.module.archivist.account.Form', {
         me.callParent();
 
         let responseData = {};
-        let save = false;
 
         me.down('#coreEventElementParameterSaveButton').on('click', () => {
             me.setLoading(true);

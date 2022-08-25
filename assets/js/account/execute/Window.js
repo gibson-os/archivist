@@ -1,7 +1,7 @@
-Ext.define('GibsonOS.module.archivist.account.Window', {
+Ext.define('GibsonOS.module.archivist.account.execute.Window', {
     extend: 'GibsonOS.Window',
-    alias: ['widget.gosModuleArchivistAccountWindow'],
-    title: 'Account',
+    alias: ['widget.gosModuleArchivistAccountExecuteWindow'],
+    title: 'Ausführen',
     width: 500,
     autoHeight: true,
     requiredPermission: {
@@ -12,7 +12,7 @@ Ext.define('GibsonOS.module.archivist.account.Window', {
         let me = this;
 
         me.items = [{
-            xtype: 'gosModuleArchivistAccountForm',
+            xtype: 'gosModuleArchivistAccountExecuteForm',
             accountId: me.accountId
         }];
 

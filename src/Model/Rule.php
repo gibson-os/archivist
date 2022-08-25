@@ -19,7 +19,7 @@ use JsonSerializable;
  * @method Rule    setIndexed(Index[] $indexed)
  */
 #[Table]
-#[Key(unique: true, columns: ['account_id', 'observed_filename'])]
+#[Key(unique: true, columns: ['account_id', 'observed_filename', 'observed_content'])]
 class Rule extends AbstractModel implements JsonSerializable
 {
     #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED], autoIncrement: true)]

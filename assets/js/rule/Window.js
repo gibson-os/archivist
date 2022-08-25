@@ -13,9 +13,13 @@ Ext.define('GibsonOS.module.archivist.rule.Window', {
 
         me.items = [{
             xtype: 'gosModuleArchivistRuleForm',
-            ruleId: me.ruleId
+            accountId: me.accountId
         }];
 
         me.callParent();
+
+        me.down('form').getForm().on('actioncomplete', () => {
+            me.close();
+        })
     }
 });

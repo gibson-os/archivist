@@ -16,6 +16,7 @@ use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Model\User\Permission;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Module\Archivist\Dto\Strategy;
+use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Repository\RuleRepository;
 use GibsonOS\Module\Archivist\Store\RuleStore;
@@ -27,12 +28,19 @@ use ReflectionException;
 class RuleController extends AbstractController
 {
     /**
-     * @throws FactoryError
+     * @throws JsonException
+     * @throws ReflectionException
      * @throws SelectError
      */
     #[CheckPermission(Permission::READ)]
-    public function index(RuleStore $ruleStore, int $start = 0, int $limit = 100, array $sort = []): AjaxResponse
-    {
+    public function index(
+        RuleStore $ruleStore,
+        #[GetModel] Account $account,
+        int $start = 0,
+        int $limit = 100,
+        array $sort = []
+    ): AjaxResponse {
+        $ruleStore->setAccount($account);
         $ruleStore->setLimit($limit, $start);
         $ruleStore->setSortByExt($sort);
 
@@ -104,7 +112,7 @@ class RuleController extends AbstractController
     #[CheckPermission(Permission::WRITE)]
     public function save(
         ModelManager $modelManager,
-        #[GetMappedModel(['user_id' => 'session.user.id'], ['user' => 'session.user'])] Rule $rule
+        #[GetMappedModel] Rule $rule
     ): AjaxResponse {
         $modelManager->save($rule);
 

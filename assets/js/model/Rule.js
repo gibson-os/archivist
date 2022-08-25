@@ -10,6 +10,9 @@ Ext.define('GibsonOS.module.archivist.model.Rule', {
         name: 'observedFilename',
         type: 'string'
     },{
+        name: 'observedContent',
+        type: 'string'
+    },{
         name: 'moveDirectory',
         type: 'string'
     },{
