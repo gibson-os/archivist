@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Model;
 
-use DateTimeImmutable;
 use GibsonOS\Core\Attribute\Install\Database\Column;
 use GibsonOS\Core\Attribute\Install\Database\Constraint;
 use GibsonOS\Core\Attribute\Install\Database\Key;
@@ -47,7 +46,7 @@ class Rule extends AbstractModel implements JsonSerializable
     private int $accountId;
 
     #[Column]
-    private ?DateTimeImmutable $lastRun = null;
+    private bool $active = false;
 
     #[Constraint]
     protected Account $account;
@@ -142,14 +141,14 @@ class Rule extends AbstractModel implements JsonSerializable
         return $this;
     }
 
-    public function getLastRun(): ?DateTimeImmutable
+    public function isActive(): bool
     {
-        return $this->lastRun;
+        return $this->active;
     }
 
-    public function setLastRun(?DateTimeImmutable $lastRun): Rule
+    public function setActive(bool $active): Rule
     {
-        $this->lastRun = $lastRun;
+        $this->active = $active;
 
         return $this;
     }
@@ -175,7 +174,7 @@ class Rule extends AbstractModel implements JsonSerializable
             'moveDirectory' => $this->getMoveDirectory(),
             'moveFilename' => $this->getMoveFilename(),
             'configuration' => $this->getConfiguration(),
-            'lastRun' => $this->getLastRun()?->format('Y-m-d H:i:s'),
+            'active' => $this->isActive(),
         ];
     }
 }

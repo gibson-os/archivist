@@ -1,6 +1,7 @@
 Ext.define('GibsonOS.module.archivist.rule.Grid', {
     extend: 'GibsonOS.module.core.component.grid.Panel',
     alias: ['widget.gosModuleArchivistRuleGrid'],
+    multiSelect: true,
     requiredPermission: {
         module: 'archivist',
         task: 'rule'
@@ -24,6 +25,19 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
             me.getStore().load();
         })
     },
+    enterFunction(record) {
+        const me = this;
+        const window = new GibsonOS.module.archivist.rule.Window({
+            accountId: me.accountId,
+            ruleId: record.get('id')
+        });
+        const form = window.down('form').getForm();
+
+        form.loadRecord(record);
+        form.on('actioncomplete', () => {
+            me.getStore().load();
+        })
+    },
     deleteFunction(records) {
         const me = this;
 
@@ -36,16 +50,16 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
 
                 me.setLoading(true);
 
-                ruleIds = [];
+                let rules = [];
 
                 Ext.iterate(records, record => {
-                    ruleIds.push(record.get('id'));
+                    rules.push({id: record.get('id')});
                 });
 
                 GibsonOS.Ajax.request({
                     url: baseDir + 'archivist/rule/delete',
                     params: {
-                        'ruleIds[]': ruleIds
+                        'rules': Ext.encode(rules)
                     },
                     success() {
                         me.getStore().load();
@@ -56,24 +70,6 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
                 });
             }
         );
-    },
-    enterFunction(record) {
-        const window = new GibsonOS.module.archivist.rule.Window({accountId: record.get('id')});
-        const formPanel = window.down('gosModuleArchivistRuleForm');
-        const form = formPanel.getForm();
-        const configuration = record.get('configuration');
-
-        const beforeAddFieldsFunctions = (parameters) => {
-            formPanel.un('beforeAddFields', beforeAddFieldsFunctions);
-
-            Ext.iterate(parameters, (name, parameter) => {
-                console.log('set value ' + configuration[name] + ' for ' + name);
-                parameter.value = configuration[name] ?? null;
-            });
-        };
-        formPanel.on('beforeAddFields', beforeAddFieldsFunctions);
-        form.findField('strategy').setValue(record.get('strategy'));
-        form.setValues(record.get('configuration'));
     },
     getColumns() {
         return [{

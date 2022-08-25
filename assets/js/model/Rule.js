@@ -19,7 +19,7 @@ Ext.define('GibsonOS.module.archivist.model.Rule', {
         name: 'moveFilename',
         type: 'string'
     },{
-        name: 'lastRun',
-        type: 'date'
+        name: 'active',
+        type: 'bool'
     }]
 });

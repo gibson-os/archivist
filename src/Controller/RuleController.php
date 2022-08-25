@@ -6,9 +6,11 @@ namespace GibsonOS\Module\Archivist\Controller;
 use GibsonOS\Core\Attribute\CheckPermission;
 use GibsonOS\Core\Attribute\GetMappedModel;
 use GibsonOS\Core\Attribute\GetModel;
+use GibsonOS\Core\Attribute\GetModels;
 use GibsonOS\Core\Controller\AbstractController;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Exception\FactoryError;
+use GibsonOS\Core\Exception\Model\DeleteError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Manager\ModelManager;
@@ -18,7 +20,6 @@ use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
-use GibsonOS\Module\Archivist\Repository\RuleRepository;
 use GibsonOS\Module\Archivist\Store\RuleStore;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
@@ -120,12 +121,19 @@ class RuleController extends AbstractController
     }
 
     /**
-     * @param int[] $ruleIds
+     * @param Rule[] $rules
+     *
+     * @throws JsonException
+     * @throws DeleteError
      */
     #[CheckPermission(Permission::DELETE)]
-    public function delete(RuleRepository $ruleRepository, array $ruleIds): AjaxResponse
-    {
-        $ruleRepository->deleteByIds($ruleIds);
+    public function delete(
+        ModelManager $modelManager,
+        #[GetModels(Rule::class)] array $rules,
+    ): AjaxResponse {
+        foreach ($rules as $rule) {
+            $modelManager->delete($rule);
+        }
 
         return $this->returnSuccess();
     }

@@ -4,6 +4,7 @@ Ext.define('GibsonOS.module.archivist.rule.Window', {
     title: 'Regel',
     width: 500,
     autoHeight: true,
+    ruleId: null,
     requiredPermission: {
         module: 'archivist',
         task: 'rule'
@@ -13,7 +14,8 @@ Ext.define('GibsonOS.module.archivist.rule.Window', {
 
         me.items = [{
             xtype: 'gosModuleArchivistRuleForm',
-            accountId: me.accountId
+            accountId: me.accountId,
+            ruleId: me.ruleId
         }];
 
         me.callParent();
