@@ -44,9 +44,12 @@ Ext.define('GibsonOS.module.archivist.account.execute.Form', {
                     id: me.accountId
                 },
                 success(response) {
+                    if (!me.isVisible()) {
+                        return;
+                    }
+
                     form.findField('status').setValue(Ext.decode(response.responseText).data.message + '...');
                     setTimeout(getStatus, 1000);
-                    // @todo kill on close
                 }
             });
         };
