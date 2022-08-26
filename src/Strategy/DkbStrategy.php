@@ -265,7 +265,7 @@ class DkbStrategy extends AbstractWebStrategy
         return 'dkb';
     }
 
-    public function getRuleParameters(Rule $rule): array
+    public function getRuleParameters(Account $account, Rule $rule = null): array
     {
         return [];
     }

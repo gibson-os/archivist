@@ -55,7 +55,7 @@ class DirectoryStrategy implements StrategyInterface
         $account->setConfiguration($configuration);
     }
 
-    public function getRuleParameters(Rule $rule): array
+    public function getRuleParameters(Account $account, Rule $rule = null): array
     {
         return [];
     }

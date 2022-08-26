@@ -171,6 +171,7 @@ class Rule extends AbstractModel implements JsonSerializable
             'id' => $this->getId(),
             'name' => $this->getName(),
             'observedFilename' => $this->getObservedFilename(),
+            'observedContent' => $this->getObservedContent(),
             'moveDirectory' => $this->getMoveDirectory(),
             'moveFilename' => $this->getMoveFilename(),
             'configuration' => $this->getConfiguration(),

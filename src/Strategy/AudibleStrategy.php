@@ -129,14 +129,14 @@ class AudibleStrategy extends AbstractWebStrategy
 //        $strategy->setConfigurationValue(self::KEY_SESSION, serialize($session));
     }
 
-    public function getRuleParameters(Rule $rule): array
+    public function getRuleParameters(Account $account, Rule $rule = null): array
     {
         return [
-            self::KEY_TYPE => new OptionParameter('Typ', [
+            self::KEY_TYPE => (new OptionParameter('Typ', [
                 'Einzelne Hörbücher' => self::TYPE_SINGLE,
                 'Serien' => self::TYPE_SERIES,
                 'Podcast' => self::TYPE_PODCAST,
-            ]),
+            ]))->setValue($rule?->getConfiguration()[self::KEY_TYPE] ?? null),
         ];
     }
 

@@ -20,8 +20,26 @@ Ext.define('GibsonOS.module.archivist.rule.Window', {
 
         me.callParent();
 
-        me.down('form').getForm().on('actioncomplete', () => {
+        const formPanel = me.down('gosModuleCoreParameterForm');
+        const form = formPanel.getForm();
+
+        form.on('actioncomplete', () => {
             me.close();
         })
+        formPanel.on('render', () => {
+            formPanel.setLoading(true);
+
+            GibsonOS.Ajax.request({
+                url: baseDir + 'archivist/rule/edit',
+                params: {
+                    id: me.ruleId,
+                    accountId: me.accountId
+                },
+                success(response) {
+                    formPanel.addFields(Ext.decode(response.responseText).data);
+                    formPanel.setLoading(false);
+                }
+            });
+        });
     }
 });

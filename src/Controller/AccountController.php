@@ -46,7 +46,7 @@ class AccountController extends AbstractController
     public function execute(
         CommandService $commandService,
         ModelManager $modelManager,
-        #[GetModel] Account $account
+        #[GetModel(['id' => 'id', 'user_id' => 'session.user.id'])] Account $account
     ): AjaxResponse {
         $modelManager->save($account->setActive(true)->setMessage('Starte'));
         $commandService->executeAsync(IndexerCommand::class, ['accountId' => $account->getId()]);
@@ -62,12 +62,11 @@ class AccountController extends AbstractController
     #[CheckPermission(Permission::WRITE)]
     public function save(
         ModelManager $modelManager,
-        #[GetMappedModel] Account $account
+        #[GetMappedModel(['id' => 'id', 'user_id' => 'session.user.id'], ['user' => 'session.user'])] Account $account
     ): AjaxResponse {
-        $account->setUser($this->sessionService->getUser() ?? new User());
         $modelManager->save($account);
 
-        return $this->returnSuccess($account);
+        return $this->returnSuccess();
     }
 
     /**
@@ -77,7 +76,7 @@ class AccountController extends AbstractController
     #[CheckPermission(Permission::WRITE)]
     public function delete(
         ModelManager $modelManager,
-        #[GetMappedModels(Account::class)] array $accounts
+        #[GetMappedModels(Account::class, ['id' => 'id', 'user_id' => 'session.user.id'])] array $accounts
     ): AjaxResponse {
         foreach ($accounts as $account) {
             $modelManager->delete($account);

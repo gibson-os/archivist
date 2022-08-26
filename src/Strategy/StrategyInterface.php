@@ -27,12 +27,12 @@ interface StrategyInterface
     /**
      * @return AbstractParameter[]
      */
-    public function getRuleParameters(Rule $rule): array;
+    public function getRuleParameters(Account $account, Rule $rule = null): array;
 
     /**
      * @param array<string, string> $parameters
      */
-    public function setRuleParameters(Rule $rule, array $parameters): bool;
+    public function setRuleParameters(Rule $rule, array $parameters): void;
 
     /**
      * @return AbstractParameter[]

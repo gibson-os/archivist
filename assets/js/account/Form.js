@@ -35,85 +35,29 @@ Ext.define('GibsonOS.module.archivist.account.Form', {
                     });
 
                     const strategy = combo.getStore().getById(value);
-                    me.addFields(strategy.get('parameters'));
+
+                    Ext.iterate(strategy.get('parameters'), (name, parameter) => {
+                        me.addField('configuration[' + name + ']', parameter);
+                    });
                 }
             }
         }];
 
         me.callParent();
 
-        let responseData = {};
-
         me.down('#coreEventElementParameterSaveButton').on('click', () => {
             me.setLoading(true);
 
-            const getParameters = () => {
-                let parameters = {};
-
-                me.items.each(field => {
-                    if (field.getName() === 'strategy' || field.getName() === 'name') {
-                        return true;
-                    }
-
-                    parameters[field.getName()] = field.getValue();
-                });
-
-                parameters.strategy = me.getForm().findField('strategy').getValue();
-                parameters.name = me.getForm().findField('name').getValue();
-                parameters.id = me.accountId;
-
-                return parameters;
-            };
-
-            GibsonOS.Ajax.request({
+            me.getForm().submit({
                 url: baseDir + 'archivist/account/save',
                 timeout: 120000,
-                params: getParameters(),
-                success(response) {
-                    responseData = Ext.decode(response.responseText).data;
-
-                    if (responseData.id) {
-                        me.accountId = responseData.id;
-                    }
-
-                    // me.down('#coreEventElementParameterSaveButton').up().add({
-                    //     itemId: 'archivistAccountFormExecuteButton',
-                    //     text: 'Ausführen',
-                    //     handler() {
-                    //         GibsonOS.Ajax.request({
-                    //             url: baseDir + 'archivist/account/execute',
-                    //             params: getParameters(),
-                    //             success(response) {
-                    //                 const messageBox = GibsonOS.MessageBox.show({
-                    //                     type: GibsonOS.MessageBox.type.INFO,
-                    //                     title: 'Status von ' + Ext.decode(response.responseText).data.name,
-                    //                     msg: 'Starte...'
-                    //                 });
-                    //                 const messageField = messageBox.down('displayfield');
-                    //
-                    //                 const reloadFunction = () => {
-                    //                     if (messageBox.isHidden()) {
-                    //                         return;
-                    //                     }
-                    //
-                    //                     GibsonOS.Ajax.request({
-                    //                         url: baseDir + 'archivist/account/status',
-                    //                         params: {
-                    //                             id: responseData.id
-                    //                         },
-                    //                         success(response) {
-                    //                             messageField.setValue(Ext.decode(response.responseText).data.message + '...');
-                    //                         }
-                    //                     });
-                    //                     setTimeout(reloadFunction, 100);
-                    //                 };
-                    //                 reloadFunction();
-                    //             }
-                    //         });
-                    //     }
-                    // });
+                params: {
+                    id: me.accountId
                 },
-                callback() {
+                success() {
+                    me.setLoading(false);
+                },
+                failure() {
                     me.setLoading(false);
                 }
             });
