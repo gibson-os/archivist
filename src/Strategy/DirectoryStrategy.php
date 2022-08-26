@@ -85,6 +85,7 @@ class DirectoryStrategy implements StrategyInterface
     public function getFiles(Account $account, Rule $rule): Generator
     {
         $configuration = $account->getConfiguration();
+        $executionParameters = $account->getExecutionParameters();
         $viewedFiles = $configuration['viewedFiles'] ?? [];
         $directory = $configuration['directory'];
 
@@ -103,7 +104,7 @@ class DirectoryStrategy implements StrategyInterface
             }
 
             $configuration['waitTime'] = 0;
-            $this->modelManager->save($rule->setMessage(sprintf('Prüfe ob Datei %s noch größer wird', $file)));
+            $this->modelManager->save($account->setMessage(sprintf('Prüfe ob Datei %s noch größer wird', $file)));
             $fileSize = filesize($file);
             sleep(1);
 
@@ -123,22 +124,19 @@ class DirectoryStrategy implements StrategyInterface
             );
         }
 
-        if (!$strategy->hasConfigurationValue('loadedFiles')) {
-            $this->modelManager->save($rule->setMessage('Warte auf neue Dateien'));
-            $waitTime =
-                ($strategy->hasConfigurationValue('waitTime')
-                    ? ((int) $strategy->getConfigurationValue('waitTime')) :
-                    0)
-                + self::WAIT_PER_LOOP_SECONDS;
+        if (count($executionParameters['loadedFiled'] ?? []) === 0) {
+            $this->modelManager->save($account->setMessage('Warte auf neue Dateien'));
+            $waitTime = ($executionParameters['waitTime'] ?? 0) + self::WAIT_PER_LOOP_SECONDS;
             sleep(self::WAIT_PER_LOOP_SECONDS);
 
             if ($waitTime >= self::MAX_WAIT_SECONDS) {
                 return null;
             }
 
-            $strategy->setConfigurationValue('waitTime', $waitTime);
+            $executionParameters['waitTime'] = $waitTime;
+            $account->setExecutionParameters($executionParameters);
 
-            yield from $this->getFiles($strategy, $rule);
+            yield from $this->getFiles($account, $rule);
         }
     }
 
@@ -146,13 +144,11 @@ class DirectoryStrategy implements StrategyInterface
     {
         $fileName = $this->dirService->addEndSlash($file->getPath()) . $file->getName();
         $file->setResource(fopen($fileName, 'r'), filesize($fileName));
-
-        $files = $file->getStrategy()->hasConfigurationValue('loadedFiles')
-            ? $file->getStrategy()->getConfigurationValue('loadedFiles')
-            : []
-        ;
+        $executionParameters = $file->getAccount()->getExecutionParameters();
+        $files = $executionParameters['loadedFiles'] ?? [];
         $files[] = $fileName;
-        $file->getStrategy()->setConfigurationValue('loadedFiles', $files);
+        $executionParameters['loadedFiles'] = $files;
+        $file->getAccount()->setExecutionParameters($executionParameters);
 
         return $file;
     }

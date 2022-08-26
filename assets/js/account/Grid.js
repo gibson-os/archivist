@@ -19,6 +19,14 @@ Ext.define('GibsonOS.module.archivist.account.Grid', {
             maxSelectionNeeded: 1,
             handler() {
                 const records = me.getSelectionModel().getSelection();
+
+                if (records.length !== 1) {
+                    return;
+                }
+
+                new GibsonOS.module.archivist.account.execute.Window({
+                    accountId: records[0].get('id')
+                });
             }
         });
     },
@@ -75,10 +83,6 @@ Ext.define('GibsonOS.module.archivist.account.Grid', {
             dataIndex: 'strategy',
             text: 'Strategy',
             flex: 1
-        },{
-            dataIndex: 'active',
-            text: 'Aktiv',
-            width: 50
         }];
     }
 });

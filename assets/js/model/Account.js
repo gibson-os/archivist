@@ -9,8 +9,5 @@ Ext.define('GibsonOS.module.archivist.model.Account', {
     },{
         name: 'name',
         type: 'string'
-    },{
-        name: 'active',
-        type: 'bool'
     }]
 });

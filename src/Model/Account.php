@@ -37,6 +37,9 @@ class Account extends AbstractModel implements JsonSerializable
     #[Column(type: Column::TYPE_JSON)]
     private array $configuration = [];
 
+    #[Column(type: Column::TYPE_JSON)]
+    private array $executionParameters = [];
+
     #[Column(type: Column::TYPE_TEXT)]
     private ?string $message = null;
 
@@ -109,6 +112,18 @@ class Account extends AbstractModel implements JsonSerializable
     public function setConfiguration(array $configuration): Account
     {
         $this->configuration = $configuration;
+
+        return $this;
+    }
+
+    public function getExecutionParameters(): array
+    {
+        return $this->executionParameters;
+    }
+
+    public function setExecutionParameters(array $executionParameters): Account
+    {
+        $this->executionParameters = $executionParameters;
 
         return $this;
     }

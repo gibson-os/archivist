@@ -17,5 +17,12 @@ Ext.define('GibsonOS.module.archivist.account.execute.Window', {
         }];
 
         me.callParent();
+
+        const formPanel = me.down('gosModuleCoreParameterForm');
+        const saveButton = formPanel.down('#coreEventElementParameterSaveButton');
+
+        formPanel.on('render', () => {
+            formPanel.execute();
+        });
     }
 });

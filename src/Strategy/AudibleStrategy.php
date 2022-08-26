@@ -154,13 +154,15 @@ class AudibleStrategy extends AbstractWebStrategy
 
     public function setExecuteParameters(Account $account, int $step, array $parameters): bool
     {
-        $loadLibary = function () use ($account): bool {
+        $loadLibrary = function () use ($account): bool {
             $session = $this->getSession($account);
             $page = $session->getPage();
             $page->clickLink(self::LINK_LIBRARY);
             $this->browserService->waitForElementById($session, 'lib-subheader-actions');
 
-            $account->setConfigurationValue(self::KEY_SESSION, serialize($session));
+            $executionParameters = $account->getExecutionParameters();
+            $executionParameters[self::KEY_SESSION] = serialize($session);
+            $account->setExecutionParameters($executionParameters);
 
             return true;
         };
@@ -168,7 +170,7 @@ class AudibleStrategy extends AbstractWebStrategy
         return match ($step) {
             self::STEP_LOGIN => $this->validateLogin($account),
             self::STEP_CAPTCHA => $this->validateCaptcha($account, $parameters),
-            default => $loadLibary()
+            default => $loadLibrary()
         };
     }
 
@@ -311,10 +313,10 @@ class AudibleStrategy extends AbstractWebStrategy
      */
     public function setFileResource(File $file, Account $account): File
     {
-        if ($account->getClassName() !== self::class) {
+        if ($account->getStrategy() !== self::class) {
             throw new StrategyException(sprintf(
                 'Class name %s is not equal with %s',
-                $account->getClassName(),
+                $account->getStrategy(),
                 self::class
             ));
         }

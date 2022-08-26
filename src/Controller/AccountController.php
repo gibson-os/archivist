@@ -12,6 +12,7 @@ use GibsonOS\Core\Exception\Model\DeleteError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Manager\ModelManager;
+use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Model\User;
 use GibsonOS\Core\Model\User\Permission;
 use GibsonOS\Core\Service\CommandService;
@@ -19,6 +20,7 @@ use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Module\Archivist\Command\IndexerCommand;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Store\AccountStore;
+use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonException;
 use ReflectionException;
 
@@ -44,13 +46,30 @@ class AccountController extends AbstractController
      */
     #[CheckPermission(Permission::WRITE)]
     public function execute(
+        ServiceManager $serviceManager,
         CommandService $commandService,
         ModelManager $modelManager,
-        #[GetModel(['id' => 'id', 'user_id' => 'session.user.id'])] Account $account
+        #[GetModel(['id' => 'id', 'user_id' => 'session.user.id'])] Account $account,
+        array $parameters = [],
     ): AjaxResponse {
-        $modelManager->save($account->setActive(true)->setMessage('Starte'));
+        $account->setExecutionParameters($parameters);
+        $strategy = $serviceManager->get($account->getStrategy(), StrategyInterface::class);
+        $executeParameters = $strategy->getExecuteParameters($account);
+
+        if (count($executeParameters)) {
+            $modelManager->save($account);
+
+            return $this->returnSuccess($executeParameters);
+        }
+
+        $modelManager->save($account->setMessage('Starte'));
         $commandService->executeAsync(IndexerCommand::class, ['accountId' => $account->getId()]);
 
+        return $this->returnSuccess([]);
+    }
+
+    public function status(#[GetModel(['id' => 'id', 'user_id' => 'session.user.id'])] Account $account): AjaxResponse
+    {
         return $this->returnSuccess($account);
     }
 

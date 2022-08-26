@@ -64,7 +64,7 @@ class IndexerCommand extends AbstractCommand
         $account = $this->accountRepository->getById($this->accountId);
 
         try {
-//            $this->ruleService->executeRule($rule);
+            $this->ruleService->executeRule($rule);
         } catch (LockError) {
             $this->logger->warning('Indexing for this account already runs!');
             $this->modelManager->save(
