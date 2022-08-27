@@ -558,4 +558,8 @@ class AudibleStrategy extends AbstractWebStrategy
     {
         $this->browserService->waitForLink($session, self::LINK_LIBRARY, 30000000);
     }
+
+    public function reset(): void
+    {
+    }
 }

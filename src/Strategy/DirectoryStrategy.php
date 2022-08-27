@@ -29,6 +29,12 @@ class DirectoryStrategy implements StrategyInterface
 
     private const WAIT_PER_LOOP_SECONDS = 3;
 
+    private array $viewedFiles = [];
+
+    private array $loadedFiles = [];
+
+    private int $waitTime = 0;
+
     public function __construct(
         private readonly DirService $dirService,
         private readonly FileService $fileService,
@@ -85,12 +91,10 @@ class DirectoryStrategy implements StrategyInterface
     public function getFiles(Account $account): Generator
     {
         $configuration = $account->getConfiguration();
-        $executionParameters = $account->getExecutionParameters();
-        $viewedFiles = $configuration['viewedFiles'] ?? [];
         $directory = $configuration['directory'];
 
         foreach ($this->dirService->getFiles($directory) as $file) {
-            $lockName = RuleService::RULE_LOCK_PREFIX . 'directory' . $configuration['directory'];
+            $lockName = RuleService::RULE_LOCK_PREFIX . 'directory' . $directory;
 
             if ($this->lockService->shouldStop($lockName)) {
                 return null;
@@ -98,12 +102,12 @@ class DirectoryStrategy implements StrategyInterface
 
             if (
                 is_dir($file) ||
-                in_array($file, $viewedFiles)
+                in_array($file, $this->viewedFiles)
             ) {
                 continue;
             }
 
-            $configuration['waitTime'] = 0;
+            $this->waitTime = 0;
             $this->modelManager->save($account->setMessage(sprintf('Prüfe ob Datei %s noch größer wird', $file)));
             $fileSize = filesize($file);
             sleep(1);
@@ -112,9 +116,7 @@ class DirectoryStrategy implements StrategyInterface
                 continue;
             }
 
-            $viewedFiles[] = $file;
-            $configuration['viewedFiles'] = $viewedFiles;
-            $account->setConfiguration($configuration);
+            $this->viewedFiles[] = $file;
 
             yield new File(
                 $this->fileService->getFilename($file),
@@ -124,17 +126,14 @@ class DirectoryStrategy implements StrategyInterface
             );
         }
 
-        if (count($executionParameters['loadedFiled'] ?? []) === 0) {
+        if (count($this->loadedFiles) === 0) {
             $this->modelManager->save($account->setMessage('Warte auf neue Dateien'));
-            $waitTime = ($executionParameters['waitTime'] ?? 0) + self::WAIT_PER_LOOP_SECONDS;
+            $this->waitTime += self::WAIT_PER_LOOP_SECONDS;
             sleep(self::WAIT_PER_LOOP_SECONDS);
 
-            if ($waitTime >= self::MAX_WAIT_SECONDS) {
+            if ($this->waitTime >= self::MAX_WAIT_SECONDS) {
                 return null;
             }
-
-            $executionParameters['waitTime'] = $waitTime;
-            $account->setExecutionParameters($executionParameters);
 
             yield from $this->getFiles($account);
         }
@@ -144,30 +143,17 @@ class DirectoryStrategy implements StrategyInterface
     {
         $fileName = $this->dirService->addEndSlash($file->getPath()) . $file->getName();
         $file->setResource(fopen($fileName, 'r'), filesize($fileName));
-        $executionParameters = $file->getAccount()->getExecutionParameters();
-        $files = $executionParameters['loadedFiles'] ?? [];
-        $files[] = $fileName;
-        $executionParameters['loadedFiles'] = $files;
-        $file->getAccount()->setExecutionParameters($executionParameters);
+        $this->loadedFiles[] = $fileName;
 
         return $file;
     }
 
     public function unload(Account $account): void
     {
-        $configuration = $account->getConfiguration();
-
-        if (!isset($configuration['loadedFiles'])) {
-            return;
-        }
-
-        foreach ($configuration['loadedFiles'] as $file) {
+        foreach ($this->loadedFiles as $file) {
             unlink($file);
 //            $this->trashService->add($file);
         }
-
-        $configuration['loadedFiles'] = [];
-        $account->setConfiguration($configuration);
     }
 
     /**
@@ -185,5 +171,12 @@ class DirectoryStrategy implements StrategyInterface
         }
 
         return $lockName;
+    }
+
+    public function reset(): void
+    {
+        $this->waitTime = 0;
+        $this->viewedFiles = [];
+        $this->loadedFiles = [];
     }
 }

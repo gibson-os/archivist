@@ -11,19 +11,19 @@ use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
 use GibsonOS\Module\Archivist\Dto\Strategy;
-use GibsonOS\Module\Archivist\Repository\RuleRepository;
+use GibsonOS\Module\Archivist\Repository\AccountRepository;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonException;
 
 class StrategyAutoComplete implements AutoCompleteInterface
 {
-    private const PARAMETER_RULE_ID = 'ruleId';
+    private const PARAMETER_ACCOUNT_ID = 'accountId';
 
     public function __construct(
-        private ServiceManager $serviceManager,
-        private DirService $dirService,
-        private FileService $fileService,
-        private RuleRepository $ruleRepository
+        private readonly ServiceManager $serviceManager,
+        private readonly DirService $dirService,
+        private readonly FileService $fileService,
+        private readonly AccountRepository $accountRepository
     ) {
     }
 
@@ -42,8 +42,8 @@ class StrategyAutoComplete implements AutoCompleteInterface
         $strategies = [];
         $rule = null;
 
-        if (!empty($parameters[self::PARAMETER_RULE_ID])) {
-            $rule = $this->ruleRepository->getById((int) $parameters[self::PARAMETER_RULE_ID]);
+        if (!empty($parameters[self::PARAMETER_ACCOUNT_ID])) {
+            $rule = $this->accountRepository->getById((int) $parameters[self::PARAMETER_ACCOUNT_ID]);
         }
 
         foreach ($files as $file) {
@@ -94,11 +94,11 @@ class StrategyAutoComplete implements AutoCompleteInterface
         $strategyService = $this->serviceManager->get($className);
         $strategy = new Strategy($strategyService->getName(), $className);
 
-        if (!empty($parameters[self::PARAMETER_RULE_ID])) {
-            $rule = $this->ruleRepository->getById((int) $parameters[self::PARAMETER_RULE_ID]);
+        if (!empty($parameters[self::PARAMETER_ACCOUNT_ID])) {
+            $account = $this->accountRepository->getById((int) $parameters[self::PARAMETER_ACCOUNT_ID]);
 
-            if ($rule->getStrategy() === $className) {
-                $strategy->setConfiguration($rule->getConfiguration());
+            if ($account->getStrategy() === $className) {
+                $strategy->setConfiguration($account->getConfiguration());
             }
         }
 

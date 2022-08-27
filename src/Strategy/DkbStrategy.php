@@ -283,4 +283,8 @@ class DkbStrategy extends AbstractWebStrategy
     {
         return true;
     }
+
+    public function reset(): void
+    {
+    }
 }

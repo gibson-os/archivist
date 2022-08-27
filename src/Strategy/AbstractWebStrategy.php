@@ -54,11 +54,10 @@ abstract class AbstractWebStrategy implements StrategyInterface
 
     protected function getSession(Account $account = null): Session
     {
-        if (
-            $account !== null &&
-            $account->hasConfigurationValue(self::KEY_SESSION)
-        ) {
-            return unserialize($account->getConfigurationValue(self::KEY_SESSION));
+        $executionParameters = $account?->getExecutionParameters() ?? [];
+
+        if (isset($executionParameters[self::KEY_SESSION])) {
+            return unserialize($executionParameters[self::KEY_SESSION]);
         }
 
         return $this->browserService->getSession();

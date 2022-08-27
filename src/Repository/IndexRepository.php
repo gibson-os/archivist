@@ -44,11 +44,10 @@ class IndexRepository extends AbstractRepository
                 '`' . $this->indexTableName . '`.`changed`, ' .
                 '`' . $this->ruleTableName . '`.`name`, ' .
                 '`' . $this->ruleTableName . '`.`observed_filename`, ' .
+                '`' . $this->ruleTableName . '`.`observed_content`, ' .
                 '`' . $this->ruleTableName . '`.`move_directory`, ' .
                 '`' . $this->ruleTableName . '`.`move_filename`, ' .
-                '`' . $this->ruleTableName . '`.`active`, ' .
-                '`' . $this->ruleTableName . '`.`message`, ' .
-                '`' . $this->ruleTableName . '`.`user_id`'
+                '`' . $this->ruleTableName . '`.`active`'
             )
         ;
 
@@ -70,11 +69,10 @@ class IndexRepository extends AbstractRepository
                     ->setId($record->rule_id)
                     ->setName($record->name)
                     ->setObservedFilename($record->observed_filename)
+                    ->setObservedContent($record->observed_content)
                     ->setMoveDirectory($record->move_directory)
                     ->setMoveFilename($record->move_filename)
                     ->setActive((bool) $record->active)
-                    ->setMessage($record->message)
-                    ->setUserId((int) $record->user_id)
             );
         }
 
