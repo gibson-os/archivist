@@ -57,12 +57,12 @@ class AccountController extends AbstractController
         $executeParameters = $strategy->getExecuteParameters($account);
 
         if (count($executeParameters)) {
-            $modelManager->save($account);
+            $modelManager->saveWithoutChildren($account);
 
             return $this->returnSuccess($executeParameters);
         }
 
-        $modelManager->save($account->setMessage('Starte'));
+        $modelManager->saveWithoutChildren($account->setMessage('Starte'));
         $commandService->executeAsync(IndexerCommand::class, ['accountId' => $account->getId()]);
 
         return $this->returnSuccess([]);
@@ -83,7 +83,7 @@ class AccountController extends AbstractController
         ModelManager $modelManager,
         #[GetMappedModel(['id' => 'id', 'user_id' => 'session.user.id'], ['user' => 'session.user'])] Account $account
     ): AjaxResponse {
-        $modelManager->save($account);
+        $modelManager->saveWithoutChildren($account);
 
         return $this->returnSuccess();
     }

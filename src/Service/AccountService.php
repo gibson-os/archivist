@@ -66,12 +66,12 @@ class AccountService
 
         if (count($rules) === 0) {
             $this->logger->warning(sprintf('No active rules for account %s!', $account->getName()));
-            $this->modelManager->save($account->setMessage('Keine aktiven Regeln vorhanden'));
+            $this->modelManager->saveWithoutChildren($account->setMessage('Keine aktiven Regeln vorhanden'));
 
             return false;
         }
 
-        $this->modelManager->save($account->setMessage('Ermittel Dateien'));
+        $this->modelManager->saveWithoutChildren($account->setMessage('Ermittel Dateien'));
         $this->logger->info(sprintf(
             'Get files with %s strategy for account %s',
             $strategy->getName(),
@@ -88,7 +88,7 @@ class AccountService
             }
         }
 
-        $this->modelManager->save($account->setMessage('Fertig'));
+        $this->modelManager->saveWithoutChildren($account->setMessage('Fertig'));
         $strategy->unload($account);
         $this->lockService->unlock($lockName);
 

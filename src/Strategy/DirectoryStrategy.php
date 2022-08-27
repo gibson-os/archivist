@@ -19,7 +19,7 @@ use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Service\RuleService;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
-use GibsonOS\Module\Explorer\Service\TrashService;
+use GibsonOS\Module\Explorer\Sersvice\TrashService;
 use JsonException;
 use ReflectionException;
 
@@ -108,7 +108,7 @@ class DirectoryStrategy implements StrategyInterface
             }
 
             $this->waitTime = 0;
-            $this->modelManager->save($account->setMessage(sprintf('Prüfe ob Datei %s noch größer wird', $file)));
+            $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Prüfe ob Datei %s noch größer wird', $file)));
             $fileSize = filesize($file);
             sleep(1);
 
@@ -127,7 +127,7 @@ class DirectoryStrategy implements StrategyInterface
         }
 
         if (count($this->loadedFiles) === 0) {
-            $this->modelManager->save($account->setMessage('Warte auf neue Dateien'));
+            $this->modelManager->saveWithoutChildren($account->setMessage('Warte auf neue Dateien'));
             $this->waitTime += self::WAIT_PER_LOOP_SECONDS;
             sleep(self::WAIT_PER_LOOP_SECONDS);
 

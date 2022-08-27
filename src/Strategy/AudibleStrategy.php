@@ -246,7 +246,7 @@ class AudibleStrategy extends AbstractWebStrategy
             $titleParts = new TitleParts($matches[1], $matches[3], $matches[5]);
 
             if ($type === self::TYPE_PODCAST) {
-                $this->modelManager->save($account->setMessage(sprintf('Überprüfe %s', $matches[1])));
+                $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Überprüfe %s', $matches[1])));
                 $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[6]));
                 $currentUrl = $session->getCurrentUrl();
                 $this->browserService->goto($session, $matches[6]);
@@ -263,7 +263,7 @@ class AudibleStrategy extends AbstractWebStrategy
                     yield new File($this->cleanTitle($titleParts), $file->getPath(), $file->getCreateDate(), $account);
                 }
 
-                $this->modelManager->save($account->setMessage('Gehe zurück zur Bibliothek'));
+                $this->modelManager->saveWithoutChildren($account->setMessage('Gehe zurück zur Bibliothek'));
                 $this->logger->info(sprintf('Go back to %s', $currentUrl));
                 $this->browserService->goto($session, $currentUrl);
                 $this->browserService->waitForElementById($session, 'lib-subheader-actions');
@@ -335,11 +335,11 @@ class AudibleStrategy extends AbstractWebStrategy
         stream_copy_to_stream($resource, $newFile);
         fclose($newFile);
 
-        $this->modelManager->save($account->setMessage(sprintf('Ermittel Checksumme für %s', $file->getName())));
+        $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Ermittel Checksumme für %s', $file->getName())));
         $this->logger->info(sprintf('Get checksum for %s', $file->getName()));
         $checksum = $this->ffmpegService->getChecksum($tmpFileName);
 
-        $this->modelManager->save($account->setMessage(sprintf(
+        $this->modelManager->saveWithoutChildren($account->setMessage(sprintf(
             'Ermittel Activation Bytes mit Checksumme %s für %s',
             $checksum,
             $file->getName()
@@ -348,7 +348,7 @@ class AudibleStrategy extends AbstractWebStrategy
         $activationBytes = $this->getActivationBytes($checksum);
         $file->setResource($resource, $response->getBody()->getLength());
 
-        $this->modelManager->save($account->setMessage(sprintf('Konvertiere %s', $file->getName())));
+        $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Konvertiere %s', $file->getName())));
         $this->logger->info('Convert');
         $this->ffmpegService->convert(
             (new Media($tmpFileName))->setAudioStreams(['0:a' => new Audio()])->selectAudioStream('0:a'),

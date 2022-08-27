@@ -93,7 +93,7 @@ class RuleController extends AbstractController
         ModelManager $modelManager,
         #[GetMappedModel] Rule $rule
     ): AjaxResponse {
-        $modelManager->save($rule);
+        $modelManager->saveWithoutChildren($rule);
 
         return $this->returnSuccess();
     }

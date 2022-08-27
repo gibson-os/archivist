@@ -62,7 +62,7 @@ class RuleService
         }
 
         $this->logger->info(sprintf('Indexing file "%s"', $file->getName()));
-        $this->modelManager->save($account->setMessage(sprintf('Indexiere "%s"', $file->getName())));
+        $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Indexiere "%s"', $file->getName())));
 
         $context = [
             'template' => $this->dirService->addEndSlash($rule->getMoveDirectory()) . $rule->getMoveFilename(),
@@ -94,7 +94,7 @@ class RuleService
         }
 
         $this->logger->info(sprintf('Load file %s', $file->getName()));
-        $this->modelManager->save($account->setMessage(sprintf('Lade Datei %s', $file->getName())));
+        $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Lade Datei %s', $file->getName())));
         $strategy->setFileResource($file, $account);
         $resource = $file->getResource();
 
