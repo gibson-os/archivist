@@ -63,7 +63,6 @@ class RuleService
     public function executeRule(Rule $rule): void
     {
         $this->logger->info(sprintf('Start indexing for rule %s', $rule->getName()));
-        /** @var StrategyInterface $strategyService */
         $strategyService = $this->serviceManager->get($rule->getStrategy(), StrategyInterface::class);
 
         $lockName = self::RULE_LOCK_PREFIX . $strategyService->getLockName($rule);

@@ -82,7 +82,7 @@ class DirectoryStrategy implements StrategyInterface
      * @throws DateTimeError
      * @throws ReflectionException
      */
-    public function getFiles(Account $account, Rule $rule): Generator
+    public function getFiles(Account $account): Generator
     {
         $configuration = $account->getConfiguration();
         $executionParameters = $account->getExecutionParameters();
@@ -136,7 +136,7 @@ class DirectoryStrategy implements StrategyInterface
             $executionParameters['waitTime'] = $waitTime;
             $account->setExecutionParameters($executionParameters);
 
-            yield from $this->getFiles($account, $rule);
+            yield from $this->getFiles($account);
         }
     }
 

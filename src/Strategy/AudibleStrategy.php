@@ -181,7 +181,7 @@ class AudibleStrategy extends AbstractWebStrategy
      * @throws ReflectionException
      * @throws SaveError
      */
-    public function getFiles(Account $account, Rule $rule, string $type = null): Generator
+    public function getFiles(Account $account, string $type = null): Generator
     {
         $configuration = $account->getConfiguration();
         $session = $this->getSession($account);
@@ -189,11 +189,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
         try {
             while (true) {
-                yield from $this->getFilesFromPage(
-                    $account,
-                    $rule,
-                    $type ?? $configuration[self::KEY_TYPE]
-                );
+                yield from $this->getFilesFromPage($account, $type ?? $configuration[self::KEY_TYPE]);
 
                 $link = $page->findLink('Eine Seite vorwärts');
 
@@ -220,7 +216,7 @@ class AudibleStrategy extends AbstractWebStrategy
      * @throws JsonException
      * @throws ReflectionException
      */
-    private function getFilesFromPage(Account $account, Rule $rule, string $type): Generator
+    private function getFilesFromPage(Account $account, string $type): Generator
     {
         $expression = 'adbl-lib-action-download[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
 
@@ -250,14 +246,14 @@ class AudibleStrategy extends AbstractWebStrategy
             $titleParts = new TitleParts($matches[1], $matches[3], $matches[5]);
 
             if ($type === self::TYPE_PODCAST) {
-                $this->modelManager->save($rule->setMessage(sprintf('Überprüfe %s', $matches[1])));
+                $this->modelManager->save($account->setMessage(sprintf('Überprüfe %s', $matches[1])));
                 $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[6]));
                 $currentUrl = $session->getCurrentUrl();
                 $this->browserService->goto($session, $matches[6]);
                 $this->browserService->waitForElementById($session, 'lib-subheader-actions');
                 $titleParts->setSeries($titleParts->getTitle());
 
-                foreach ($this->getFiles($account, $rule, self::TYPE_SINGLE) as $file) {
+                foreach ($this->getFiles($account, self::TYPE_SINGLE) as $file) {
                     if (!$file instanceof File) {
                         continue;
                     }
@@ -267,7 +263,7 @@ class AudibleStrategy extends AbstractWebStrategy
                     yield new File($this->cleanTitle($titleParts), $file->getPath(), $file->getCreateDate(), $account);
                 }
 
-                $this->modelManager->save($rule->setMessage('Gehe zurück zur Bibliothek'));
+                $this->modelManager->save($account->setMessage('Gehe zurück zur Bibliothek'));
                 $this->logger->info(sprintf('Go back to %s', $currentUrl));
                 $this->browserService->goto($session, $currentUrl);
                 $this->browserService->waitForElementById($session, 'lib-subheader-actions');

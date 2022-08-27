@@ -1,6 +1,7 @@
 Ext.define('GibsonOS.module.archivist.account.Grid', {
     extend: 'GibsonOS.module.core.component.grid.Panel',
     alias: ['widget.gosModuleArchivistAccountGrid'],
+    multiSelect: true,
     requiredPermission: {
         module: 'archivist',
         task: 'account'
@@ -16,7 +17,7 @@ Ext.define('GibsonOS.module.archivist.account.Grid', {
             tbarText: 'Ausführen',
             selectionNeeded: true,
             minSelectionNeeded: 1,
-            maxSelectionNeeded: 1,
+            maxSelectionAllowed: 1,
             handler() {
                 const records = me.getSelectionModel().getSelection();
 

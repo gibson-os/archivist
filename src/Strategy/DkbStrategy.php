@@ -87,15 +87,15 @@ class DkbStrategy extends AbstractWebStrategy
     /**
      * @throws ElementNotFoundException
      */
-    public function getFiles(Account $account, Rule $rule): Generator
+    public function getFiles(Account $account): Generator
     {
-        $session = $this->getSession($strategy);
+        $session = $this->getSession($account);
         $page = $session->getPage();
-        $page->clickLink($strategy->getConfigurationValue('path'));
+        $page->clickLink($account->getConfigurationValue('path'));
 
         try {
             while (true) {
-                yield from $this->getFilesFromPage($strategy);
+                yield from $this->getFilesFromPage($account);
 
                 $page->clickLink('Nächste Seite');
             }
@@ -107,9 +107,9 @@ class DkbStrategy extends AbstractWebStrategy
     /**
      * @return File[]
      */
-    private function getFilesFromPage(Strategy $strategy): array
+    private function getFilesFromPage(Account $account): array
     {
-        $session = $this->getSession($strategy);
+        $session = $this->getSession($account);
         $page = $session->getPage();
         $responseBody = $page->getContent();
 
@@ -126,7 +126,7 @@ class DkbStrategy extends AbstractWebStrategy
                 $fileName,
                 self::URL . html_entity_decode($fileMatches[4][$id]),
                 $this->dateTimeService->get($fileMatches[3][$id] . '-' . $fileMatches[2][$id] . '-' . $fileMatches[1][$id]),
-                $strategy
+                $account
             );
         }
 
