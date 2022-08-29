@@ -29,6 +29,12 @@ class DkbStrategy extends AbstractWebStrategy
 
     private const STEP_PATH = 2;
 
+    private bool $loggedIn = false;
+
+    private bool $tanConfirmed = false;
+
+    private array $directories = [];
+
     public function getName(): string
     {
         return 'DKB';
@@ -42,46 +48,74 @@ class DkbStrategy extends AbstractWebStrategy
      */
     public function getAccountParameters(Strategy $strategy): array
     {
-        if (
-            $strategy->getConfigurationStep() === self::STEP_LOGIN &&
-            $strategy->hasConfigurationValue('username') &&
-            $strategy->hasConfigurationValue('password')
-        ) {
-            $this->login($strategy, [
-                'j_username' => $this->cryptService->decrypt($strategy->getConfigurationValue('username')),
-                'j_password' => $this->cryptService->decrypt($strategy->getConfigurationValue('password')),
-            ]);
-        }
-
-        return match ($strategy->getConfigurationStep()) {
-            self::STEP_TAN => $this->getTanParameters(),
-            self::STEP_PATH => $this->getPathParameters($strategy),
-            default => $this->getLoginParameters(),
-        };
+        return [
+            'j_username' => new StringParameter('Anmeldename'),
+            'j_password' => (new StringParameter('Passwort'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
+        ];
+//        if (
+//            $strategy->getConfigurationStep() === self::STEP_LOGIN &&
+//            $strategy->hasConfigurationValue('username') &&
+//            $strategy->hasConfigurationValue('password')
+//        ) {
+//            $this->login($strategy, [
+//                'j_username' => $this->cryptService->decrypt($strategy->getConfigurationValue('username')),
+//                'j_password' => $this->cryptService->decrypt($strategy->getConfigurationValue('password')),
+//            ]);
+//        }
+//
+//        return match ($strategy->getConfigurationStep()) {
+//            self::STEP_TAN => $this->getTanParameters(),
+//            self::STEP_PATH => $this->getPathParameters($strategy),
+//        };
     }
 
-    /**
-     * @throws BrowserException
-     * @throws ElementNotFoundException
-     */
     public function setAccountParameters(Account $account, array $parameters): void
     {
-        switch ($strategy->getConfigurationStep()) {
-            case self::STEP_TAN:
-                $this->validateTan($strategy, $parameters);
+        $configuration = $account->getConfiguration();
+        $configuration['username'] = $this->cryptService->encrypt($parameters['j_username']);
+        $configuration['password'] = $this->cryptService->encrypt($parameters['j_password']);
+        $account->setConfiguration($configuration);
 
-//                return false;
-// no break
-            case self::STEP_PATH:
-                $strategy->setConfigurationValue('path', $parameters['path']);
+//        switch ($strategy->getConfigurationStep()) {
+//            case self::STEP_TAN:
+//                $this->validateTan($strategy, $parameters);
+//
+////                return false;
+//// no break
+//            case self::STEP_PATH:
+//                $strategy->setConfigurationValue('path', $parameters['path']);
+//
+////                return true;
+//// no break
+//            default:
+//                $this->login($strategy, $parameters);
+//
+////                return false;
+//        }
+    }
 
-//                return true;
-// no break
-            default:
-                $this->login($strategy, $parameters);
+    public function getRuleParameters(Account $account, Rule $rule = null): array
+    {
+        return $this->loggedIn
+            ? $this->tanConfirmed
+                ? $this->getTanParameters()
+                : $this->getPathParameters($account)
+            : $this->login()
+        ;
+    }
 
-//                return false;
-        }
+    public function setRuleParameters(Rule $rule, array $parameters): void
+    {
+    }
+
+    public function getExecuteParameters(Account $account): array
+    {
+        return [];
+    }
+
+    public function setExecuteParameters(Account $account, array $parameters): bool
+    {
+        return true;
     }
 
     /**
@@ -166,17 +200,6 @@ class DkbStrategy extends AbstractWebStrategy
         return $file;
     }
 
-    /**
-     * @return AbstractParameter[]
-     */
-    private function getLoginParameters(): array
-    {
-        return [
-            'j_username' => new StringParameter('Anmeldename'),
-            'j_password' => (new StringParameter('Passwort'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
-        ];
-    }
-
     private function getTanParameters(): array
     {
         return [
@@ -184,10 +207,12 @@ class DkbStrategy extends AbstractWebStrategy
         ];
     }
 
-    private function getPathParameters(Strategy $strategy): array
+    private function getPathParameters(Account $account): array
     {
+        $configuration = $account->getConfiguration();
+
         return [
-            'path' => new OptionParameter('Verzeichnis', $strategy->getConfigurationValue('directories')),
+            'path' => new OptionParameter('Verzeichnis', $configuration['directories']),
         ];
     }
 
@@ -265,26 +290,10 @@ class DkbStrategy extends AbstractWebStrategy
         return 'dkb';
     }
 
-    public function getRuleParameters(Account $account, Rule $rule = null): array
-    {
-        return [];
-    }
-
-    public function setRuleParameters(Rule $rule, array $parameters): void
-    {
-    }
-
-    public function getExecuteParameters(Account $account): array
-    {
-        return [];
-    }
-
-    public function setExecuteParameters(Account $account, array $parameters): bool
-    {
-        return true;
-    }
-
     public function reset(): void
     {
+        $this->loggedIn = false;
+        $this->tanConfirmed = false;
+        $this->directories = [];
     }
 }

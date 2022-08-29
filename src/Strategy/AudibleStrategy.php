@@ -102,12 +102,14 @@ class AudibleStrategy extends AbstractWebStrategy
     public function setAccountParameters(Account $account, array $parameters): void
     {
         $configuration = $account->getConfiguration();
-        $configuration[self::KEY_EMAIL] = $parameters[self::KEY_EMAIL]
+        $configuration[self::KEY_EMAIL] = $this->cryptService->encrypt(
+            $parameters[self::KEY_EMAIL]
             ?? $this->cryptService->decrypt($configuration[self::KEY_EMAIL])
-        ;
-        $configuration[self::KEY_PASSWORD] = $parameters[self::KEY_PASSWORD]
+        );
+        $configuration[self::KEY_PASSWORD] = $this->cryptService->encrypt(
+            $parameters[self::KEY_PASSWORD]
             ?? $this->cryptService->decrypt($configuration[self::KEY_PASSWORD])
-        ;
+        );
         $account->setConfiguration($configuration);
     }
 
@@ -168,7 +170,6 @@ class AudibleStrategy extends AbstractWebStrategy
         $page = $session->getPage();
         $page->clickLink(self::LINK_LIBRARY);
         $this->browserService->waitForElementById($session, 'lib-subheader-actions');
-
         $executionParameters = $account->getExecutionParameters();
         $executionParameters[self::KEY_SESSION] = serialize($session);
         $account->setExecutionParameters($executionParameters);
