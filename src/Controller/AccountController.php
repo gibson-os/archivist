@@ -8,6 +8,7 @@ use GibsonOS\Core\Attribute\GetMappedModel;
 use GibsonOS\Core\Attribute\GetMappedModels;
 use GibsonOS\Core\Attribute\GetModel;
 use GibsonOS\Core\Controller\AbstractController;
+use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\Model\DeleteError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
@@ -42,7 +43,7 @@ class AccountController extends AbstractController
     /**
      * @throws JsonException
      * @throws SaveError
-     * @throws ReflectionException
+     * @throws FactoryError
      */
     #[CheckPermission(Permission::WRITE)]
     public function execute(
@@ -54,6 +55,7 @@ class AccountController extends AbstractController
     ): AjaxResponse {
         $account->setExecutionParameters($parameters);
         $strategy = $serviceManager->get($account->getStrategy(), StrategyInterface::class);
+        $strategy->setExecuteParameters($account, $parameters);
         $executeParameters = $strategy->getExecuteParameters($account);
 
         if (count($executeParameters)) {
@@ -76,13 +78,18 @@ class AccountController extends AbstractController
     /**
      * @throws JsonException
      * @throws SaveError
-     * @throws ReflectionException
+     * @throws FactoryError
      */
     #[CheckPermission(Permission::WRITE)]
     public function save(
+        ServiceManager $serviceManager,
         ModelManager $modelManager,
-        #[GetMappedModel(['id' => 'id', 'user_id' => 'session.user.id'], ['user' => 'session.user'])] Account $account
+        #[GetMappedModel(['id' => 'id', 'user_id' => 'session.user.id'], ['user' => 'session.user'])] Account $account,
+        array $configuration = [],
     ): AjaxResponse {
+        $strategy = $serviceManager->get($account->getStrategy(), StrategyInterface::class);
+        $strategy->setAccountParameters($account, $configuration);
+
         $modelManager->saveWithoutChildren($account);
 
         return $this->returnSuccess();

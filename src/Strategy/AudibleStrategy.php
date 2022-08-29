@@ -9,6 +9,7 @@ use Behat\Mink\Session;
 use Generator;
 use GibsonOS\Core\Dto\Ffmpeg\Media;
 use GibsonOS\Core\Dto\Ffmpeg\Stream\Audio;
+use GibsonOS\Core\Dto\Parameter\AbstractParameter;
 use GibsonOS\Core\Dto\Parameter\OptionParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Dto\Web\Request;
@@ -64,6 +65,14 @@ class AudibleStrategy extends AbstractWebStrategy
 
     private const LINK_LIBRARY = 'Bibliothek';
 
+    private const EXPRESSION_PODCAST = '(adbl-episodes-link)[^<]*<[^<]*<[^<]*<[^<]*<[^<]*<[^<]*href="([^"]*)"[^<]*<[^<]*chevron-container.+?</a>.+?';
+
+    private const EXPRESSION_NOT_PODCAST = '(adbl-lib-action-download)[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
+
+    private bool $loggedIn = false;
+
+    private bool $captchaApproved = false;
+
     public function __construct(
         BrowserService $browserService,
         WebService $webService,
@@ -84,49 +93,22 @@ class AudibleStrategy extends AbstractWebStrategy
 
     public function getAccountParameters(Strategy $strategy): array
     {
-//        $typeParameter = new OptionParameter('Typ', [
-//            'Einzelne Hörbücher' => self::TYPE_SINGLE,
-//            'Serien' => self::TYPE_SERIES,
-//            'Podcast' => self::TYPE_PODCAST,
-//        ]);
-
-        if ($strategy->getConfigurationStep() === self::STEP_CAPTCHA) {
-            return [
-                self::KEY_CAPTCHA_IMAGE => (new StringParameter('Captcha'))->setImage($strategy->getConfigurationValue(self::KEY_CAPTCHA_IMAGE)),
-            ];
-        }
-
-//        if (
-//            $strategy->hasConfigurationValue(self::KEY_EMAIL) &&
-//            $strategy->hasConfigurationValue(self::KEY_PASSWORD)
-//        ) {
-//            return [self::KEY_TYPE => $typeParameter];
-//        }
-
         return [
             self::KEY_EMAIL => (new StringParameter('E-Mail'))->setInputType(StringParameter::INPUT_TYPE_EMAIL),
             self::KEY_PASSWORD => (new StringParameter('Passwort'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
-            //self::KEY_TYPE => $typeParameter,
         ];
     }
 
     public function setAccountParameters(Account $account, array $parameters): void
     {
         $configuration = $account->getConfiguration();
-        $email = $parameters[self::KEY_EMAIL] ?? $this->cryptService->decrypt($configuration[self::KEY_EMAIL]);
-        $password = $parameters[self::KEY_PASSWORD] ?? $this->cryptService->decrypt($configuration[self::KEY_PASSWORD]);
-        $account->setConfiguration([
-            self::KEY_TYPE => $parameters[self::KEY_TYPE],
-            self::KEY_EMAIL => $this->cryptService->encrypt($email),
-            self::KEY_PASSWORD => $this->cryptService->encrypt($password),
-        ]);
-
-//        $session = $this->getSession($strategy);
-//        $page = $session->getPage();
-//        $page->clickLink(self::LINK_LIBRARY);
-//        $this->browserService->waitForElementById($session, 'lib-subheader-actions');
-//
-//        $strategy->setConfigurationValue(self::KEY_SESSION, serialize($session));
+        $configuration[self::KEY_EMAIL] = $parameters[self::KEY_EMAIL]
+            ?? $this->cryptService->decrypt($configuration[self::KEY_EMAIL])
+        ;
+        $configuration[self::KEY_PASSWORD] = $parameters[self::KEY_PASSWORD]
+            ?? $this->cryptService->decrypt($configuration[self::KEY_PASSWORD])
+        ;
+        $account->setConfiguration($configuration);
     }
 
     public function getRuleParameters(Account $account, Rule $rule = null): array
@@ -147,31 +129,51 @@ class AudibleStrategy extends AbstractWebStrategy
         ]);
     }
 
+    /**
+     * @throws StrategyException
+     *
+     * @return AbstractParameter[]
+     */
     public function getExecuteParameters(Account $account): array
     {
+        if (!$this->loggedIn) {
+            throw new StrategyException('Not logged in!');
+        }
+
+        if (!$this->captchaApproved) {
+            return [
+                self::KEY_CAPTCHA_IMAGE => (new StringParameter('Captcha'))
+                    ->setImage($account->getExecutionParameters()[self::KEY_CAPTCHA_IMAGE]),
+            ];
+        }
+
         return [];
     }
 
-    public function setExecuteParameters(Account $account, int $step, array $parameters): bool
+    /**
+     * @throws BrowserException
+     * @throws ElementNotFoundException
+     */
+    public function setExecuteParameters(Account $account, array $parameters): bool
     {
-        $loadLibrary = function () use ($account): bool {
-            $session = $this->getSession($account);
-            $page = $session->getPage();
-            $page->clickLink(self::LINK_LIBRARY);
-            $this->browserService->waitForElementById($session, 'lib-subheader-actions');
+        if (!$this->loggedIn) {
+            return $this->validateLogin($account);
+        }
 
-            $executionParameters = $account->getExecutionParameters();
-            $executionParameters[self::KEY_SESSION] = serialize($session);
-            $account->setExecutionParameters($executionParameters);
+        if (!$this->captchaApproved) {
+            return $this->validateCaptcha($account, $parameters);
+        }
 
-            return true;
-        };
+        $session = $this->getSession($account);
+        $page = $session->getPage();
+        $page->clickLink(self::LINK_LIBRARY);
+        $this->browserService->waitForElementById($session, 'lib-subheader-actions');
 
-        return match ($step) {
-            self::STEP_LOGIN => $this->validateLogin($account),
-            self::STEP_CAPTCHA => $this->validateCaptcha($account, $parameters),
-            default => $loadLibrary()
-        };
+        $executionParameters = $account->getExecutionParameters();
+        $executionParameters[self::KEY_SESSION] = serialize($session);
+        $account->setExecutionParameters($executionParameters);
+
+        return true;
     }
 
     /**
@@ -181,15 +183,14 @@ class AudibleStrategy extends AbstractWebStrategy
      * @throws ReflectionException
      * @throws SaveError
      */
-    public function getFiles(Account $account, string $type = null): Generator
+    public function getFiles(Account $account): Generator
     {
-        $configuration = $account->getConfiguration();
         $session = $this->getSession($account);
         $page = $session->getPage();
 
         try {
             while (true) {
-                yield from $this->getFilesFromPage($account, $type ?? $configuration[self::KEY_TYPE]);
+                yield from $this->getFilesFromPage($account);
 
                 $link = $page->findLink('Eine Seite vorwärts');
 
@@ -216,14 +217,9 @@ class AudibleStrategy extends AbstractWebStrategy
      * @throws JsonException
      * @throws ReflectionException
      */
-    private function getFilesFromPage(Account $account, string $type): Generator
+    private function getFilesFromPage(Account $account): Generator
     {
-        $expression = 'adbl-lib-action-download[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
-
-        if ($type === self::TYPE_PODCAST) {
-            $expression = 'adbl-episodes-link[^<]*<[^<]*<[^<]*<[^<]*<[^<]*<[^<]*href="([^"]*)"[^<]*<[^<]*chevron-container.+?</a>.+?';
-        }
-
+        $expression = '(' . self::EXPRESSION_NOT_PODCAST . '|' . self::EXPRESSION_PODCAST . ')';
         $session = $this->getSession($account);
         $page = $session->getPage();
 
@@ -237,7 +233,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
         foreach ($pageParts as $pagePart) {
             $this->logger->debug(sprintf('Search #%s# in %s', $expression, $pagePart));
-            $matches = ['', '', '', '', '', '', ''];
+            $matches = ['', '', '', '', '', '', '', '', '', ''];
 
             if (preg_match('#' . $expression . '#s', $pagePart, $matches) !== 1) {
                 continue;
@@ -245,15 +241,15 @@ class AudibleStrategy extends AbstractWebStrategy
 
             $titleParts = new TitleParts($matches[1], $matches[3], $matches[5]);
 
-            if ($type === self::TYPE_PODCAST) {
+            if (count($matches) === 11) { // Podcast
                 $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Überprüfe %s', $matches[1])));
-                $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[6]));
+                $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[8]));
                 $currentUrl = $session->getCurrentUrl();
-                $this->browserService->goto($session, $matches[6]);
+                $this->browserService->goto($session, $matches[8]);
                 $this->browserService->waitForElementById($session, 'lib-subheader-actions');
                 $titleParts->setSeries($titleParts->getTitle());
 
-                foreach ($this->getFiles($account, self::TYPE_SINGLE) as $file) {
+                foreach ($this->getFiles($account) as $file) {
                     if (!$file instanceof File) {
                         continue;
                     }
@@ -275,20 +271,20 @@ class AudibleStrategy extends AbstractWebStrategy
 
             if (empty($series)) {
                 $this->findSeriesAndEpisode($titleParts);
-                $series = $titleParts->getSeries();
+//                $series = $titleParts->getSeries();
             }
 
-            if (
-                (empty($series) && $type === self::TYPE_SERIES) ||
-                (!empty($series) && $type === self::TYPE_SINGLE)
-            ) {
-                continue;
-            }
+//            if (
+//                (empty($series) && $type === self::TYPE_SERIES) ||
+//                (!empty($series) && $type === self::TYPE_SINGLE)
+//            ) {
+//                continue;
+//            }
 
             $title = $this->cleanTitle($titleParts);
             $this->logger->info(sprintf('Find %s', $title));
 
-            yield new File($title, self::URL . $matches[6], $this->dateTimeService->get(), $account);
+            yield new File($title, self::URL . $matches[8], $this->dateTimeService->get(), $account);
         }
 
         yield null;
@@ -370,10 +366,10 @@ class AudibleStrategy extends AbstractWebStrategy
      */
     public function unload(Account $account): void
     {
-        $session = $this->getSession($account);
-        $page = $session->getPage();
-        $page->clickLink('Abmelden');
-        $session->stop();
+//        $session = $this->getSession($account);
+//        $page = $session->getPage();
+//        $page->clickLink('Abmelden');
+//        $session->stop();
     }
 
     public function getLockName(Account $account): string
@@ -480,12 +476,13 @@ class AudibleStrategy extends AbstractWebStrategy
      */
     private function setCaptchaStep(Session $session, Account $account): void
     {
-        $configuration = $account->getConfiguration();
+        $executionParameters = $account->getExecutionParameters();
         $captchaImage = $this->browserService->waitForElementById($session, 'auth-captcha-image');
         $captchaImageSource = $captchaImage->getAttribute('src') ?? '';
-        $configuration[self::KEY_SESSION] = $session;
-        $configuration[self::KEY_CAPTCHA_IMAGE] = $captchaImageSource;
-        $account->setConfiguration($configuration);
+        $executionParameters[self::KEY_SESSION] = $session;
+        $executionParameters[self::KEY_CAPTCHA_IMAGE] = $captchaImageSource;
+        $account->setExecutionParameters($executionParameters);
+        $this->captchaApproved = false;
     }
 
     /**
@@ -508,6 +505,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
         try {
             $this->waitForLibrary($session);
+            $this->captchaApproved = true;
         } catch (BrowserException) {
             $this->setCaptchaStep($session, $account);
 
@@ -537,11 +535,14 @@ class AudibleStrategy extends AbstractWebStrategy
         ]);
         $page->pressButton('signInSubmit');
 
-        $configuration[self::KEY_SESSION] = serialize($session);
-        $account->setConfiguration($configuration);
+        $executionParameters = $account->getExecutionParameters();
+        $executionParameters[self::KEY_SESSION] = serialize($session);
+        $account->setExecutionParameters($executionParameters);
+        $this->loggedIn = true;
 
         try {
             $this->waitForLibrary($session);
+            $this->captchaApproved = true;
         } catch (BrowserException) {
             $this->setCaptchaStep($session, $account);
 
@@ -561,5 +562,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
     public function reset(): void
     {
+        $this->loggedIn = false;
+        $this->captchaApproved = false;
     }
 }

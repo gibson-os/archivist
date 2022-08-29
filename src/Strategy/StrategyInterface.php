@@ -42,7 +42,7 @@ interface StrategyInterface
     /**
      * @param array<string, string> $parameters
      */
-    public function setExecuteParameters(Account $account, int $step, array $parameters): bool;
+    public function setExecuteParameters(Account $account, array $parameters): bool;
 
     /**
      * @return Generator<File>

@@ -14,7 +14,7 @@ use function sprintf;
 
 class BrowserService
 {
-    private const WAIT_TIME = 100000;
+    private const WAIT_TIME = 300000;
 
     public function __construct(private LoggerInterface $logger)
     {

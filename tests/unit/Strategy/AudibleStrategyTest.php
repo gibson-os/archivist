@@ -6,23 +6,23 @@ namespace GibsonOS\Module\Archivist\Test\Unit\Strategy;
 use Behat\Mink\Element\DocumentElement;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
-use Codeception\Test\Unit;
+use DMore\ChromeDriver\ChromeDriver;
 use GibsonOS\Core\Service\CryptService;
 use GibsonOS\Core\Service\DateTimeService;
 use GibsonOS\Core\Service\FfmpegService;
 use GibsonOS\Core\Service\ProcessService;
 use GibsonOS\Core\Service\WebService;
-use GibsonOS\Module\Archivist\Dto\Strategy;
-use GibsonOS\Module\Archivist\Model\Rule;
+use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Service\BrowserService;
 use GibsonOS\Module\Archivist\Strategy\AudibleStrategy;
+use GibsonOS\UnitTest\AbstractTest;
 use phpmock\phpunit\PHPMock;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
-class AudibleStrategyTest extends Unit
+class AudibleStrategyTest extends AbstractTest
 {
     use ProphecyTrait;
     use PHPMock;
@@ -59,7 +59,6 @@ class AudibleStrategyTest extends Unit
         putenv('TIMEZONE=Europe/Berlin');
         putenv('DATE_LATITUDE=51.2642156');
         putenv('DATE_LONGITUDE=6.8001438');
-        $serviceManager = new ServiceManagerService();
         $this->browserService = $this->prophesize(BrowserService::class);
         $this->webService = $this->prophesize(WebService::class);
         $this->ffmpegService = $this->prophesize(FfmpegService::class);
@@ -70,7 +69,8 @@ class AudibleStrategyTest extends Unit
             $this->webService->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal(),
             $this->cryptService->reveal(),
-            $serviceManager->get(DateTimeService::class),
+            $this->serviceManager->get(DateTimeService::class),
+            $this->modelManager->reveal(),
             $this->ffmpegService->reveal(),
             $this->processService->reveal()
         );
@@ -78,24 +78,24 @@ class AudibleStrategyTest extends Unit
 
     public function testLogin(): void
     {
-        /** @var ObjectProphecy|Session $session */
-        $session = $this->prophesize(Session::class);
+        $session = new Session(new ChromeDriver('http://localhost:9222', null, 'chrome://new-tab-page'));
         /** @var ObjectProphecy|DocumentElement $page */
         $page = $this->prophesize(DocumentElement::class);
 
         $this->browserService->getSession()
             ->shouldBeCalledOnce()
-            ->willReturn($session->reveal())
+            ->willReturn($session)
         ;
-        $this->browserService->loadPage($session->reveal(), 'https://audible.de/')
+        $this->browserService->loadPage($session, 'https://audible.de/')
             ->shouldBeCalledOnce()
             ->willReturn($page->reveal())
         ;
-        $page->clickLink('Bereits Kunde? Anmelden')
+        $page->clickLink('Anmelden')
             ->shouldBeCalledOnce()
         ;
-        $this->browserService->waitForElementById($session->reveal(), 'ap_email')
+        $this->browserService->waitForElementById($session, 'ap_email')
             ->shouldBeCalledOnce()
+            ->willReturn(new NodeElement('foo', $session))
         ;
         $this->cryptService->decrypt('Arthur')
             ->shouldBeCalledOnce()
@@ -105,7 +105,7 @@ class AudibleStrategyTest extends Unit
             ->shouldBeCalledOnce()
             ->willReturn('Dent')
         ;
-        $this->browserService->fillFormFields($session->reveal(), [
+        $this->browserService->fillFormFields($session, [
             'email' => 'Arthur',
             'password' => 'Dent',
         ])
@@ -114,26 +114,24 @@ class AudibleStrategyTest extends Unit
         $page->pressButton('signInSubmit')
             ->shouldBeCalledOnce()
         ;
-        $this->browserService->waitForLink($session->reveal(), 'Bibliothek', 60000000)
+        $this->browserService->waitForLink($session, 'Bibliothek', 30000000)
             ->shouldBeCalledOnce()
+            ->willReturn(new NodeElement('foo', $session))
         ;
         $page->clickLink('Bibliothek')
             ->shouldBeCalledOnce()
         ;
-        $this->browserService->waitForElementById($session->reveal(), 'lib-subheader-actions')
+        $this->browserService->waitForElementById($session, 'lib-subheader-actions')
             ->shouldBeCalledOnce()
-        ;
-        $this->getFunctionMock(__NAMESPACE__, 'serialize')
-            ->expects($this->once())
-            ->with($session->reveal())
-            ->willReturn('galaxy')
+            ->willReturn(new NodeElement('foo', $session))
         ;
 
-        $strategy = (new Strategy('Audible', AudibleStrategy::class))
-            ->setConfigurationValue('email', 'Arthur')
-            ->setConfigurationValue('password', 'Dent')
-        ;
-        $this->audibleStrategy->setAccountParameters($strategy, []);
+        $account = new Account();
+        $this->audibleStrategy->setAccountParameters($account, [
+            'email' => 'Arthur',
+            'password' => 'Dent',
+        ]);
+        $this->audibleStrategy->setExecuteParameters($account, []);
     }
 
     public function testLoginWithCaptcha(): void
@@ -143,14 +141,13 @@ class AudibleStrategyTest extends Unit
     /**
      * @dataProvider getData
      */
-    public function testGetFiles(string $name, string $types, string $content, ?string $subContent): void
+    public function testGetFiles(string $name, string $content, ?string $subContent): void
     {
         /** @var ObjectProphecy|Session $session */
         $session = $this->prophesize(Session::class);
         /** @var ObjectProphecy|DocumentElement $page */
         $page = $this->prophesize(DocumentElement::class);
-        /** @var ObjectProphecy|Rule $rule */
-        $rule = $this->prophesize(Rule::class);
+        $account = (new Account())->setStrategy(AudibleStrategy::class);
 
         if ($subContent === null) {
             $page->getContent()->willReturn($content);
@@ -162,43 +159,20 @@ class AudibleStrategyTest extends Unit
             ;
             $session->getCurrentUrl()->shouldBeCalledOnce();
             $this->browserService->goto($session->reveal(), Argument::any())->shouldBeCalledOnce();
-            $rule->setMessage(Argument::any())
-                ->shouldBeCalledOnce()
-                ->willReturn($rule->reveal())
-            ;
-            $rule->save()
-                ->shouldBeCalledOnce()
-            ;
+            $this->modelManager->saveWithoutChildren(Argument::any())->shouldBeCalledOnce();
         }
 
-        $page->getContent()->shouldBeCalledTimes($subContent === null ? 3 : 4);
+        $page->getContent()->shouldBeCalledTimes($subContent === null ? 1 : 2);
         $session->getPage()
-            ->shouldBeCalledTimes($subContent === null ? 6 : 8)
+            ->shouldBeCalledTimes($subContent === null ? 2 : 4)
             ->willReturn($page)
         ;
         $this->browserService->getSession()
-            ->shouldBeCalledTimes($subContent === null ? 6 : 8)
+            ->shouldBeCalledTimes($subContent === null ? 2 : 4)
             ->willReturn($session)
         ;
 
-        $possibleTypes = [
-            'single' => 'single',
-            'series' => 'series',
-            'podcast' => 'podcast',
-        ];
-        unset($possibleTypes[$types]);
-
-        $this->assertSame($name, $this->audibleStrategy->getFiles(
-            (new Strategy('Audible', AudibleStrategy::class))->setConfigurationValue('type', $types),
-            $rule->reveal()
-        )->current()->getName());
-
-        foreach ($possibleTypes as $possibleElement) {
-            $this->assertNull($this->audibleStrategy->getFiles(
-                (new Strategy('Audible', AudibleStrategy::class))->setConfigurationValue('type', $possibleElement),
-                $rule->reveal()
-            )->current(), 'Matched for: ' . $possibleElement);
-        }
+        $this->assertSame($name, $this->audibleStrategy->getFiles($account)->current()->getName());
     }
 
     public function getData(): array
@@ -206,7 +180,6 @@ class AudibleStrategyTest extends Unit
         return [
             '[#meinAudibleOriginal] Die 121ste Umdrehung um die Sonne' => [
                 '[#meinAudibleOriginal] Die 121ste Umdrehung um die Sonne',
-                'series',
                 '<div id="adbl-library-content-row-B07TCMB54Y" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
     bc-spacing-top-s2" style="">
@@ -543,7 +516,6 @@ bc-trigger-tooltip">
             ],
             '[Die phantastischen Fälle des Rufus T. Feuerflieg] 6 Zurück in die Gegenwart' => [
                 '[Die phantastischen Fälle des Rufus T. Feuerflieg] 6 Zurück in die Gegenwart',
-                'series',
                 '<div id="adbl-library-content-row-B08ZJL9F8L" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
     bc-spacing-top-s2" style="">
@@ -904,7 +876,6 @@ bc-trigger-tooltip">
             ],
             '[Bibi und Tina 1-50] 24 Der Millionär' => [
                 '[Bibi und Tina 1-50] 24 Der Millionär',
-                'series',
                 '<div id="adbl-library-content-row-B004JVIMPG" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
     bc-spacing-top-s2" style="">
@@ -1255,7 +1226,6 @@ bc-trigger-tooltip">
             ],
             '[Die Amazonas-Detektive] 1 Verschwörung im Dschungel' => [
                 '[Die Amazonas-Detektive] 1 Verschwörung im Dschungel',
-                'series',
                 '<div id="adbl-library-content-row-B08R7KHYVT" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
     bc-spacing-top-s2" style="">
@@ -1585,7 +1555,6 @@ bc-trigger-tooltip">
             ],
             '[Ghostsitter] 5 Die komplette Staffel' => [
                 '[Ghostsitter] 5 Die komplette Staffel',
-                'series',
                 '<div id="adbl-library-content-row-B081ZF4X1M" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
     bc-spacing-top-s2" style="">
@@ -1951,7 +1920,6 @@ bc-trigger-tooltip">
             ],
             '[Game of Thrones - Das Lied von Eis und Feuer] 2 Game of Thrones - Das Lied von Eis und Feuer' => [
                 '[Game of Thrones - Das Lied von Eis und Feuer] 2 Game of Thrones - Das Lied von Eis und Feuer',
-                'series',
                 '<div id="adbl-library-content-row-B004UZH630" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
     bc-spacing-top-s2" style="">
@@ -2382,7 +2350,6 @@ bc-trigger-popover">
             ],
             '[Woodwalkers] 2 Gefährliche Freundschaft' => [
                 '[Woodwalkers] 2 Gefährliche Freundschaft',
-                'series',
                 '<div id="adbl-library-content-row-B0798RRSXZ" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
     bc-spacing-top-s2" style="">
@@ -2723,7 +2690,6 @@ bc-trigger-tooltip">
             ],
             'Der Zombie Survival Guide - Überleben unter Untoten' => [
                 'Der Zombie Survival Guide - Überleben unter Untoten',
-                'single',
                 '<div id="adbl-library-content-row-B005LNBKRS" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
     bc-spacing-top-s2" style="">
@@ -3146,7 +3112,6 @@ bc-trigger-popover">
             ],
             'ALIEN - In den Schatten - Die 1. Staffel (Kostenlose Hörprobe)' => [
                 'ALIEN - In den Schatten - Die 1. Staffel (Kostenlose Hörprobe)',
-                'single',
                 '<div id="adbl-library-content-row-B07RDQSFD8" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
     bc-spacing-top-s2" style="">
@@ -3502,7 +3467,6 @@ bc-trigger-tooltip">
             ],
             '[Sag mal, du als Physiker. Der P.M.-Podcast: Staffel 5 (Original Podcast)] Flg. 22 - Frieren ohne den (Golf-)Strom' => [
                 '[Sag mal, du als Physiker. Der P.M.-Podcast: Staffel 5 (Original Podcast)] Flg. 22 - Frieren ohne den (Golf-)Strom',
-                'podcast',
                 '<div id="adbl-library-content-row-B08NC7JHV7" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
     bc-spacing-top-s2" style="">
@@ -3969,7 +3933,6 @@ bc-trigger-tooltip">
             ],
             '[Paw Patrol] 128-130 Der Sternschnuppen-Regen' => [
                 '[Paw Patrol] 128-130 Der Sternschnuppen-Regen',
-                'series',
                 '<div id="adbl-library-content-row-B08WM3F85K" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
     bc-spacing-top-s2" style="">
@@ -4310,7 +4273,6 @@ bc-trigger-tooltip">
             ],
             '[Charly und der Wunderwombat Waldemar] 1 Staffel' => [
                 '[Charly und der Wunderwombat Waldemar] 1 Staffel',
-                'series',
                 '<div id="adbl-library-content-row-B08BBXSFLY" class="adbl-library-content-row">
 <div id="" class="bc-row-responsive
     bc-spacing-top-s2" style="">

@@ -16,6 +16,7 @@ Ext.define('GibsonOS.module.archivist.account.execute.Form', {
             const form = me.getForm();
 
             form.submit({
+                timeout: 120,
                 xtype: 'gosFormActionAction',
                 url: baseDir + 'archivist/account/execute',
                 params: {
@@ -55,6 +56,7 @@ Ext.define('GibsonOS.module.archivist.account.execute.Form', {
         };
 
         form.submit({
+            timeout: 120,
             xtype: 'gosFormActionAction',
             url: baseDir + 'archivist/account/execute',
             params: {

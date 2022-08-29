@@ -77,7 +77,7 @@ class DirectoryStrategy implements StrategyInterface
         return [];
     }
 
-    public function setExecuteParameters(Account $account, int $step, array $parameters): bool
+    public function setExecuteParameters(Account $account, array $parameters): bool
     {
         return true;
     }
