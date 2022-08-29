@@ -29,6 +29,8 @@ class DirectoryStrategy implements StrategyInterface
 
     private const WAIT_PER_LOOP_SECONDS = 3;
 
+    private const KEY_DIRECTORY = 'directory';
+
     private array $viewedFiles = [];
 
     private array $loadedFiles = [];
@@ -51,13 +53,13 @@ class DirectoryStrategy implements StrategyInterface
 
     public function getAccountParameters(Strategy $strategy): array
     {
-        return ['directory' => new DirectoryParameter()];
+        return [self::KEY_DIRECTORY => new DirectoryParameter()];
     }
 
     public function setAccountParameters(Account $account, array $parameters): void
     {
         $configuration = $account->getConfiguration();
-        $configuration['directory'] = $parameters['directory'];
+        $configuration[self::KEY_DIRECTORY] = $parameters[self::KEY_DIRECTORY];
         $account->setConfiguration($configuration);
     }
 
@@ -91,10 +93,10 @@ class DirectoryStrategy implements StrategyInterface
     public function getFiles(Account $account): Generator
     {
         $configuration = $account->getConfiguration();
-        $directory = $configuration['directory'];
+        $directory = $configuration[self::KEY_DIRECTORY];
 
         foreach ($this->dirService->getFiles($directory) as $file) {
-            $lockName = RuleService::RULE_LOCK_PREFIX . 'directory' . $directory;
+            $lockName = RuleService::RULE_LOCK_PREFIX . self::KEY_DIRECTORY . $directory;
 
             if ($this->lockService->shouldStop($lockName)) {
                 return null;
@@ -163,7 +165,7 @@ class DirectoryStrategy implements StrategyInterface
      */
     public function getLockName(Account $account): string
     {
-        $lockName = 'directory' . $account->getConfiguration()['directory'];
+        $lockName = self::KEY_DIRECTORY . $account->getConfiguration()[self::KEY_DIRECTORY];
         $this->lockService->stop(RuleService::RULE_LOCK_PREFIX . $lockName);
 
         while ($this->lockService->isLocked(RuleService::RULE_LOCK_PREFIX . $lockName)) {
