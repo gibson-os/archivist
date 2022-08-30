@@ -53,6 +53,8 @@ class AudibleStrategy extends AbstractWebStrategy
 
     private const KEY_CAPTCHA_IMAGE = 'captchaImage';
 
+    private const KEY_STEP = 'step';
+
     private const TYPE_SINGLE = 'single';
 
     private const TYPE_SERIES = 'series';
@@ -63,15 +65,13 @@ class AudibleStrategy extends AbstractWebStrategy
 
     private const STEP_CAPTCHA = 1;
 
+    private const STEP_LIBRARY = 3;
+
     private const LINK_LIBRARY = 'Bibliothek';
 
     private const EXPRESSION_PODCAST = '(adbl-episodes-link)[^<]*<[^<]*<[^<]*<[^<]*<[^<]*<[^<]*href="([^"]*)"[^<]*<[^<]*chevron-container.+?</a>.+?';
 
     private const EXPRESSION_NOT_PODCAST = '(adbl-lib-action-download)[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
-
-    private bool $loggedIn = false;
-
-    private bool $captchaApproved = false;
 
     public function __construct(
         BrowserService $browserService,
@@ -138,43 +138,50 @@ class AudibleStrategy extends AbstractWebStrategy
      */
     public function getExecuteParameters(Account $account): array
     {
-        if (!$this->loggedIn) {
-            throw new StrategyException('Not logged in!');
-        }
+        $executionParameters = $account->getExecutionParameters();
 
-        if (!$this->captchaApproved) {
-            return [
+        return match ($executionParameters[self::KEY_STEP] ?? self::STEP_LOGIN) {
+            self::STEP_LOGIN => throw new StrategyException('Not logged in!'),
+            self::STEP_CAPTCHA => [
                 self::KEY_CAPTCHA_IMAGE => (new StringParameter('Captcha'))
                     ->setImage($account->getExecutionParameters()[self::KEY_CAPTCHA_IMAGE]),
-            ];
-        }
-
-        return [];
+            ],
+            self::STEP_LIBRARY => [],
+            default => throw new StrategyException(sprintf(
+                'Unknown audible step %s',
+                $executionParameters[self::KEY_STEP]
+            ))
+        };
     }
 
     /**
      * @throws BrowserException
      * @throws ElementNotFoundException
+     * @throws StrategyException
      */
     public function setExecuteParameters(Account $account, array $parameters): bool
     {
-        if (!$this->loggedIn) {
-            return $this->validateLogin($account);
-        }
-
-        if (!$this->captchaApproved) {
-            return $this->validateCaptcha($account, $parameters);
-        }
-
-        $session = $this->getSession($account);
-        $page = $session->getPage();
-        $page->clickLink(self::LINK_LIBRARY);
-        $this->browserService->waitForElementById($session, 'lib-subheader-actions');
         $executionParameters = $account->getExecutionParameters();
-        $executionParameters[self::KEY_SESSION] = serialize($session);
-        $account->setExecutionParameters($executionParameters);
+        $loadLibrary = function () use ($account, $executionParameters) {
+            $session = $this->getSession($account);
+            $page = $session->getPage();
+            $page->clickLink(self::LINK_LIBRARY);
+            $this->browserService->waitForElementById($session, 'lib-subheader-actions');
+            $executionParameters[self::KEY_SESSION] = serialize($session);
+            $account->setExecutionParameters($executionParameters);
 
-        return true;
+            return true;
+        };
+
+        return match ($executionParameters[self::KEY_STEP] ?? self::STEP_LOGIN) {
+            self::STEP_LOGIN => $this->validateLogin($account),
+            self::STEP_CAPTCHA => $this->validateCaptcha($account, $parameters),
+            self::STEP_LIBRARY => $loadLibrary(),
+            default => throw new StrategyException(sprintf(
+                'Unknown audible step %s',
+                $executionParameters[self::KEY_STEP]
+            ))
+        };
     }
 
     /**
@@ -299,7 +306,6 @@ class AudibleStrategy extends AbstractWebStrategy
      * @throws GetError
      * @throws JsonException
      * @throws ProcessError
-     * @throws ReflectionException
      * @throws SaveError
      * @throws StrategyException
      * @throws WebException
@@ -367,10 +373,10 @@ class AudibleStrategy extends AbstractWebStrategy
      */
     public function unload(Account $account): void
     {
-//        $session = $this->getSession($account);
-//        $page = $session->getPage();
-//        $page->clickLink('Abmelden');
-//        $session->stop();
+        $session = $this->getSession($account);
+        $page = $session->getPage();
+        $page->clickLink('Abmelden');
+        $session->stop();
     }
 
     public function getLockName(Account $account): string
@@ -482,8 +488,8 @@ class AudibleStrategy extends AbstractWebStrategy
         $captchaImageSource = $captchaImage->getAttribute('src') ?? '';
         $executionParameters[self::KEY_SESSION] = $session;
         $executionParameters[self::KEY_CAPTCHA_IMAGE] = $captchaImageSource;
+        $executionParameters[self::KEY_STEP] = self::STEP_CAPTCHA;
         $account->setExecutionParameters($executionParameters);
-        $this->captchaApproved = false;
     }
 
     /**
@@ -506,7 +512,9 @@ class AudibleStrategy extends AbstractWebStrategy
 
         try {
             $this->waitForLibrary($session);
-            $this->captchaApproved = true;
+            $executionParameters = $account->getExecutionParameters();
+            $executionParameters[self::KEY_STEP] = self::STEP_LIBRARY;
+            $account->setExecutionParameters($executionParameters);
         } catch (BrowserException) {
             $this->setCaptchaStep($session, $account);
 
@@ -538,12 +546,11 @@ class AudibleStrategy extends AbstractWebStrategy
 
         $executionParameters = $account->getExecutionParameters();
         $executionParameters[self::KEY_SESSION] = serialize($session);
+        $executionParameters[self::KEY_STEP] = self::STEP_LIBRARY;
         $account->setExecutionParameters($executionParameters);
-        $this->loggedIn = true;
 
         try {
             $this->waitForLibrary($session);
-            $this->captchaApproved = true;
         } catch (BrowserException) {
             $this->setCaptchaStep($session, $account);
 
@@ -559,11 +566,5 @@ class AudibleStrategy extends AbstractWebStrategy
     private function waitForLibrary(Session $session): void
     {
         $this->browserService->waitForLink($session, self::LINK_LIBRARY, 30000000);
-    }
-
-    public function reset(): void
-    {
-        $this->loggedIn = false;
-        $this->captchaApproved = false;
     }
 }

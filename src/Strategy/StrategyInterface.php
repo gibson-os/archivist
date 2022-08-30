@@ -54,6 +54,4 @@ interface StrategyInterface
     public function unload(Account $account): void;
 
     public function getLockName(Account $account): string;
-
-    public function reset(): void;
 }

@@ -57,7 +57,6 @@ class AccountService
 
         $lockName = self::RULE_LOCK_PREFIX . $strategy->getLockName($account);
         $this->lockService->lock($lockName);
-        $strategy->reset();
 
         $rules = array_filter(
             $account->getRules(),
@@ -88,8 +87,9 @@ class AccountService
             }
         }
 
-        $this->modelManager->saveWithoutChildren($account->setMessage('Fertig'));
         $strategy->unload($account);
+        $account->setExecutionParameters([]);
+        $this->modelManager->saveWithoutChildren($account->setMessage('Fertig'));
         $this->lockService->unlock($lockName);
 
         return true;

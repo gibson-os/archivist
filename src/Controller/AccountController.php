@@ -54,6 +54,7 @@ class AccountController extends AbstractController
         array $parameters = [],
     ): AjaxResponse {
         $account->setExecutionParameters($parameters);
+
         $strategy = $serviceManager->get($account->getStrategy(), StrategyInterface::class);
         $strategy->setExecuteParameters($account, $parameters);
         $executeParameters = $strategy->getExecuteParameters($account);

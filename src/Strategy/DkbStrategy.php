@@ -289,11 +289,4 @@ class DkbStrategy extends AbstractWebStrategy
     {
         return 'dkb';
     }
-
-    public function reset(): void
-    {
-        $this->loggedIn = false;
-        $this->tanConfirmed = false;
-        $this->directories = [];
-    }
 }
