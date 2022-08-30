@@ -23,17 +23,13 @@ class DkbStrategy extends AbstractWebStrategy
 {
     private const URL = 'https://www.dkb.de';
 
+    private const KEY_STEP = 'step';
+
     private const STEP_LOGIN = 0;
 
     private const STEP_TAN = 1;
 
     private const STEP_PATH = 2;
-
-    private bool $loggedIn = false;
-
-    private bool $tanConfirmed = false;
-
-    private array $directories = [];
 
     public function getName(): string
     {
@@ -96,12 +92,7 @@ class DkbStrategy extends AbstractWebStrategy
 
     public function getRuleParameters(Account $account, Rule $rule = null): array
     {
-        return $this->loggedIn
-            ? $this->tanConfirmed
-                ? $this->getTanParameters()
-                : $this->getPathParameters($account)
-            : $this->login()
-        ;
+        return [];
     }
 
     public function setRuleParameters(Rule $rule, array $parameters): void
@@ -110,7 +101,20 @@ class DkbStrategy extends AbstractWebStrategy
 
     public function getExecuteParameters(Account $account): array
     {
-        return [];
+        $executionParameters = $account->getExecutionParameters();
+
+        return match ($executionParameters[self::KEY_STEP] ?? self::STEP_LOGIN) {
+            self::STEP_LOGIN => [
+                'j_username' => new StringParameter('Anmeldename'),
+                'j_password' => (new StringParameter('Passwort'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
+            ],
+            self::STEP_TAN => $this->getTanParameters(),
+            self::STEP_PATH => [],
+            default => throw new StrategyException(sprintf(
+                'Unknown dkb step %s',
+                $executionParameters[self::KEY_STEP]
+            ))
+        };
     }
 
     public function setExecuteParameters(Account $account, array $parameters): bool
@@ -125,7 +129,8 @@ class DkbStrategy extends AbstractWebStrategy
     {
         $session = $this->getSession($account);
         $page = $session->getPage();
-        $page->clickLink($account->getConfigurationValue('path'));
+        // @todo er soll jedes Verzeichnis durchlaufen execution parameter directories
+//        $page->clickLink($account->getConfigurationValue('path'));
 
         try {
             while (true) {
@@ -174,19 +179,19 @@ class DkbStrategy extends AbstractWebStrategy
      */
     public function setFileResource(File $file, Account $account): File
     {
-        $strategy = $file->getStrategy();
+        $account = $file->getAccount();
 
-        if ($strategy->getClassName() !== self::class) {
+        if ($account->getStrategy() !== self::class) {
             throw new StrategyException(sprintf(
                 'Class name %s is not equal with %s',
-                $strategy->getClassName(),
+                $account->getStrategy(),
                 self::class
             ));
         }
 
         $response = $this->webService->get(
             (new Request($file->getPath()))
-                ->setCookieFile($this->browserService->createCookieFile($this->getSession($strategy)))
+                ->setCookieFile($this->browserService->createCookieFile($this->getSession($account)))
         );
 
         $resource = $response->getBody()->getResource();
@@ -260,9 +265,9 @@ class DkbStrategy extends AbstractWebStrategy
      * @throws BrowserException
      * @throws ElementNotFoundException
      */
-    private function validateTan(Strategy $strategy, array $parameters): void
+    private function validateTan(Account $account, array $parameters): void
     {
-        $session = $this->getSession($strategy);
+        $session = $this->getSession($account);
         $page = $session->getPage();
         $this->browserService->fillFormFields($session, ['tan' => $parameters['tan']]);
         $page->pressButton('Anmeldung bestätigen');
@@ -279,10 +284,9 @@ class DkbStrategy extends AbstractWebStrategy
             $directories[$link] = $link;
         }
 
-        $strategy
-            ->setConfigurationValue('directories', $directories)
-            ->setNextConfigurationStep()
-        ;
+        $executionParameter = $account->getExecutionParameters();
+        $executionParameter['directories'] = $directories;
+        $account->setExecutionParameters($executionParameter);
     }
 
     public function getLockName(Account $account): string
