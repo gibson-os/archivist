@@ -20,6 +20,7 @@ use GibsonOS\Core\Service\CommandService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Module\Archivist\Command\IndexerCommand;
 use GibsonOS\Module\Archivist\Model\Account;
+use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Store\AccountStore;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonException;
@@ -53,6 +54,10 @@ class AccountController extends AbstractController
         #[GetModel(['id' => 'id', 'user_id' => 'session.user.id'])] Account $account,
         array $parameters = [],
     ): AjaxResponse {
+        if (count(array_filter($account->getRules(), fn (Rule $rule): bool => $rule->isActive())) === 0) {
+            return $this->returnFailure('Account has no active rules!');
+        }
+
         $account->setExecutionParameters($parameters);
 
         $strategy = $serviceManager->get($account->getStrategy(), StrategyInterface::class);

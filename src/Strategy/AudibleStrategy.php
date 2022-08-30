@@ -241,9 +241,9 @@ class AudibleStrategy extends AbstractWebStrategy
 
             if (count($matches) === 11) { // Podcast
                 $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Überprüfe %s', $matches[1])));
-                $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[8]));
+                $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[10]));
                 $currentUrl = $session->getCurrentUrl();
-                $this->browserService->goto($session, $matches[8]);
+                $this->browserService->goto($session, $matches[10]);
                 $this->browserService->waitForElementById($session, 'lib-subheader-actions');
                 $titleParts->setSeries($titleParts->getTitle());
 
