@@ -17,5 +17,12 @@ Ext.define('GibsonOS.module.archivist.account.Window', {
         }];
 
         me.callParent();
+
+        const formPanel = me.down('gosModuleCoreParameterForm');
+        const form = formPanel.getForm();
+
+        form.on('actioncomplete', () => {
+            me.close();
+        })
     }
 });

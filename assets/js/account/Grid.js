@@ -32,7 +32,13 @@ Ext.define('GibsonOS.module.archivist.account.Grid', {
         });
     },
     addFunction() {
-        new GibsonOS.module.archivist.account.Window();
+        const me = this;
+        const window = new GibsonOS.module.archivist.account.Window();
+        const form = window.down('form').getForm();
+
+        form.on('actioncomplete', () => {
+            me.getStore().load();
+        })
     },
     deleteFunction(records) {
         const me = this;
