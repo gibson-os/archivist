@@ -19,7 +19,8 @@ class File implements \JsonSerializable
         private readonly string $name,
         private readonly string $path,
         private readonly DateTimeInterface $createDate,
-        private readonly Account $account
+        private readonly Account $account,
+        private readonly ?string $content = null,
     ) {
     }
 
@@ -41,6 +42,11 @@ class File implements \JsonSerializable
     public function getAccount(): Account
     {
         return $this->account;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
     }
 
     /**
@@ -72,6 +78,7 @@ class File implements \JsonSerializable
         return [
             'path' => $this->getPath(),
             'name' => $this->getName(),
+            'content' => $this->getContent(),
             'createDate' => $this->getCreateDate()->format('Y-m-d H:i:s'),
             'account' => $this->getAccount()->getId(),
         ];

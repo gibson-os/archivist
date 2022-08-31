@@ -73,6 +73,17 @@ class RuleService
             $context['match' . $index] = $match;
         }
 
+        $contentMatches = [];
+        preg_match(
+            '/' . ($rule->getObservedContent() ?? '.*') . '/',
+            $file->getContent() ?? '',
+            $contentMatches
+        );
+
+        foreach ($contentMatches as $index => $contentMatch) {
+            $context['contentMatch' . $index] = $contentMatch;
+        }
+
         $newFileName = $this->twigService->getTwig()->render('@archivist/fileName.html.twig', $context);
         $newFileName = str_replace(['\\', ':', '*', '?', '"', '<', '>', '|'], '', $newFileName);
         $inputPath = $this->dirService->addEndSlash($file->getPath()) . $file->getName();

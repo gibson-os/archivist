@@ -33,10 +33,11 @@ Ext.define('GibsonOS.module.archivist.account.execute.Form', {
     },
     execute() {
         const me = this;
-        // const saveButton = me.down('#coreEventElementParameterSaveButton');
+        const saveButton = me.down('#coreEventElementParameterSaveButton');
         const form = me.getForm();
 
         me.setLoading(true);
+        saveButton.hide();
 
         const getStatus = () => {
             GibsonOS.Ajax.request({

@@ -10,12 +10,10 @@ use GibsonOS\Core\Attribute\GetModels;
 use GibsonOS\Core\Controller\AbstractController;
 use GibsonOS\Core\Dto\Parameter\BoolParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
-use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\Model\DeleteError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Manager\ModelManager;
-use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Model\User\Permission;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Module\Archivist\Model\Account;
@@ -49,12 +47,9 @@ class RuleController extends AbstractController
 
     /**
      * @param class-string $strategy
-     *
-     * @throws FactoryError
      */
     #[CheckPermission(Permission::WRITE)]
     public function edit(
-        ServiceManager $serviceManager,
         #[GetModel(['id' => 'accountId', 'user_id' => 'session.user.id'])] Account $account,
         #[GetModel] Rule $rule = null
     ): AjaxResponse {
@@ -79,9 +74,7 @@ class RuleController extends AbstractController
     }
 
     /**
-     * @throws JsonException
      * @throws SaveError
-     * @throws ReflectionException
      */
     #[CheckPermission(Permission::WRITE)]
     public function save(

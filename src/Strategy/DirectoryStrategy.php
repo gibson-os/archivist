@@ -5,12 +5,14 @@ namespace GibsonOS\Module\Archivist\Strategy;
 
 use Generator;
 use GibsonOS\Core\Exception\DateTimeError;
+use GibsonOS\Core\Exception\File\ReaderException;
 use GibsonOS\Core\Exception\Flock\LockError;
 use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Service\DateTimeService;
 use GibsonOS\Core\Service\DirService;
+use GibsonOS\Core\Service\File\ReaderService;
 use GibsonOS\Core\Service\FileService;
 use GibsonOS\Core\Service\LockService;
 use GibsonOS\Module\Archivist\Dto\File;
@@ -41,7 +43,8 @@ class DirectoryStrategy implements StrategyInterface
         private readonly FileService $fileService,
         private readonly DateTimeService $dateTimeService,
         private readonly LockService $lockService,
-        private readonly ModelManager $modelManager
+        private readonly ModelManager $modelManager,
+        private readonly ReaderService $readerService,
     ) {
     }
 
@@ -110,11 +113,18 @@ class DirectoryStrategy implements StrategyInterface
 
             $this->viewedFiles[] = $file;
 
+            try {
+                $content = $this->readerService->getContent($file);
+            } catch (ReaderException) {
+                $content = null;
+            }
+
             yield new File(
                 $this->fileService->getFilename($file),
                 $directory,
                 $this->dateTimeService->get('@' . filemtime($file)),
-                $account
+                $account,
+                $content,
             );
         }
 
