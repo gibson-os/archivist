@@ -16,7 +16,6 @@ use GibsonOS\Core\Service\LockService;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Model\Account;
-use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Service\RuleService;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 use GibsonOS\Module\Explorer\Service\TrashService;
@@ -61,15 +60,6 @@ class DirectoryStrategy implements StrategyInterface
         $configuration = $account->getConfiguration();
         $configuration[self::KEY_DIRECTORY] = $parameters[self::KEY_DIRECTORY];
         $account->setConfiguration($configuration);
-    }
-
-    public function getRuleParameters(Account $account, Rule $rule = null): array
-    {
-        return [];
-    }
-
-    public function setRuleParameters(Rule $rule, array $parameters): void
-    {
     }
 
     public function getExecuteParameters(Account $account): array

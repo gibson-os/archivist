@@ -10,7 +10,6 @@ use Generator;
 use GibsonOS\Core\Dto\Ffmpeg\Media;
 use GibsonOS\Core\Dto\Ffmpeg\Stream\Audio;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
-use GibsonOS\Core\Dto\Parameter\OptionParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Dto\Web\Request;
 use GibsonOS\Core\Exception\DateTimeError;
@@ -33,7 +32,6 @@ use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 use GibsonOS\Module\Archivist\Model\Account;
-use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Service\BrowserService;
 use JsonException;
 use Psr\Log\LoggerInterface;
@@ -111,24 +109,6 @@ class AudibleStrategy extends AbstractWebStrategy
             ?? $this->cryptService->decrypt($configuration[self::KEY_PASSWORD])
         );
         $account->setConfiguration($configuration);
-    }
-
-    public function getRuleParameters(Account $account, Rule $rule = null): array
-    {
-        return [
-            self::KEY_TYPE => (new OptionParameter('Typ', [
-                'Einzelne Hörbücher' => self::TYPE_SINGLE,
-                'Serien' => self::TYPE_SERIES,
-                'Podcast' => self::TYPE_PODCAST,
-            ]))->setValue($rule?->getConfiguration()[self::KEY_TYPE] ?? null),
-        ];
-    }
-
-    public function setRuleParameters(Rule $rule, array $parameters): void
-    {
-        $rule->setConfiguration([
-            self::KEY_TYPE => $parameters[self::KEY_TYPE],
-        ]);
     }
 
     /**

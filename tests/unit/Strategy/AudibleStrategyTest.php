@@ -4643,6 +4643,3562 @@ bc-trigger-tooltip">
 </div>',
                 null,
             ],
+            '[SchauerGeschichte: Ängste vergangener Zeiten. Staffel 2 (Original Podcast)] Flg. 12 - (Der Horror der) Hexenverfolgung: Salem/Neuengland 1692' => [
+                '[SchauerGeschichte: Ängste vergangener Zeiten. Staffel 2 (Original Podcast)] Flg. 12 - (Der Horror der) Hexenverfolgung: Salem/Neuengland 1692',
+                '<div id="adbl-library-content-row-B09BYJ7JCH" class="adbl-library-content-row">
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive
+    
+    bc-spacing-top-s2" style="">
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+<div class="bc-col-responsive
+    
+    
+    bc-spacing-top-none 
+    
+
+    bc-col-2">
+    
+        
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive" style="">
+    
+            
+                
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+        
+        <img id="" class="bc-pub-block
+    
+    bc-image-inset-border js-only-element" src="https://m.media-amazon.com/images/I/5184rdB-wiL._SL500_.jpg" alt="SchauerGeschichte: Ängste vergangener Zeiten. Staffel 2 (Original Podcast) Titelbild">
+    
+
+
+                
+                
+            
+        
+</div>
+
+    
+</div>
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+<div class="bc-col-responsive
+    
+    
+    bc-spacing-top-none 
+    
+
+    bc-col-10">
+    
+        
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive
+    display-flex" style="">
+    
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+<div class="bc-col-responsive
+    
+    
+    
+    
+
+    bc-col-9">
+    
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span>
+ 	<ul class="bc-list
+	
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    bc-list-nostyle">
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item
+	
+    bc-spacing-s0_5">
+    
+                        
+                        
+                            
+                                
+ 
+
+  
+<span class="bc-text
+    
+    bc-size-headline3">SchauerGeschichte: Ängste vergangener Zeiten. Staffel 2 (Original Podcast)</span>
+                            
+                            
+                        
+                    
+</li>
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item">
+    
+                        
+                    
+</li>
+
+                    
+                    
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item
+	authorLabel 
+    bc-spacing-s0_5 
+    bc-spacing-top-s0_5">
+    
+                            
+ 
+
+  
+<span class="bc-text
+    
+    
+    
+    bc-color-secondary">
+                                Von:
+                                
+                                    
+                                    <a class="bc-link
+    
+    
+    bc-color-base" tabindex="0" href="/search?searchAuthor=SchauerGeschichte%3A+%C3%84ngste+vergangener+Zeiten&amp;ref=a_library_t_c5_libItem_author_11&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=8V1HQASF95CZNP750KR5">
+                                            
+ 
+
+  
+<span class="bc-text
+    
+    bc-size-callout">SchauerGeschichte: Ängste vergangener Zeiten</span>
+                                        </a>,
+                                
+                                    
+                                    <a class="bc-link
+    
+    
+    bc-color-base" tabindex="0" href="/search?searchAuthor=Francis+Nenik&amp;ref=a_library_t_c5_libItem_author_11&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=8V1HQASF95CZNP750KR5">
+                                            
+ 
+
+  
+<span class="bc-text
+    
+    bc-size-callout">Francis Nenik</span>
+                                        </a>
+                                
+                            </span>
+                        
+</li>
+
+                    
+                    
+                    
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item
+	narratorLabel 
+    bc-spacing-s0_5">
+    
+                            
+ 
+
+  
+<span class="bc-text
+    
+    
+    
+    bc-color-secondary">
+                                Gesprochen von:
+                                
+                                    
+                                    <a class="bc-link
+    
+    
+    bc-color-base" tabindex="0" href="/search?searchNarrator=Nic+Romm&amp;ref=a_library_t_c5_libItem_narrator_11&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=8V1HQASF95CZNP750KR5">
+                                            
+ 
+
+  
+<span class="bc-text
+    
+    bc-size-callout">Nic Romm</span>
+                                        </a>
+                                
+                            </span>
+                        
+</li>
+
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item
+	summaryLabel 
+    bc-spacing-s0_5 
+    bc-spacing-top-s1">
+    
+                        
+ 
+
+  
+<span class="bc-text
+    merchandisingSummary 
+    bc-size-body 
+    
+    bc-color-secondary"><p>Die Geschichte der Menschheit ist voller dunkler Legenden. "SchauerGeschichte" nimmt dich mit auf eine ungewöhnliche Reise in die Vergangenheit...</p></span>
+                    
+</li>
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item">
+    
+                        
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+<input type="hidden" name="isFinished" value="false">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="bc-box
+		
+			bc-box-padding-none
+			
+			adbl-library-item-button-row
+    
+    
+    bc-spacing-top-s1" data-asin="B09BYJ7JCH" data-collection-id="">
+	
+			
+      
+        
+    
+
+      
+  
+</div>
+
+                    
+</li>
+
+                </ul>
+</span>
+
+            
+</div>
+
+            
+                
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+<div class="bc-col-responsive
+    
+    
+    
+    
+
+    bc-col-1 
+    
+    
+    bc-col-offset-2">
+    
+                        
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive
+    adbl-episodes-link" style="">
+    
+                            <input type="hidden" name="asin" value="B09BYJ7JCH">
+                            <input type="hidden" name="contentType" value="Show">
+                            <input type="hidden" name="contentDeliveryType" value="Periodical">
+                            <input type="hidden" name="asinIndex" value="11">
+                            
+                                
+                                
+                                    
+                                    
+                                
+                            
+                            
+                            <a class="bc-link
+    
+    
+    bc-color-base 
+    
+    
+    
+    
+    
+    bc-text-normal" tabindex="0" aria-label="SchauerGeschichte: Ängste vergangener Zeiten. Staffel 2 (Original Podcast)Alle Folgen zeigen" href="/library/episodes?parentAsin=B09BYJ7JCH&amp;parentTitle=SchauerGeschichte%3a+%c3%84ngste+vergangener+Zeiten.+Staffel+2+(Original+Podcast)&amp;ref=a_library_t_c5_view_all_episodes_11&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=8V1HQASF95CZNP750KR5">
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="height: 171px;" class="bc-box
+		
+			bc-box-padding-base
+			
+			chevron-container">
+	
+			
+      
+        
+                                    
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+<i style="vertical-align: center" aria-hidden="true" class="bc-icon
+	bc-icon-fill-base
+	bc-icon-chevron-right-s4
+	
+	bc-icon-chevron-right 
+	bc-icon-size-large 
+	bc-color-base">
+</i>
+                                
+      
+  
+</div>
+
+                            </a>
+                        
+</div>
+
+                    
+</div>
+
+                
+                
+            
+        
+</div>
+
+    
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive
+    
+    bc-spacing-top-base 
+    bc-spacing-base" style="">
+    
+    
+        
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+<div class="bc-col-responsive
+    
+    
+    
+    
+
+    bc-col-10 
+    
+    
+    bc-col-offset-2">
+    
+                
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive
+    library-item-divider" style="">
+    
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="bc-divider
+    
+    
+    
+    bc-divider-secondary">
+</div>
+
+                
+</div>
+
+            
+</div>
+
+        
+    
+
+</div>
+
+</div>',
+                    '<div id="adbl-library-content-row-B09BZ15JWR" class="adbl-library-content-row">
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive
+    
+    bc-spacing-top-s2" style="">
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+<div class="bc-col-responsive
+    
+    
+    bc-spacing-top-none 
+    
+
+    bc-col-2">
+    
+        
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive" style="">
+    
+            
+                
+                
+                    <a class="bc-link
+    
+    
+    bc-color-link" tabindex="0" href="/pd/Flg-12-Der-Horror-der-Hexenverfolgung-Salem-Neuengland-1692-Hoerbuch/B09BZ15JWR?ref=a_library_e_c5_libItem_&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=9AEPHDVRHWQQYNSBQR45">
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+        
+        
+        <img id="" class="bc-pub-block
+    
+    bc-image-inset-border js-only-element" src="https://m.media-amazon.com/images/I/5184rdB-wiL._SL500_.jpg" alt="Flg. 12 - (Der Horror der) Hexenverfolgung: Salem/Neuengland 1692 Titelbild">
+    
+
+
+                    </a>
+                
+            
+        
+</div>
+
+    
+</div>
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+<div class="bc-col-responsive
+    
+    
+    bc-spacing-top-none 
+    
+
+    bc-col-10">
+    
+        
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive
+    display-flex" style="">
+    
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+<div class="bc-col-responsive
+    
+    
+    
+    
+
+    bc-col-9">
+    
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span>
+ 	<ul class="bc-list
+	
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    bc-list-nostyle">
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item
+	
+    bc-spacing-s0_5">
+    
+                        
+                        
+                            
+                            
+                                <a class="bc-link
+    
+    
+    bc-color-base" tabindex="0" href="/pd/Flg-12-Der-Horror-der-Hexenverfolgung-Salem-Neuengland-1692-Hoerbuch/B09BZ15JWR?ref=a_library_e_c5_libItem_&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=9AEPHDVRHWQQYNSBQR45">
+                                    
+ 
+
+  
+<span class="bc-text
+    
+    bc-size-headline3">Flg. 12 - (Der Horror der) Hexenverfolgung: Salem/Neuengland 1692</span>
+                                </a>
+                            
+                        
+                    
+</li>
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item">
+    
+                        
+                    
+</li>
+
+                    
+                    
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item
+	authorLabel 
+    bc-spacing-s0_5 
+    bc-spacing-top-s0_5">
+    
+                            
+ 
+
+  
+<span class="bc-text
+    
+    
+    
+    bc-color-secondary">
+                                Von:
+                                
+                                    
+                                    <a class="bc-link
+    
+    
+    bc-color-base" tabindex="0" href="/search?searchAuthor=SchauerGeschichte%3A+%C3%84ngste+vergangener+Zeiten&amp;ref=a_library_e_c5_libItem_author_1&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=9AEPHDVRHWQQYNSBQR45">
+                                            
+ 
+
+  
+<span class="bc-text
+    
+    bc-size-callout">SchauerGeschichte: Ängste vergangener Zeiten</span>
+                                        </a>,
+                                
+                                    
+                                    <a class="bc-link
+    
+    
+    bc-color-base" tabindex="0" href="/search?searchAuthor=Francis+Nenik&amp;ref=a_library_e_c5_libItem_author_1&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=9AEPHDVRHWQQYNSBQR45">
+                                            
+ 
+
+  
+<span class="bc-text
+    
+    bc-size-callout">Francis Nenik</span>
+                                        </a>
+                                
+                            </span>
+                        
+</li>
+
+                    
+                    
+                    
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item
+	narratorLabel 
+    bc-spacing-s0_5">
+    
+                            
+ 
+
+  
+<span class="bc-text
+    
+    
+    
+    bc-color-secondary">
+                                Gesprochen von:
+                                
+                                    
+                                    <a class="bc-link
+    
+    
+    bc-color-base" tabindex="0" href="/search?searchNarrator=Nic+Romm&amp;ref=a_library_e_c5_libItem_narrator_1&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=9AEPHDVRHWQQYNSBQR45">
+                                            
+ 
+
+  
+<span class="bc-text
+    
+    bc-size-callout">Nic Romm</span>
+                                        </a>
+                                
+                            </span>
+                        
+</li>
+
+                    
+                    
+                    
+                    
+                    
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item
+	rateAndReviewLabel 
+    bc-spacing-s0_5">
+    
+                            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="bc-box
+		
+			bc-box-padding-none
+			
+			adbl-prod-rate-review-bar-group
+    
+    
+    bc-spacing-top-none">
+	
+			
+      
+        
+    
+        
+            
+
+
+
+
+
+
+
+
+<input type="hidden" name="asinForRatingStars" value="B09BZ15JWR" class="asin-for-rating-stars">
+
+            
+
+
+
+
+
+
+
+
+<input type="hidden" name="ratingsCsrfToken" value="ggRE0mB2+CAwx8Y41TzIi0Nv+eIm0OezNx9t3dAAAAABAAAAAGMPEmpyYXcAAAAAFVfwRGgNifE9xfqJS///" class="ratings-csrf-token">
+
+            <div class="bc-trigger
+
+
+bc-trigger-tooltip">
+  
+  
+  <div class="bc-rating-stars adbl-prod-rate-review-bar adbl-prod-rate-review-bar-overall" data-star-count="0" role="radiogroup" tabindex="0" asin="B09BZ15JWR">
+      <h3 class="bc-pub-offscreen">interactive rating stars</h3>
+      <span class="bc-rating-star" data-index="1" data-text="1 Stern" role="radio" aria-checked="false" aria-label="1 Stern" tabindex="0">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+<i aria-hidden="true" class="bc-icon bc-icon-fill-active bc-icon-star-empty-s2 star-border bc-pub-hidden bc-icon-star-empty bc-icon-size-small bc-color-active">
+</i>
+          
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+<i aria-hidden="true" class="bc-icon bc-icon-star-empty-s2 bc-icon-star-empty bc-icon-size-small bc-color-active bc-icon-fill-active">
+</i>
+      </span>
+      <span class="bc-rating-star" data-index="2" data-text="2 Sterne" role="radio" aria-checked="false" aria-label="2 Sterne" tabindex="0">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+<i aria-hidden="true" class="bc-icon bc-icon-fill-active bc-icon-star-empty-s2 star-border bc-pub-hidden bc-icon-star-empty bc-icon-size-small bc-color-active">
+</i>
+          
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+<i aria-hidden="true" class="bc-icon bc-icon-star-empty-s2 bc-icon-star-empty bc-icon-size-small bc-color-active bc-icon-fill-active">
+</i>
+      </span>
+      <span class="bc-rating-star" data-index="3" data-text="3 Sterne" role="radio" aria-checked="false" aria-label="3 Sterne" tabindex="0">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+<i aria-hidden="true" class="bc-icon bc-icon-fill-active bc-icon-star-empty-s2 star-border bc-pub-hidden bc-icon-star-empty bc-icon-size-small bc-color-active">
+</i>
+          
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+<i aria-hidden="true" class="bc-icon bc-icon-star-empty-s2 bc-icon-star-empty bc-icon-size-small bc-color-active bc-icon-fill-active">
+</i>
+      </span>
+      <span class="bc-rating-star" data-index="4" data-text="4 Sterne" role="radio" aria-checked="false" aria-label="4 Sterne" tabindex="0">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+<i aria-hidden="true" class="bc-icon bc-icon-fill-active bc-icon-star-empty-s2 star-border bc-pub-hidden bc-icon-star-empty bc-icon-size-small bc-color-active">
+</i>
+          
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+<i aria-hidden="true" class="bc-icon bc-icon-star-empty-s2 bc-icon-star-empty bc-icon-size-small bc-color-active bc-icon-fill-active">
+</i>
+      </span>
+      <span class="bc-rating-star" data-index="5" data-text="5 Sterne" role="radio" aria-checked="false" aria-label="5 Sterne" tabindex="0">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+<i aria-hidden="true" class="bc-icon bc-icon-fill-active bc-icon-star-empty-s2 star-border bc-pub-hidden bc-icon-star-empty bc-icon-size-small bc-color-active">
+</i>
+          
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+<i aria-hidden="true" class="bc-icon bc-icon-star-empty-s2 bc-icon-star-empty bc-icon-size-small bc-color-active bc-icon-fill-active">
+</i>
+      </span>
+      
+  </div>
+  
+
+  <div class="bc-tooltip bc-tooltip-left bc-hidden  bc-palette-inverse bc-rating-stars-tooltip" role="tooltip">
+      <div class="bc-tooltip-inner bc-color-background-inverse bc-color-background-base">
+          <div class="bc-tooltip-message bc-color-base">
+          
+          </div>
+      </div>
+  </div>
+
+</div>
+        
+        
+    
+    &nbsp;
+    
+    
+        
+            
+                <a class="bc-link
+    
+    
+    bc-color-base" tabindex="0" href="/write-review?rdpath=%2Fpd%2FB09BZ15JWR&amp;asin=B09BZ15JWR&amp;source=lib&amp;page=1&amp;ref=a_library_e_c5_review&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=9AEPHDVRHWQQYNSBQR45">Rezension schreiben</a>
+            
+            
+        
+    
+
+      
+  
+</div>
+
+                        
+</li>
+
+                    
+                    
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item
+	summaryLabel 
+    bc-spacing-s0_5 
+    bc-spacing-top-s1">
+    
+                        
+ 
+
+  
+<span class="bc-text
+    merchandisingSummary 
+    bc-size-body 
+    
+    bc-color-secondary"><p>Ihr größtes Ausmaß erreichte die Hexenverfolgung im Europa des 16. und 17. Jahrhunderts. Auch die englischen Kolonien im Nordosten der USA...</p></span>
+                    
+</li>
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item">
+    
+                        
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+<input type="hidden" name="isFinished" value="true">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="bc-box
+		
+			bc-box-padding-none
+			
+			adbl-library-item-button-row
+    
+    
+    bc-spacing-top-s1" data-asin="B09BZ15JWR" data-collection-id="">
+	
+			
+      
+        
+    
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+  
+  
+  
+  
+  
+  
+
+
+
+  
+    
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+    
+    <span id="add-to-favorites-button-B09BZ15JWR" class="bc-button
+  bc-button-simple
+  add-to-favorites-button  
+  
+  
+  bc-button-small 
+  bc-button-inline">
+      <button class="bc-button-text" type="button" tabindex="0">
+        <span class="bc-text
+    bc-button-text-inner 
+    bc-size-action-small">
+    
+    
+                <span class="favorite-icon library-button-row-icon">&nbsp;</span>
+                
+ 
+
+  
+<span class="bc-text">Zu Favoriten hinzufügen</span>
+            
+  </span>
+      </button>
+    </span>
+  
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+  
+  
+  
+  
+  
+  
+
+
+
+  
+    
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+    
+    <span id="remove-from-favorites-button-B09BZ15JWR" class="bc-button
+  bc-button-simple
+  remove-from-favorites-button bc-pub-hidden 
+  
+  
+  bc-button-small 
+  bc-button-inline">
+      <button class="bc-button-text" type="button" tabindex="0">
+        <span class="bc-text
+    bc-button-text-inner 
+    bc-size-action-small">
+    
+    
+                <span class="unfavorite-icon library-button-row-icon">&nbsp;</span>
+                
+ 
+
+  
+<span class="bc-text">Aus Favoriten entfernen</span>
+            
+  </span>
+      </button>
+    </span>
+  
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+  
+  
+  
+  
+  
+  
+
+
+
+  
+    
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+    
+    <span class="bc-button
+  bc-button-simple
+  add-item-to-collection-button 
+  
+  
+  bc-button-small 
+  bc-button-inline">
+      <button class="bc-button-text" type="button" tabindex="0">
+        <span class="bc-text
+    bc-button-text-inner 
+    bc-size-action-small">
+    
+    
+                <span class="add-to-collection-icon library-button-row-icon">&nbsp;</span>
+                
+ 
+
+  
+<span class="bc-text">Hinzufügen zu ...</span>
+            
+  </span>
+      </button>
+    </span>
+  
+
+
+            
+
+            
+
+
+
+
+
+
+
+
+<input type="hidden" name="collectionIds-B09BZ15JWR" value="" id="collectionIds-B09BZ15JWR">
+
+
+            <!-- These input fields are needed to localize success and failure toasts for adding to and removing from favorites-->
+            
+            
+            
+
+
+
+
+
+
+
+
+<input type="hidden" name="addToFavoritesSuccessMessage" value="Erfolgreich zu Favoriten hinzugefügt">
+
+            
+            
+
+
+
+
+
+
+
+
+<input type="hidden" name="addToFavoritesFailureMessage" value="Fehler beim Hinzufügen zu Favoriten">
+
+            
+            
+
+
+
+
+
+
+
+
+<input type="hidden" name="removeFromFavoritesSuccessMessage" value="Erfolgreich von Favoritenentfernt">
+
+            
+            
+
+
+
+
+
+
+
+
+<input type="hidden" name="removeFromFavoritesFailureMessage" value="Fehler beim Entfernen von Favoriten">
+
+
+            <!-- These input fields are needed to localize success and failure toasts for removing from a collection-->
+            
+            
+            
+
+
+
+
+
+
+
+
+<input type="hidden" name="removeFromCollectionSuccessMessage" value="Erfolgreich von Sammlungentfernt">
+
+            
+            
+
+
+
+
+
+
+
+
+<input type="hidden" name="removeFromCollectionFailureMessage" value="Fehler beim Entfernen von Sammlung">
+
+        
+
+        
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+  
+  
+  
+  
+  
+  
+
+
+
+  
+    
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+    
+    <span id="mark-as-unfinished-button-B09BZ15JWR" class="bc-button
+  bc-button-simple
+  mark-as-unfinished-button  
+  
+  
+  bc-button-small 
+  bc-button-inline">
+      <button class="bc-button-text" type="button" tabindex="0">
+        <span class="bc-text
+    bc-button-text-inner 
+    bc-size-action-small">
+    
+    
+                <span class="unfinished-icon library-button-row-icon">&nbsp;</span>
+                
+ 
+
+  
+<span class="bc-text
+    small-padding-left">Als nicht abgeschlossen markieren</span>
+            
+  </span>
+      </button>
+    </span>
+  
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+  
+  
+  
+  
+  
+  
+
+
+
+  
+    
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+    
+    <span id="mark-as-finished-button-B09BZ15JWR" class="bc-button
+  bc-button-simple
+  mark-as-finished-button bc-pub-hidden 
+  
+  
+  bc-button-small 
+  bc-button-inline">
+      <button class="bc-button-text" type="button" tabindex="0">
+        <span class="bc-text
+    bc-button-text-inner 
+    bc-size-action-small">
+    
+    
+                <span class="finished-icon library-button-row-icon">&nbsp;</span>
+                
+ 
+
+  
+<span class="bc-text
+    small-padding-left">Als beendet markieren</span>
+            
+  </span>
+      </button>
+    </span>
+  
+
+
+            <input type="hidden" class="markAsFinished-csrf-token" name="markAsFinishedToken" value="gnV1sQXSv/vuCQKe2qKPFCLZEWaL6ujMnj7xSDgAAAABAAAAAGMPEmpyYXcAAAAAFVfwRGgNifE9xfqJS///">
+        
+    
+
+      
+  
+</div>
+
+                    
+</li>
+
+                </ul>
+</span>
+
+            
+</div>
+
+            
+                
+                
+                    
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+<div class="bc-col-responsive
+    adbl-library-select-row-checkbox bc-pub-hidden 
+    
+    
+    
+
+    bc-col-1 
+    
+    
+    bc-col-offset-2">
+    
+                            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="height: 171px;" class="bc-box
+		
+			bc-box-padding-base
+			
+			checkbox-container">
+	
+			
+      
+        
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+<div id="" class="bc-checkbox
+    adbl-library-item-select-checkbox adbl-library-item-select-checkbox-B09BZ15JWR">
+	<label class="bc-label-wrapper ">
+    <div class="bc-checkbox-wrapper">
+        <input type="checkbox" autocomplete="off" data-asin="B09BZ15JWR" data-img-url="https://m.media-amazon.com/images/I/5184rdB-wiL._SL500_.jpg" data-img-alt-text="Flg. 12 - (Der Horror der) Hexenverfolgung: Salem/Neuengland 1692 Titelbild">
+            <span class="bc-checkbox-icon-container bc-color-border-base">
+            <span class="bc-checkbox-icon-inner">
+                <div class="bc-color-background-active bc-checkbox-check">
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+<i aria-hidden="true" class="bc-icon
+	bc-icon-fill-inverse
+	bc-icon-check-s2
+	bc-checkbox-icon 
+	bc-icon-check 
+	
+	bc-color-inverse">
+</i>
+                </div>
+            </span>
+        </span>
+    </div>
+    <span class="bc-checkbox-label bc-size-callout">
+        
+    </span>
+	</label>
+</div>
+
+                            
+      
+  
+</div>
+
+                        
+</div>
+
+                    
+
+                    
+                        
+                        
+                            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+<div class="bc-col-responsive
+    adbl-library-action 
+    
+    
+    
+
+    bc-col-2 
+    
+    
+    bc-col-offset-1">
+    
+    
+        
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive
+    
+    bc-spacing-top-s2" style="">
+    
+            
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+  
+<span class="bc-text
+    
+    
+    
+    bc-color-secondary" id="time-remaining-finished-B09BZ15JWR">
+    Beendet
+</span>
+
+        
+</div>
+
+    
+    
+    
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive
+    adbl-library-item 
+    bc-spacing-top-s2" style="">
+    
+        <input type="hidden" name="asin" value="B09BZ15JWR">
+        <input type="hidden" name="contentType" value="Show">
+        <input type="hidden" name="contentDeliveryType" value="SinglePartIssue">
+        <input type="hidden" name="asinIndex" value="1">
+        <input type="hidden" name="isPrerelease" value="false">
+        <input type="hidden" name="deepLinkUrl" value="">
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+  
+  
+  
+  
+  
+  
+
+
+
+  
+    
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+    
+    <span class="bc-button
+  bc-button-primary
+  adbl-library-listen-now-button 
+  
+  
+  bc-button-small">
+      <button class="bc-button-text" type="button" tabindex="0">
+        <span class="bc-text
+    bc-button-text-inner 
+    bc-size-action-small">
+    
+    
+            
+ 
+
+  
+<span class="bc-text
+    
+    bc-size-callout">Abspielen</span>
+        
+  </span>
+      </button>
+    </span>
+  
+
+
+    
+</div>
+
+    
+     
+         
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive
+    
+    bc-spacing-top-s2" style="">
+    
+    
+        
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+  
+  
+  
+  
+  
+  
+
+
+
+  
+    
+  
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    <span class="bc-button
+  bc-button-secondary
+  adbl-lib-action-download 
+  
+  
+  bc-button-small">
+      <a class="bc-button-text" href="/library/download?asin=B09BZ15JWR&amp;codec=AAX_44_128" tabindex="0" role="button">
+        <span class="bc-text
+    bc-button-text-inner 
+    bc-size-action-small">
+    
+    
+                
+ 
+
+  
+<span class="bc-text
+    
+    bc-size-callout">Herunterladen</span>
+            
+  </span>
+      </a>
+    </span>
+  
+
+  
+
+  
+
+  
+
+
+        
+    
+
+</div>
+
+
+    
+    
+    
+    
+        
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive
+    
+    bc-spacing-top-s2" style="">
+    
+            
+ 
+
+  
+<span class="bc-text
+    
+    bc-size-caption1 
+    
+    bc-color-secondary">
+                Du hast diesen Titel heruntergeladen
+            </span>
+        
+</div>
+
+    
+
+</div>
+
+
+                        
+                    
+                
+            
+        
+</div>
+
+    
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive
+    
+    bc-spacing-top-base 
+    bc-spacing-base" style="">
+    
+    
+        
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+<div class="bc-col-responsive
+    
+    
+    
+    
+
+    bc-col-10 
+    
+    
+    bc-col-offset-2">
+    
+                
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+<div id="" class="bc-row-responsive
+    library-item-divider" style="">
+    
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="bc-divider
+    
+    
+    
+    bc-divider-secondary">
+</div>
+
+                
+</div>
+
+            
+</div>
+
+        
+    
+
+</div>
+
+</div>',
+            ],
         ];
     }
 }

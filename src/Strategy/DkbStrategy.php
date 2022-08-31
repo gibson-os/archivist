@@ -17,7 +17,6 @@ use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 use GibsonOS\Module\Archivist\Model\Account;
-use GibsonOS\Module\Archivist\Model\Rule;
 
 class DkbStrategy extends AbstractWebStrategy
 {
@@ -88,15 +87,6 @@ class DkbStrategy extends AbstractWebStrategy
 //
 ////                return false;
 //        }
-    }
-
-    public function getRuleParameters(Account $account, Rule $rule = null): array
-    {
-        return [];
-    }
-
-    public function setRuleParameters(Rule $rule, array $parameters): void
-    {
     }
 
     public function getExecuteParameters(Account $account): array

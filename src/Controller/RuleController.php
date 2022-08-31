@@ -21,7 +21,6 @@ use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Store\RuleStore;
-use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 use JsonException;
 use ReflectionException;
@@ -74,11 +73,7 @@ class RuleController extends AbstractController
                 ->setValue($rule?->isActive()),
         ];
 
-        $strategyService = $serviceManager->get($account->getStrategy(), StrategyInterface::class);
-
-        foreach ($strategyService->getRuleParameters($account, $rule) as $ruleKey => $ruleParameter) {
-            $parameters['configuration[' . $ruleKey . ']'] = $ruleParameter;
-        }
+        // @todo einfach js formular daraus machen? Aktiv hat glaube ich Probleme gemacht
 
         return $this->returnSuccess($parameters);
     }

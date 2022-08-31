@@ -8,7 +8,6 @@ use GibsonOS\Core\Dto\Parameter\AbstractParameter;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Model\Account;
-use GibsonOS\Module\Archivist\Model\Rule;
 
 interface StrategyInterface
 {
@@ -23,16 +22,6 @@ interface StrategyInterface
      * @param array<string, string> $parameters
      */
     public function setAccountParameters(Account $account, array $parameters): void;
-
-    /**
-     * @return AbstractParameter[]
-     */
-    public function getRuleParameters(Account $account, Rule $rule = null): array;
-
-    /**
-     * @param array<string, string> $parameters
-     */
-    public function setRuleParameters(Rule $rule, array $parameters): void;
 
     /**
      * @return AbstractParameter[]

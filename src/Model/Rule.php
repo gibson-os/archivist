@@ -33,9 +33,6 @@ class Rule extends AbstractModel implements JsonSerializable
     #[Column(length: 255)]
     private ?string $observedContent = null;
 
-    #[Column(type: Column::TYPE_JSON)]
-    private array $configuration = [];
-
     #[Column(length: 255)]
     private string $moveDirectory;
 
@@ -129,18 +126,6 @@ class Rule extends AbstractModel implements JsonSerializable
         return $this;
     }
 
-    public function getConfiguration(): array
-    {
-        return $this->configuration;
-    }
-
-    public function setConfiguration(array $configuration): Rule
-    {
-        $this->configuration = $configuration;
-
-        return $this;
-    }
-
     public function isActive(): bool
     {
         return $this->active;
@@ -174,7 +159,6 @@ class Rule extends AbstractModel implements JsonSerializable
             'observedContent' => $this->getObservedContent(),
             'moveDirectory' => $this->getMoveDirectory(),
             'moveFilename' => $this->getMoveFilename(),
-            'configuration' => $this->getConfiguration(),
             'active' => $this->isActive(),
         ];
     }
