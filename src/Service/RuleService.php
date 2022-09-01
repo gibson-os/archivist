@@ -61,6 +61,19 @@ class RuleService
             return;
         }
 
+        $contentMatches = [];
+        preg_match(
+            '/' . ($rule->getObservedContent() ?? '.*') . '/s',
+            $file->getContent() ?? '',
+            $contentMatches
+        );
+
+        if (empty($contentMatches)) {
+            $this->logger->info(sprintf('No content match for rule "%s"', $rule->getName()));
+
+            return;
+        }
+
         $this->logger->info(sprintf('Indexing file "%s"', $file->getName()));
         $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Indexiere "%s"', $file->getName())));
 
@@ -72,13 +85,6 @@ class RuleService
         foreach ($matches as $index => $match) {
             $context['match' . $index] = $match;
         }
-
-        $contentMatches = [];
-        preg_match(
-            '/' . ($rule->getObservedContent() ?? '.*') . '/',
-            $file->getContent() ?? '',
-            $contentMatches
-        );
 
         foreach ($contentMatches as $index => $contentMatch) {
             $context['contentMatch' . $index] = $contentMatch;
