@@ -61,17 +61,21 @@ class RuleService
             return;
         }
 
+        $observedContent = $rule->getObservedContent();
         $contentMatches = [];
-        preg_match(
-            '/' . ($rule->getObservedContent() ?? '.*') . '/s',
-            $file->getContent() ?? '',
-            $contentMatches
-        );
 
-        if (empty($contentMatches)) {
-            $this->logger->info(sprintf('No content match for rule "%s"', $rule->getName()));
+        if ($observedContent !== null) {
+            preg_match(
+                '/' . $observedContent . '/s',
+                $file->getContent() ?? '',
+                $contentMatches
+            );
 
-            return;
+            if (empty($contentMatches)) {
+                $this->logger->info(sprintf('No content match for rule "%s"', $rule->getName()));
+
+                return;
+            }
         }
 
         $this->logger->info(sprintf('Indexing file "%s"', $file->getName()));
