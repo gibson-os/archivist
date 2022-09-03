@@ -51,7 +51,7 @@ Ext.define('GibsonOS.module.archivist.account.execute.Form', {
 
                 if (Object.keys(data).length) {
                     Ext.iterate(data, (name, parameter) => {
-                        me.addField('parameter[' + name + ']', parameter);
+                        me.addField('parameters[' + name + ']', parameter);
                     });
                 } else {
                     me.add({
