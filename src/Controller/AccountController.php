@@ -108,7 +108,7 @@ class AccountController extends AbstractController
     #[CheckPermission(Permission::WRITE)]
     public function delete(
         ModelManager $modelManager,
-        //@todo #[GetMappedModels(Account::class, ['id' => 'id', 'user_id' => 'session.user.id'])] array $accounts klappt mit session wert nicht
+        // @todo #[GetMappedModels(Account::class, ['id' => 'id', 'user_id' => 'session.user.id'])] array $accounts klappt mit session wert nicht
         #[GetMappedModels(Account::class)] array $accounts
     ): AjaxResponse {
         foreach ($accounts as $account) {

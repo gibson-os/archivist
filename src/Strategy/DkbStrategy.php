@@ -75,17 +75,17 @@ class DkbStrategy extends AbstractWebStrategy
 //            case self::STEP_TAN:
 //                $this->validateTan($strategy, $parameters);
 //
-////                return false;
-//// no break
+        // //                return false;
+        // // no break
 //            case self::STEP_PATH:
 //                $strategy->setConfigurationValue('path', $parameters['path']);
 //
-////                return true;
-//// no break
+        // //                return true;
+        // // no break
 //            default:
 //                $this->login($strategy, $parameters);
 //
-////                return false;
+        // //                return false;
 //        }
     }
 

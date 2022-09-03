@@ -10,6 +10,7 @@ use Behat\Mink\Session;
 use DMore\ChromeDriver\ChromeDriver;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
 use Psr\Log\LoggerInterface;
+
 use function sprintf;
 
 class BrowserService

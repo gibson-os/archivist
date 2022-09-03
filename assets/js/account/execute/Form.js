@@ -11,24 +11,7 @@ Ext.define('GibsonOS.module.archivist.account.execute.Form', {
 
         saveButton.setText('Ausführen');
         saveButton.on('click', () => {
-            me.setLoading(true);
-
-            const form = me.getForm();
-
-            form.submit({
-                timeout: 120,
-                xtype: 'gosFormActionAction',
-                url: baseDir + 'archivist/account/execute',
-                params: {
-                    id: me.accountId
-                },
-                failure() {
-                    me.setLoading(false);
-                },
-                success() {
-                    me.setLoading(false);
-                }
-            });
+            me.execute();
         });
     },
     execute() {
@@ -37,7 +20,6 @@ Ext.define('GibsonOS.module.archivist.account.execute.Form', {
         const form = me.getForm();
 
         me.setLoading(true);
-        saveButton.hide();
 
         const getStatus = () => {
             GibsonOS.Ajax.request({
@@ -67,22 +49,22 @@ Ext.define('GibsonOS.module.archivist.account.execute.Form', {
                 me.removeAll();
                 const data = action.result.data;
 
-                if (data.length) {
-                    Ext.iterate(data.parameters, (name, parameter) => {
+                if (Object.keys(data).length) {
+                    Ext.iterate(data, (name, parameter) => {
                         me.addField('parameter[' + name + ']', parameter);
                     });
                 } else {
-                    // saveButton.setText('Schließen');
                     me.add({
                         name: 'status',
                         xtype: 'gosCoreComponentFormFieldDisplay',
                         hideLabel: true
                     });
+                    saveButton.hide();
                     getStatus();
                 }
 
                 me.setLoading(false);
             }
         });
-    },
+    }
 });
