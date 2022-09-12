@@ -9,6 +9,7 @@ use GibsonOS\Core\Attribute\Install\Database\Column;
 use GibsonOS\Core\Attribute\Install\Database\Constraint;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
+use JsonSerializable;
 use mysqlDatabase;
 
 /**
@@ -16,7 +17,7 @@ use mysqlDatabase;
  * @method Index     setRule(?Rule $rule)
  */
 #[Table]
-class Index extends AbstractModel
+class Index extends AbstractModel implements JsonSerializable
 {
     #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED], autoIncrement: true)]
     private ?int $id = null;
@@ -131,5 +132,17 @@ class Index extends AbstractModel
         $this->changed = $changed;
 
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'inputPath' => $this->getInputPath(),
+            'outputPath' => $this->getOutputPath(),
+            'size' => $this->getSize(),
+            'error' => $this->getError(),
+            'changed' => $this->getChanged()->format('Y-m-d H:i:s'),
+        ];
     }
 }

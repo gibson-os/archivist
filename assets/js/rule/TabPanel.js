@@ -10,7 +10,9 @@ Ext.define('GibsonOS.module.archivist.rule.TabPanel', {
             xtype: 'gosModuleArchivistRuleGrid',
             title: 'Regeln'
         },{
-            title: 'Indexierte Dateien'
+            xtype: 'gosModuleArchivistIndexGrid',
+            title: 'Indexierte Dateien',
+            //ruleId: me.ruleId
         }];
 
         me.callParent();
