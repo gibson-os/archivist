@@ -241,15 +241,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
             if (empty($series)) {
                 $this->findSeriesAndEpisode($titleParts);
-//                $series = $titleParts->getSeries();
             }
-
-//            if (
-//                (empty($series) && $type === self::TYPE_SERIES) ||
-//                (!empty($series) && $type === self::TYPE_SINGLE)
-//            ) {
-//                continue;
-//            }
 
             $title = $this->cleanTitle($titleParts);
             $this->logger->info(sprintf('Find %s', $title));
