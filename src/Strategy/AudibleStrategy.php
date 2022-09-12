@@ -47,23 +47,15 @@ class AudibleStrategy extends AbstractWebStrategy
 
     private const KEY_CAPTCHA = 'guess';
 
-    private const KEY_TYPE = 'type';
-
     private const KEY_CAPTCHA_IMAGE = 'captchaImage';
 
     private const KEY_STEP = 'step';
-
-    private const TYPE_SINGLE = 'single';
-
-    private const TYPE_SERIES = 'series';
-
-    private const TYPE_PODCAST = 'podcast';
 
     private const STEP_LOGIN = 0;
 
     private const STEP_CAPTCHA = 1;
 
-    private const STEP_LIBRARY = 3;
+    private const STEP_LIBRARY = 2;
 
     private const LINK_LIBRARY = 'Bibliothek';
 
@@ -456,7 +448,7 @@ class AudibleStrategy extends AbstractWebStrategy
         $executionParameters = $account->getExecutionParameters();
         $captchaImage = $this->browserService->waitForElementById($session, 'auth-captcha-image');
         $captchaImageSource = $captchaImage->getAttribute('src') ?? '';
-        $executionParameters[self::KEY_SESSION] = $session;
+        $executionParameters[self::KEY_SESSION] = serialize($session);
         $executionParameters[self::KEY_CAPTCHA_IMAGE] = $captchaImageSource;
         $executionParameters[self::KEY_STEP] = self::STEP_CAPTCHA;
         $account->setExecutionParameters($executionParameters);
