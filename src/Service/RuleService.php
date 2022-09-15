@@ -98,7 +98,7 @@ class RuleService
         $newFileName = html_entity_decode(html_entity_decode($newFileName));
         $newFileName = str_replace(['\\', ':', '*', '?', '"', '<', '>', '|'], ' ', $newFileName);
         $newFileName = preg_replace('/\s{2,}/', ' ', $newFileName);
-        $newFileName = trim(preg_replace('/ (\.|\))/', '$1', $newFileName));
+        $newFileName = trim(preg_replace('/ (\.|\)|\?|!)/', '$1', $newFileName));
         $inputPath = $this->dirService->addEndSlash($file->getPath()) . $file->getName();
         $index = (new Index())
             ->setRule($rule)
