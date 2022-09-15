@@ -391,6 +391,7 @@ class AudibleStrategy extends AbstractWebStrategy
         $cleanTitle = preg_replace('/^[-:._]*/', '', $cleanTitle);
         $cleanTitle = preg_replace('/[-:._]*$/', '', $cleanTitle);
         $cleanTitle = preg_replace('/:/', ' - ', $cleanTitle);
+        $cleanTitle = str_replace('/', ' ', $cleanTitle);
         $cleanTitle = preg_replace('/\s\.\s/', ' ', $cleanTitle);
 
         if (!empty($episode)) {

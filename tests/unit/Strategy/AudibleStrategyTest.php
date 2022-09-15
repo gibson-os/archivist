@@ -4656,7 +4656,7 @@ bc-trigger-tooltip">
                 null,
             ],
             '[SchauerGeschichte: Ängste vergangener Zeiten. Staffel 2 (Original Podcast)] Flg. 12 - (Der Horror der) Hexenverfolgung: Salem/Neuengland 1692' => [
-                '[SchauerGeschichte: Ängste vergangener Zeiten. Staffel 2 (Original Podcast)] Flg. 12 - (Der Horror der) Hexenverfolgung - Salem/Neuengland 1692',
+                '[SchauerGeschichte: Ängste vergangener Zeiten. Staffel 2 (Original Podcast)] Flg. 12 - (Der Horror der) Hexenverfolgung - Salem Neuengland 1692',
                 '<div id="adbl-library-content-row-B09BYJ7JCH" class="adbl-library-content-row">
 
 
