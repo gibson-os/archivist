@@ -2,6 +2,8 @@ Ext.define('GibsonOS.module.archivist.index.Grid', {
     extend: 'GibsonOS.module.core.component.grid.Panel',
     alias: ['widget.gosModuleArchivistIndexGrid'],
     multiSelect: true,
+    accountId: null,
+    ruleId: null,
     requiredPermission: {
         module: 'archivist',
         task: 'index'
@@ -10,6 +12,7 @@ Ext.define('GibsonOS.module.archivist.index.Grid', {
         let me = this;
 
         me.store = new GibsonOS.module.archivist.store.Index({
+            accountId: me.accountId,
             ruleId: me.ruleId
         });
 

@@ -10,6 +10,7 @@ Ext.define('GibsonOS.module.archivist.store.Index', {
             type: 'gosDataProxyAjax',
             url: baseDir + 'archivist/index/index',
             extraParams: {
+                accountId: data.accountId,
                 ruleId: data.ruleId
             }
         };
