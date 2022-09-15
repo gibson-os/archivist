@@ -21,6 +21,11 @@ class BrowserService
     {
     }
 
+    public function getPage(Session $session): DocumentElement
+    {
+        return $session->getPage();
+    }
+
     public function getSession(): Session
     {
         return new Session(new ChromeDriver('http://localhost:9222', null, 'chrome://new-tab-page'));
@@ -37,7 +42,7 @@ class BrowserService
             $this->waitForElementById($session, $waitId);
         }
 
-        return $session->getPage();
+        return $this->getPage($session);
     }
 
     /**

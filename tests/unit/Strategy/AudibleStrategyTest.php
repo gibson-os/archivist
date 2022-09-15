@@ -86,6 +86,10 @@ class AudibleStrategyTest extends AbstractTest
             ->shouldBeCalledOnce()
             ->willReturn($session)
         ;
+        $this->browserService->getPage($session)
+            ->shouldBeCalledOnce()
+            ->willReturn($page->reveal())
+        ;
         $this->browserService->loadPage($session, 'https://audible.de/')
             ->shouldBeCalledOnce()
             ->willReturn($page->reveal())
@@ -96,6 +100,14 @@ class AudibleStrategyTest extends AbstractTest
         $this->browserService->waitForElementById($session, 'ap_email')
             ->shouldBeCalledOnce()
             ->willReturn(new NodeElement('foo', $session))
+        ;
+        $this->cryptService->encrypt('Arthur')
+            ->shouldBeCalledOnce()
+            ->willReturn('Arthur')
+        ;
+        $this->cryptService->encrypt('Dent')
+            ->shouldBeCalledOnce()
+            ->willReturn('Dent')
         ;
         $this->cryptService->decrypt('Arthur')
             ->shouldBeCalledOnce()
@@ -4644,7 +4656,7 @@ bc-trigger-tooltip">
                 null,
             ],
             '[SchauerGeschichte: Ängste vergangener Zeiten. Staffel 2 (Original Podcast)] Flg. 12 - (Der Horror der) Hexenverfolgung: Salem/Neuengland 1692' => [
-                '[SchauerGeschichte: Ängste vergangener Zeiten. Staffel 2 (Original Podcast)] Flg. 12 - (Der Horror der) Hexenverfolgung: Salem/Neuengland 1692',
+                '[SchauerGeschichte: Ängste vergangener Zeiten. Staffel 2 (Original Podcast)] Flg. 12 - (Der Horror der) Hexenverfolgung - Salem/Neuengland 1692',
                 '<div id="adbl-library-content-row-B09BYJ7JCH" class="adbl-library-content-row">
 
 

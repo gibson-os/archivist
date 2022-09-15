@@ -348,7 +348,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
         $matches = ['', '', ''];
 
-        if (preg_match('/(.*)([\d\W]*\d)$/', $splitTitle[1], $matches) !== 1) {
+        if (preg_match('/(.*)\s([\d\W]?\d)$/', $splitTitle[1], $matches) !== 1) {
             return;
         }
 
@@ -372,7 +372,11 @@ class AudibleStrategy extends AbstractWebStrategy
         }
 
         $episode = $titleParts->getEpisode();
-        $cleanTitle = str_ireplace([$series, $episode], '', $cleanTitle);
+        $cleanTitle = preg_replace(
+            '/(\b)(' . preg_quote($series, '/') . '|' . preg_quote($episode, '/') . ')(\b)/i',
+            '$1$3',
+            $cleanTitle
+        );
 
         if (!empty($series)) {
             $cleanTitle = preg_replace('/:.*/s', '', $cleanTitle);
@@ -387,7 +391,6 @@ class AudibleStrategy extends AbstractWebStrategy
         $cleanTitle = preg_replace('/^[-:._]*/', '', $cleanTitle);
         $cleanTitle = preg_replace('/[-:._]*$/', '', $cleanTitle);
         $cleanTitle = preg_replace('/:/', ' - ', $cleanTitle);
-        $cleanTitle = str_replace(['\\', '/', ':', '*', '?', '"', '<', '>', '|'], '', $cleanTitle);
         $cleanTitle = preg_replace('/\s\.\s/', ' ', $cleanTitle);
 
         if (!empty($episode)) {
@@ -513,7 +516,7 @@ class AudibleStrategy extends AbstractWebStrategy
     private function loadLibrary(Session $session, Account $account): void
     {
         $this->browserService->waitForLink($session, self::LINK_LIBRARY, 30000000);
-        $page = $session->getPage();
+        $page = $this->browserService->getPage($session);
         $page->clickLink(self::LINK_LIBRARY);
         $this->browserService->waitForElementById($session, 'lib-subheader-actions');
         $executionParameters = $account->getExecutionParameters();

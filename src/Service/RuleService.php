@@ -95,7 +95,8 @@ class RuleService
         }
 
         $newFileName = $this->twigService->getTwig()->render('@archivist/fileName.html.twig', $context);
-        $newFileName = str_replace(['\\', ':', '*', '?', '"', '<', '>', '|'], '', $newFileName);
+        $newFileName = str_replace(['\\', ':', '*', '?', '"', '<', '>', '|'], ' ', $newFileName);
+        $newFileName = trim(str_replace('  ', ' ', $newFileName));
         $inputPath = $this->dirService->addEndSlash($file->getPath()) . $file->getName();
         $index = (new Index())
             ->setRule($rule)

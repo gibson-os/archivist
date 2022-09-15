@@ -14,9 +14,11 @@ class TitleParts
         return $this->title;
     }
 
-    public function setTitle(string $title): void
+    public function setTitle(string $title): TitleParts
     {
         $this->title = $title;
+
+        return $this;
     }
 
     public function getSeries(): string
@@ -24,9 +26,11 @@ class TitleParts
         return $this->series;
     }
 
-    public function setSeries(string $series): void
+    public function setSeries(string $series): TitleParts
     {
         $this->series = $series;
+
+        return $this;
     }
 
     public function getEpisode(): string
@@ -34,8 +38,10 @@ class TitleParts
         return $this->episode;
     }
 
-    public function setEpisode(string $episode): void
+    public function setEpisode(string $episode): TitleParts
     {
         $this->episode = $episode;
+
+        return $this;
     }
 }
