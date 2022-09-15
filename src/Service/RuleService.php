@@ -95,7 +95,7 @@ class RuleService
         }
 
         $newFileName = $this->twigService->getTwig()->render('@archivist/fileName.html.twig', $context);
-        $newFileName = html_entity_decode($newFileName);
+        $newFileName = html_entity_decode(html_entity_decode($newFileName));
         $newFileName = str_replace(['\\', ':', '*', '?', '"', '<', '>', '|'], ' ', $newFileName);
         $newFileName = preg_replace('/\s{2,}/', ' ', $newFileName);
         $newFileName = trim(str_replace(' .', '.', $newFileName));
