@@ -42,7 +42,7 @@ Ext.define('GibsonOS.module.archivist.index.Grid', {
         },{
             dataIndex: 'changed',
             text: 'Änderungsdatum',
-            width: 100
+            width: 120
         }];
     }
 });

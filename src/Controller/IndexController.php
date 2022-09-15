@@ -27,7 +27,9 @@ class IndexController extends AbstractController
         IndexStore $indexStore,
         #[GetModel(['id' => 'accountId'])] ?Account $account,
         #[GetModel(['id' => 'ruleId'])] ?Rule $rule,
+        array $sort = [],
     ): AjaxResponse {
+        $indexStore->setSortByExt($sort);
         $indexStore
             ->setAccount($account)
             ->setRule($rule)

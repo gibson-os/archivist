@@ -67,4 +67,20 @@ class IndexStore extends AbstractDatabaseStore
 
         return $this;
     }
+
+    protected function getDefaultOrder(): string
+    {
+        return '`changed` DESC';
+    }
+
+    protected function getOrderMapping(): array
+    {
+        return [
+            'inputPath' => '`input_path`',
+            'outputPath' => '`output_path`',
+            'size' => '`size`',
+            'error' => '`error`',
+            'changed' => '`changed`',
+        ];
+    }
 }
