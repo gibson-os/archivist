@@ -36,7 +36,7 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
         form.loadRecord(record);
         form.on('actioncomplete', () => {
             me.getStore().load();
-        })
+        });
     },
     deleteFunction(records) {
         const me = this;
