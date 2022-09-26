@@ -196,7 +196,7 @@ class AudibleStrategy extends AbstractWebStrategy
         $pageParts = explode('class="adbl-library-content-row"', $page->getContent());
 
         $expression =
-            'bc-size-headline3">([^<]*).+?(Serie.+?<a[^>]*>([^<]*)</a>(, Titel (\S*))?.+?)?summaryLabel.+?' .
+            'bc-size-headline3">([^<]*).+?(Serie.+?<a[^>]*>([^<]*)</a>[^<]*(<span class="bc-text">\s*Titel (\S*))?.+?)?summaryLabel.+?' .
             $expression .
             'bc-spacing-top-base'
         ;
