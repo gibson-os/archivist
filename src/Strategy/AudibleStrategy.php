@@ -399,7 +399,7 @@ class AudibleStrategy extends AbstractWebStrategy
         }
 
         return
-            (empty($series) ? '' : '[' . $series . '] ') .
+            (empty($series) ? '' : '[' . trim($series) . '] ') .
             trim(preg_replace('/\s{2,}/s', ' ', $cleanTitle))
         ;
     }
