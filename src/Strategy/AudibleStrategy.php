@@ -348,7 +348,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
         $matches = ['', '', ''];
 
-        if (preg_match('/(.*)\s([\d\W]?\d)$/', $splitTitle[1], $matches) !== 1) {
+        if (preg_match('/(.*)\s([\d\W]?\d)\s*$/', $splitTitle[1], $matches) !== 1) {
             return;
         }
 
