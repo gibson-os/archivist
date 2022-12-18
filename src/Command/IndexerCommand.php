@@ -16,9 +16,7 @@ use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Module\Archivist\Exception\RuleException;
 use GibsonOS\Module\Archivist\Repository\AccountRepository;
 use GibsonOS\Module\Archivist\Service\AccountService;
-use JsonException;
 use Psr\Log\LoggerInterface;
-use Throwable;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -44,7 +42,7 @@ class IndexerCommand extends AbstractCommand
      * @throws CreateError
      * @throws DateTimeError
      * @throws FactoryError
-     * @throws JsonException
+     * @throws \JsonException
      * @throws LoaderError
      * @throws LockError
      * @throws RuleException
@@ -52,7 +50,7 @@ class IndexerCommand extends AbstractCommand
      * @throws SaveError
      * @throws SelectError
      * @throws SyntaxError
-     * @throws Throwable
+     * @throws \Throwable
      * @throws UnlockError
      */
     protected function run(): int

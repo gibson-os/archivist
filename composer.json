@@ -2,9 +2,7 @@
   "name": "gibson-os/archivist",
   "require": {
     "php": " ^8.1",
-    "mdo/mdo": "dev-master",
-    "gibson-os/core": "dev-master",
-    "gibson-os/explorer": "dev-master",
+    "gibson-os/explorer": "^1.0.0",
     "ext-json": "*",
     "behat/mink": "^1.8",
     "dmore/chrome-mink-driver": "^2.7"
@@ -21,20 +19,6 @@
     "php-mock/php-mock-phpunit": "^2.6",
     "rector/rector": "^0.11.57"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@wolli.dyndns.tv:/home/git/mdo.git"
-    },
-    {
-      "type": "vcs",
-      "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Core.git"
-    },
-    {
-      "type": "vcs",
-      "url": "git@wolli.dyndns.tv:/home/git/gibsonOs/Explorer.git"
-    }
-  ],
   "autoload": {
     "psr-4": {
       "GibsonOS\\Module\\Archivist\\": "src/",

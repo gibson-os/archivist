@@ -16,9 +16,7 @@ use GibsonOS\Module\Archivist\Model\Index;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Repository\IndexRepository;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
-use JsonException;
 use Psr\Log\LoggerInterface;
-use ReflectionException;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -43,8 +41,8 @@ class RuleService
      * @throws RuleException
      * @throws CreateError
      * @throws SaveError
-     * @throws JsonException
-     * @throws ReflectionException
+     * @throws \JsonException
+     * @throws \ReflectionException
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError

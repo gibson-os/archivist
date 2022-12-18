@@ -13,7 +13,6 @@ use GibsonOS\Core\Service\FileService;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Repository\AccountRepository;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
-use JsonException;
 
 class StrategyAutoComplete implements AutoCompleteInterface
 {
@@ -30,7 +29,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
     /**
      * @throws GetError
      * @throws SelectError
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function getByNamePart(string $namePart, array $parameters): array
     {
@@ -82,7 +81,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
 
     /**
      * @throws FactoryError
-     * @throws JsonException
+     * @throws \JsonException
      * @throws SelectError
      */
     public function getById(string $id, array $parameters): Strategy

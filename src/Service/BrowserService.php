@@ -11,8 +11,6 @@ use DMore\ChromeDriver\ChromeDriver;
 use GibsonOS\Module\Archivist\Exception\BrowserException;
 use Psr\Log\LoggerInterface;
 
-use function sprintf;
-
 class BrowserService
 {
     private const WAIT_TIME = 100000;
@@ -65,7 +63,7 @@ class BrowserService
                 $maxWait
             );
         } catch (BrowserException) {
-            throw new BrowserException(sprintf('Element #%s not found!', $id), $session);
+            throw new BrowserException(\sprintf('Element #%s not found!', $id), $session);
         }
 
         return $element;
@@ -91,7 +89,7 @@ class BrowserService
                 $maxWait
             );
         } catch (BrowserException) {
-            throw new BrowserException(sprintf('Link "%s" not found!', $link), $session);
+            throw new BrowserException(\sprintf('Link "%s" not found!', $link), $session);
         }
 
         return $element;
@@ -117,7 +115,7 @@ class BrowserService
                 $maxWait
             );
         } catch (BrowserException) {
-            throw new BrowserException(sprintf('Button "%s" not found!', $button), $session);
+            throw new BrowserException(\sprintf('Button "%s" not found!', $button), $session);
         }
 
         return $element;
@@ -154,12 +152,12 @@ class BrowserService
             $field = $page->findField($name);
 
             if ($field === null) {
-                throw new BrowserException(sprintf('Field %s not found!', $name), $session);
+                throw new BrowserException(\sprintf('Field %s not found!', $name), $session);
             }
 
             $field->focus();
             $field->setValue($value);
-            $this->logger->info(sprintf('Fill field "%s" with "%s"', $name, $value));
+            $this->logger->info(\sprintf('Fill field "%s" with "%s"', $name, $value));
         }
     }
 
@@ -188,7 +186,7 @@ class BrowserService
 
         $cookieFileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cookies' . uniqid() . '.jar';
         file_put_contents($cookieFileName, $cookies);
-        $this->logger->info(sprintf('Write cookies to %s', $cookieFileName));
+        $this->logger->info(\sprintf('Write cookies to %s', $cookieFileName));
         $this->logger->debug($cookies);
 
         return $cookieFileName;

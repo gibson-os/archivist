@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Dto;
 
-use DateTimeInterface;
 use GibsonOS\Module\Archivist\Model\Account;
 
 class File implements \JsonSerializable
@@ -18,7 +17,7 @@ class File implements \JsonSerializable
     public function __construct(
         private readonly string $name,
         private readonly string $path,
-        private readonly DateTimeInterface $createDate,
+        private readonly \DateTimeInterface $createDate,
         private readonly Account $account,
         private readonly ?string $content = null,
     ) {
@@ -34,7 +33,7 @@ class File implements \JsonSerializable
         return $this->path;
     }
 
-    public function getCreateDate(): DateTimeInterface
+    public function getCreateDate(): \DateTimeInterface
     {
         return $this->createDate;
     }

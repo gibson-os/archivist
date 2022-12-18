@@ -8,7 +8,6 @@ use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Repository\AbstractRepository;
 use GibsonOS\Module\Archivist\Model\Index;
 use GibsonOS\Module\Archivist\Model\Rule;
-use stdClass;
 
 class IndexRepository extends AbstractRepository
 {
@@ -57,7 +56,7 @@ class IndexRepository extends AbstractRepository
 
         $record = $table->connection->fetchObject();
 
-        if (!$record instanceof stdClass) {
+        if (!$record instanceof \stdClass) {
             throw (new SelectError())->setTable($table);
         }
 

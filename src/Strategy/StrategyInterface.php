@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Strategy;
 
-use Generator;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
@@ -34,9 +33,9 @@ interface StrategyInterface
     public function setExecuteParameters(Account $account, array $parameters): bool;
 
     /**
-     * @return Generator<File>
+     * @return \Generator<File>
      */
-    public function getFiles(Account $account): Generator;
+    public function getFiles(Account $account): \Generator;
 
     public function setFileResource(File $file, Account $account): File;
 

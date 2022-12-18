@@ -12,15 +12,13 @@ use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Store\IndexStore;
-use JsonException;
-use ReflectionException;
 
 class IndexController extends AbstractController
 {
     /**
      * @throws SelectError
-     * @throws JsonException
-     * @throws ReflectionException
+     * @throws \JsonException
+     * @throws \ReflectionException
      */
     #[CheckPermission(Permission::READ)]
     public function index(
