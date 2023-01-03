@@ -108,4 +108,14 @@ class StrategyAutoComplete implements AutoCompleteInterface
     {
         return 'GibsonOS.module.archivist.model.Strategy';
     }
+
+    public function getValueField(): string
+    {
+        return 'className';
+    }
+
+    public function getDisplayField(): string
+    {
+        return 'name';
+    }
 }
