@@ -44,6 +44,8 @@ class AudibleStrategy extends AbstractWebStrategy
 
     private const KEY_CAPTCHA = 'guess';
 
+    private const KEY_OTP = 'otpCode';
+
     private const KEY_CAPTCHA_IMAGE = 'captchaImage';
 
     private const KEY_STEP = 'step';
@@ -54,11 +56,13 @@ class AudibleStrategy extends AbstractWebStrategy
 
     private const STEP_LIBRARY = 2;
 
+    private const STEP_OTP = 3;
+
     private const LINK_LIBRARY = 'Bibliothek';
 
-    private const EXPRESSION_PODCAST = '(adbl-episodes-link)[^<]*<[^<]*<[^<]*<[^<]*<[^<]*<[^<]*href="([^"]*)"[^<]*<[^<]*chevron-container.+?</a>.+?';
+    private const EXPRESSION_PODCAST = 'href="([^"]*)"[^<]*<[^<]*chevron-container.+?</a>.+?';
 
-    private const EXPRESSION_NOT_PODCAST = '(adbl-lib-action-download)[^<]*<a[^<]*href="([^"]*)"[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
+    private const EXPRESSION_NOT_PODCAST = 'href="([^"]*)"[^<]*<[^<]*<[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
 
     public function __construct(
         BrowserService $browserService,
@@ -135,6 +139,7 @@ class AudibleStrategy extends AbstractWebStrategy
         return match ($executionParameters[self::KEY_STEP] ?? self::STEP_LOGIN) {
             self::STEP_LOGIN => $this->validateLogin($account),
             self::STEP_CAPTCHA => $this->validateCaptcha($account, $parameters),
+            self::STEP_OTP => $this->validateOtp($account, $parameters),
             self::STEP_LIBRARY => true,
             default => throw new StrategyException(sprintf(
                 'Unknown audible step %s',
@@ -193,7 +198,8 @@ class AudibleStrategy extends AbstractWebStrategy
         $pageParts = explode('class="adbl-library-content-row"', $page->getContent());
 
         $expression =
-            'bc-size-headline3">([^<]*).+?(Serie.+?<a[^>]*>([^<]*)</a>(, Titel (\S*))?.+?)?summaryLabel.+?' .
+//            'bc-size-headline3">([^<]*).+?(Serie.+?<a[^>]*>([^<]*)</a>[^<]*(<span class="bc-text">\s*Titel (\S*))?.+?)?summaryLabel.+?' .
+            'bc-size-headline3">([^<]*).+?(Serie:.+?<a[^>]*>([^<]*)</a>(,\s*Titel (\S*))?.+?)?' .
             $expression .
             'bc-spacing-top-base'
         ;
@@ -208,11 +214,11 @@ class AudibleStrategy extends AbstractWebStrategy
 
             $titleParts = new TitleParts($matches[1], $matches[3], $matches[5]);
 
-            if (count($matches) === 11) { // Podcast
+            if (count($matches) === 9) { // Podcast
                 $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Überprüfe %s', $matches[1])));
-                $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[10]));
+                $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[8]));
                 $currentUrl = $session->getCurrentUrl();
-                $this->browserService->goto($session, $matches[10]);
+                $this->browserService->goto($session, $matches[8]);
                 $this->browserService->waitForElementById($session, 'lib-subheader-actions');
                 $titleParts->setSeries($titleParts->getTitle());
 
@@ -243,7 +249,7 @@ class AudibleStrategy extends AbstractWebStrategy
             $title = $this->cleanTitle($titleParts);
             $this->logger->info(sprintf('Find %s', $title));
 
-            yield new File($title, self::URL . $matches[8], $this->dateTimeService->get(), $account);
+            yield new File($title, self::URL . $matches[7], $this->dateTimeService->get(), $account);
         }
 
         yield null;
@@ -345,7 +351,7 @@ class AudibleStrategy extends AbstractWebStrategy
 
         $matches = ['', '', ''];
 
-        if (preg_match('/(.*)\s([\d\W]?\d)$/', $splitTitle[1], $matches) !== 1) {
+        if (preg_match('/(.*)\s([\d\W]?\d)\s*$/', $splitTitle[1], $matches) !== 1) {
             return;
         }
 
@@ -396,7 +402,7 @@ class AudibleStrategy extends AbstractWebStrategy
         }
 
         return
-            (empty($series) ? '' : '[' . $series . '] ') .
+            (empty($series) ? '' : '[' . trim($series) . '] ') .
             trim(preg_replace('/\s{2,}/s', ' ', $cleanTitle))
         ;
     }
@@ -476,6 +482,38 @@ class AudibleStrategy extends AbstractWebStrategy
         return true;
     }
 
+    private function setOtpStep(Session $session, Account $account): void
+    {
+        $executionParameters = $account->getExecutionParameters();
+        $executionParameters[self::KEY_SESSION] = serialize($session);
+        $executionParameters[self::KEY_STEP] = self::STEP_OTP;
+        $account->setExecutionParameters($executionParameters);
+    }
+
+    /**
+     * @throws BrowserException
+     * @throws ElementNotFoundException
+     */
+    private function validateOtp(Account $account, array $parameters): bool
+    {
+        $session = $this->getSession($account);
+        $page = $session->getPage();
+        $this->browserService->fillFormFields($session, [
+            self::KEY_OTP => $parameters[self::KEY_OTP],
+        ]);
+        $page->pressButton('auth-signin-button');
+
+        try {
+            $this->loadLibrary($session, $account);
+        } catch (BrowserException) {
+            $this->setOtpStep($session, $account);
+
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * @throws BrowserException
      * @throws ElementNotFoundException
@@ -499,7 +537,17 @@ class AudibleStrategy extends AbstractWebStrategy
         try {
             $this->loadLibrary($session, $account);
         } catch (BrowserException) {
-            $this->setCaptchaStep($session, $account);
+            if ($page->findById('auth-mfa-otpcode') !== null) {
+                $this->setOtpStep($session, $account);
+
+                return false;
+            }
+
+            if ($page->findById('guess') !== null) {
+                $this->setCaptchaStep($session, $account);
+
+                return false;
+            }
 
             return false;
         }

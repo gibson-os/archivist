@@ -72,7 +72,6 @@
 
 
 
-
 <div class="bc-col-responsive
 
 
@@ -105,62 +104,81 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     <a class="bc-link
 
 
-    bc-color-link" tabindex="0" href="/pd/Gefaehrliche-Freundschaft-Hoerbuch/B0798RRSXZ?ref=a_library_t_c5_libItem_B0798RRSXZ&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=HSN14RQ1KTYSANCN6GCQ">
-                        <img id="" class="bc-pub-block
+    bc-color-link" tabindex="0" href="/pd/Gefaehrliche-Freundschaft-Hoerbuch/B0798RRSXZ?ref=a_library_t_c5_libItem_B0798RRSXZ&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=M0P7JXDCN63SPAQC6XRV&amp;pageLoadId=UWBRHv2EJH9sHZzx&amp;creativeId=14d6a1c2-a3f8-499b-900a-1ae788c317b1">
 
-    bc-image-inset-border js-only-element" src="https://m.media-amazon.com/images/I/61pXYkXSyYL._SL500_.jpg" alt="Gefährliche Freundschaft By Katja Brandis" style="/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <img id="" class="bc-pub-block
+
+    bc-image-inset-border js-only-element" src="https://m.media-amazon.com/images/I/61pXYkXSyYL._SL500_.jpg" alt="Gefährliche Freundschaft Titelbild">
+
+
+
                     </a>
-
-
-
-
 
 
 
@@ -298,6 +316,7 @@
 
 
 
+
 <div class="bc-col-responsive
 
 
@@ -368,8 +387,6 @@
 
 
 
-
-
 <li class="bc-list-item
 
     bc-spacing-s0_5">
@@ -378,55 +395,44 @@
 
 
 
+                                <a class="bc-link
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            <a class="bc-link
-
-
-    bc-color-base" tabindex="0" href="/pd/Gefaehrliche-Freundschaft-Hoerbuch/B0798RRSXZ?ref=a_library_t_c5_libItem_B0798RRSXZ_4&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=HSN14RQ1KTYSANCN6GCQ">
+    bc-color-base" tabindex="0" href="/pd/Gefaehrliche-Freundschaft-Hoerbuch/B0798RRSXZ?ref=a_library_t_c5_libItem_B0798RRSXZ&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=M0P7JXDCN63SPAQC6XRV&amp;pageLoadId=UWBRHv2EJH9sHZzx&amp;creativeId=14d6a1c2-a3f8-499b-900a-1ae788c317b1">
 
 
 
 
 <span class="bc-text
 
-    bc-size-headline3">
-                    Gefährliche Freundschaft: Woodwalkers 2
-                </span>
-            </a>
+    bc-size-headline3">Gefährliche Freundschaft: Woodwalkers 2</span>
+                                </a>
 
 
+
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="bc-list-item">
 
 
 
@@ -454,68 +460,39 @@
 
 
 
-
-
-
-
 <li class="bc-list-item
-
-    bc-spacing-s0_5">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	authorLabel
+    bc-spacing-s0_5
+    bc-spacing-top-s0_5">
 
 
 
 
 
 <span class="bc-text
-    authorLabel
+
 
 
     bc-color-secondary">
-
-            Geschrieben von:
-
+                                Von:
 
 
+                                    <a class="bc-link
 
 
-
-
+    bc-color-base" tabindex="0" href="/author/Katja-Brandis/B018KMQ206?ref=a_library_t_c5_libItem_author_4&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=M0P7JXDCN63SPAQC6XRV&amp;pageLoadId=UWBRHv2EJH9sHZzx&amp;creativeId=14d6a1c2-a3f8-499b-900a-1ae788c317b1">
 
 
 
 
+<span class="bc-text
 
+    bc-size-callout">Katja Brandis</span>
+                                        </a>
 
-
-
-
-
-            <a class="bc-link
-
-
-    bc-color-base" tabindex="0" href="/author/B018KMQ206?ref=a_library_t_c5_libItem_author_4&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=HSN14RQ1KTYSANCN6GCQ">Katja Brandis</a>
-
-    </span>
-
+                            </span>
 
 </li>
-
 
 
 
@@ -541,63 +518,37 @@
 
 
 <li class="bc-list-item
-
+	narratorLabel
     bc-spacing-s0_5">
 
 
 
 
 
+<span class="bc-text
 
 
 
+    bc-color-secondary">
+                                Gesprochen von:
 
 
+                                    <a class="bc-link
 
 
-
-
-
-
-
+    bc-color-base" tabindex="0" href="/search?searchNarrator=Timo+Weisschnur&amp;ref=a_library_t_c5_libItem_narrator_4&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=M0P7JXDCN63SPAQC6XRV&amp;pageLoadId=UWBRHv2EJH9sHZzx&amp;creativeId=14d6a1c2-a3f8-499b-900a-1ae788c317b1">
 
 
 
 
 <span class="bc-text
-    narratorLabel
 
+    bc-size-callout">Timo Weisschnur</span>
+                                        </a>
 
-    bc-color-secondary">
-
-            Gesprochen von:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            <a class="bc-link
-
-
-    bc-color-base" tabindex="0" href="/search?searchNarrator=Timo+Weisschnur&amp;ref=a_library_t_c5_libItem_narrator_4&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=HSN14RQ1KTYSANCN6GCQ">Timo Weisschnur</a>
-
-    </span>
-
+                            </span>
 
 </li>
-
 
 
 
@@ -635,62 +586,19 @@
 
 
     bc-color-secondary">
-                                        Serie:
+                                Serie:
 
 
-                                            <a class="bc-link
+
+
+
+
+                                    <a class="bc-link
 
     bc-size-callout
-    bc-color-base" tabindex="0" href="/series/Woodwalkers-Hoerbuch/B0799NX219?ref=a_library_t_c5_libItem_series_1&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=HSN14RQ1KTYSANCN6GCQ">
-                                                Woodwalkers
-                                            </a>
+    bc-color-base" tabindex="0" href="/series/Woodwalkers-Hoerbuecher/B0799NX219?ref=a_library_t_c5_libItem_series_1&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=M0P7JXDCN63SPAQC6XRV&amp;pageLoadId=UWBRHv2EJH9sHZzx&amp;creativeId=14d6a1c2-a3f8-499b-900a-1ae788c317b1">Woodwalkers</a>, Titel 2
 
-
-                                               ,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<span class="bc-text">
-                Titel 2
-            </span>
-
-
-
-
-
-
-                                    </span>
+                            </span>
 
 </li>
 
@@ -717,46 +625,48 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <li class="bc-list-item
-	ratingAndReviewLabel
+	rateAndReviewLabel
     bc-spacing-s0_5">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -832,9 +742,9 @@
 
 
 
-<input type="hidden" name="ratingsCsrfToken" value="gibcNqkrJ7UEUF4qXDcI++U3MVTHRNhUYxLPz6UAAAABAAAAAGMxcr1yYXcAAAAAFVfwRGgNifE9xfqJS///" class="ratings-csrf-token">
+<input type="hidden" name="ratingsCsrfToken" value="goN4MUzMpUBKjjBIPdApmo9EplEjDAyyH6g5VOAAAAABAAAAAGPmE9ZyYXcAAAAAFVfwRGgNifE9xfqJS///" class="ratings-csrf-token">
 
-                    <div class="bc-trigger
+            <div class="bc-trigger
 
 
 bc-trigger-tooltip">
@@ -1138,17 +1048,15 @@ bc-trigger-tooltip">
 
 
 
-            &nbsp;
+    &nbsp;
 
 
 
 
-                        <a class="bc-link
+                <a class="bc-link
 
 
-    bc-color-base" tabindex="0" href="/write-review?asin=B0798RRSXZ&amp;rdpath=%2Flibrary%2Ftitles%3Fpage%3D1&amp;ref=a_library_t_c5_review&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=HSN14RQ1KTYSANCN6GCQ">
-                            Rezension schreiben
-                        </a>
+    bc-color-base" tabindex="0" href="/write-review?rdpath=%2Fpd%2FB0798RRSXZ&amp;asin=B0798RRSXZ&amp;source=lib&amp;page=1&amp;ref=a_library_t_c5_review&amp;pf_rd_p=86298143-6994-4968-8277-2e2391d86bbd&amp;pf_rd_r=M0P7JXDCN63SPAQC6XRV&amp;pageLoadId=UWBRHv2EJH9sHZzx&amp;creativeId=14d6a1c2-a3f8-499b-900a-1ae788c317b1">Rezension schreiben</a>
 
 
 
@@ -1183,9 +1091,6 @@ bc-trigger-tooltip">
 
 
 
-
-
-
 <li class="bc-list-item
 	summaryLabel
     bc-spacing-s0_5
@@ -1195,52 +1100,13 @@ bc-trigger-tooltip">
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <span class="bc-text
     merchandisingSummary
     bc-size-body
 
-    bc-color-secondary">
-                Es ist Winter in den Rocky Mountains und Carag und seine Mitschüler stürzen sich voller Freude in ihre ersten Lernexpeditionen...
-            </span>
-
-
-
+    bc-color-secondary">Es ist Winter in den Rocky Mountains und Carag und seine Mitschüler stürzen sich voller Freude in ihre ersten Lernexpeditionen...</span>
 
 </li>
-
-
-
 
 
 
@@ -1275,6 +1141,14 @@ bc-trigger-tooltip">
 
 
 
+
+
+
+
+
+
+
+<input type="hidden" name="isFinished" value="true">
 
 
 
@@ -1322,16 +1196,7 @@ bc-trigger-tooltip">
 			adbl-library-item-button-row
 
 
-    bc-spacing-top-s1" data-asin="B0798RRSXZ">
-
-
-
-
-
-
-
-
-
+    bc-spacing-top-s1" data-asin="B0798RRSXZ" data-collection-id="">
 
 
 
@@ -1484,8 +1349,6 @@ bc-trigger-tooltip">
 
 
 
-
-
     <span id="remove-from-favorites-button-B0798RRSXZ" class="bc-button
   bc-button-simple
   remove-from-favorites-button bc-pub-hidden
@@ -1509,64 +1372,6 @@ bc-trigger-tooltip">
   </span>
       </button>
     </span>
-
-
-
-
-
-
-        <!-- These input fields are needed to localize success and failure toasts for adding to and removing from favorites-->
-
-
-
-
-
-
-
-
-
-
-
-<input type="hidden" name="addToFavoritesSuccessMessage" value="Erfolgreich zu Favoriten hinzugefügt">
-
-
-
-
-
-
-
-
-
-
-
-<input type="hidden" name="addToFavoritesFailureMessage" value="Fehler beim Hinzufügen zu Favoriten">
-
-
-
-
-
-
-
-
-
-
-
-<input type="hidden" name="removeFromFavoritesSuccessMessage" value="Erfolgreich von Favoritenentfernt">
-
-
-
-
-
-
-
-
-
-
-
-<input type="hidden" name="removeFromFavoritesFailureMessage" value="Fehler beim Entfernen von Favoriten">
-
-
-
 
 
 
@@ -1643,12 +1448,12 @@ bc-trigger-tooltip">
     bc-size-action-small">
 
 
-            <span class="add-to-collection-icon library-button-row-icon">&nbsp;</span>
+                <span class="add-to-collection-icon library-button-row-icon">&nbsp;</span>
 
 
 
 
-<span class="bc-text">Hinzufügen zu...</span>
+<span class="bc-text">Hinzufügen zu ...</span>
 
   </span>
       </button>
@@ -1665,14 +1470,87 @@ bc-trigger-tooltip">
 
 
 
+
+
 <input type="hidden" name="collectionIds-B0798RRSXZ" value="[3bb31f7e-d16e-4c4c-8cb7-6659cfa48854]" id="collectionIds-B0798RRSXZ">
 
 
+            <!-- These input fields are needed to localize success and failure toasts for adding to and removing from favorites-->
 
 
 
 
 
+
+
+
+
+
+
+<input type="hidden" name="addToFavoritesSuccessMessage" value="Erfolgreich zu Favoriten hinzugefügt">
+
+
+
+
+
+
+
+
+
+
+
+<input type="hidden" name="addToFavoritesFailureMessage" value="Fehler beim Hinzufügen zu Favoriten">
+
+
+
+
+
+
+
+
+
+
+
+<input type="hidden" name="removeFromFavoritesSuccessMessage" value="Erfolgreich von Favoritenentfernt">
+
+
+
+
+
+
+
+
+
+
+
+<input type="hidden" name="removeFromFavoritesFailureMessage" value="Fehler beim Entfernen von Favoriten">
+
+
+            <!-- These input fields are needed to localize success and failure toasts for removing from a collection-->
+
+
+
+
+
+
+
+
+
+
+
+<input type="hidden" name="removeFromCollectionSuccessMessage" value="Erfolgreich von Sammlungentfernt">
+
+
+
+
+
+
+
+
+
+
+
+<input type="hidden" name="removeFromCollectionFailureMessage" value="Fehler beim Entfernen von Sammlung">
 
 
 
@@ -1825,8 +1703,6 @@ bc-trigger-tooltip">
 
 
 
-
-
     <span id="mark-as-finished-button-B0798RRSXZ" class="bc-button
   bc-button-simple
   mark-as-finished-button bc-pub-hidden
@@ -1854,6 +1730,7 @@ bc-trigger-tooltip">
 
 
 
+            <input type="hidden" class="markAsFinished-csrf-token" name="markAsFinishedToken" value="gsNW4zeY3k8/fMdI6qBo4P2iZRoeOGjSoqib3joAAAABAAAAAGPmE9ZyYXcAAAAAFVfwRGgNifE9xfqJS///">
 
 
 
@@ -1864,7 +1741,135 @@ bc-trigger-tooltip">
 
 
 
-<input type="hidden" name="markAsFinishedToken" value="gv6hl1c0tHnex0oiGSDuZ3qfnbXyh+6TFhGDIyQAAAABAAAAAGMxcr1yYXcAAAAAFVfwRGgNifE9xfqJS///" class="markAsFinished-csrf-token">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <span id="download-button-B0798RRSXZ" class="bc-button
+  bc-button-simple
+
+
+
+  bc-button-small
+  bc-button-inline">
+      <a class="bc-button-text" href="/library/download?asin=B0798RRSXZ&amp;codec=AAX_44_128" tabindex="0" role="button">
+        <span class="bc-text
+    bc-button-text-inner
+    bc-size-action-small">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<i aria-hidden="true" class="bc-icon
+	bc-icon-fill-base
+	bc-icon-download-s2
+	library-button-row-icon
+	bc-icon-download
+
+	bc-color-base">
+</i>
+
+
+
+
+<span class="bc-text
+    small-padding-left">Herunterladen</span>
+
+  </span>
+      </a>
+    </span>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1875,17 +1880,11 @@ bc-trigger-tooltip">
 
 </li>
 
-                        </ul>
+                </ul>
 </span>
 
 
 </div>
-
-
-
-
-
-
 
 
 
@@ -2037,7 +2036,7 @@ bc-trigger-tooltip">
     adbl-library-item-select-checkbox adbl-library-item-select-checkbox-B0798RRSXZ">
 	<label class="bc-label-wrapper ">
     <div class="bc-checkbox-wrapper">
-        <input type="checkbox" value="B0798RRSXZ" autocomplete="off" data-asin="B0798RRSXZ" data-img-url="https://m.media-amazon.com/images/I/61pXYkXSyYL._SL500_.jpg" data-img-alt-text="">
+        <input type="checkbox" autocomplete="off" data-asin="B0798RRSXZ" data-img-url="https://m.media-amazon.com/images/I/61pXYkXSyYL._SL500_.jpg" data-img-alt-text="Gefährliche Freundschaft Titelbild">
             <span class="bc-checkbox-icon-container bc-color-border-base">
             <span class="bc-checkbox-icon-inner">
                 <div class="bc-color-background-active bc-checkbox-check">
@@ -2189,41 +2188,9 @@ bc-trigger-tooltip">
 
 
 
-
 <div id="" class="bc-row-responsive
 
     bc-spacing-top-s2" style="">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2245,42 +2212,11 @@ bc-trigger-tooltip">
 
 
     bc-color-secondary" id="time-remaining-finished-B0798RRSXZ">
-                Beendet
-            </span>
-
-
-
-
+    Beendet
+</span>
 
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2307,52 +2243,11 @@ bc-trigger-tooltip">
     adbl-library-item
     bc-spacing-top-s2" style="">
 
-            <input type="hidden" name="asin" value="B0798RRSXZ">
-    <input type="hidden" name="contentType" value="Product">
-    <input type="hidden" name="contentDeliveryType" value="SinglePartBook">
-    <input type="hidden" name="asinIndex" value="4">
-            <input type="hidden" name="deepLinkUrl" value="">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        <input type="hidden" name="asin" value="B0798RRSXZ">
+        <input type="hidden" name="contentType" value="Product">
+        <input type="hidden" name="contentDeliveryType" value="SinglePartBook">
+        <input type="hidden" name="asinIndex" value="4">
+        <input type="hidden" name="isPrerelease" value="false">
 
 
 
@@ -2429,46 +2324,9 @@ bc-trigger-tooltip">
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <span class="bc-text
 
-    bc-size-callout">
-                Abspielen
-            </span>
-
-
-
-
+    bc-size-callout">Abspielen</span>
 
   </span>
       </button>
@@ -2477,7 +2335,7 @@ bc-trigger-tooltip">
 
 
 
-
+</div>
 
 
 
@@ -2491,227 +2349,6 @@ bc-trigger-tooltip">
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div id="" class="bc-row-responsive
-
-    bc-spacing-top-s2" style="">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <span class="bc-button
-  bc-button-secondary
-  adbl-lib-action-download
-
-
-  bc-button-small">
-      <a class="bc-button-text" href="/library/download?asin=B0798RRSXZ&amp;codec=AAX_44_128" tabindex="0" role="button">
-        <span class="bc-text
-    bc-button-text-inner
-    bc-size-action-small">
-
-
-
-
-
-
-<span class="bc-text
-
-    bc-size-callout">Herunterladen</span>
-
-  </span>
-      </a>
-    </span>
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div id="" class="bc-row-responsive
-
-    bc-spacing-top-s2" style="">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<span class="bc-text
-
-    bc-size-caption1
-
-    bc-color-secondary">
-                Du hast diesen Titel heruntergeladen
-            </span>
-
-
-
-
-</div>
-
-
-</div>
-
-
-
-
 </div>
 
 
@@ -2719,8 +2356,6 @@ bc-trigger-tooltip">
 
 
 </div>
-
-
 
 
 
@@ -2863,4 +2498,4 @@ bc-trigger-tooltip">
 
 </div>
 
-    </div>
+</div>
