@@ -8,6 +8,7 @@ use GibsonOS\Core\Attribute\Install\Database\Constraint;
 use GibsonOS\Core\Attribute\Install\Database\Key;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
+use JsonSerializable;
 
 /**
  * @method Account getAccount()
@@ -18,7 +19,7 @@ use GibsonOS\Core\Model\AbstractModel;
  */
 #[Table]
 #[Key(unique: true, columns: ['account_id', 'observed_filename', 'observed_content'])]
-class Rule extends AbstractModel implements \JsonSerializable
+class Rule extends AbstractModel implements JsonSerializable
 {
     #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED], autoIncrement: true)]
     private ?int $id = null;

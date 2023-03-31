@@ -8,6 +8,7 @@ use GibsonOS\Core\Store\AbstractDatabaseStore;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Index;
 use GibsonOS\Module\Archivist\Model\Rule;
+use mysqlDatabase;
 
 class IndexStore extends AbstractDatabaseStore
 {
@@ -16,7 +17,7 @@ class IndexStore extends AbstractDatabaseStore
     private ?Rule $rule = null;
 
     public function __construct(
-        \mysqlDatabase $database = null,
+        mysqlDatabase $database = null,
         #[GetTableName(Rule::class)] private readonly string $ruleTableName,
     ) {
         parent::__construct($database);

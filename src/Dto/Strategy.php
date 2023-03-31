@@ -5,8 +5,9 @@ namespace GibsonOS\Module\Archivist\Dto;
 
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
 use GibsonOS\Core\Model\AutoCompleteModelInterface;
+use JsonSerializable;
 
-class Strategy implements \JsonSerializable, AutoCompleteModelInterface
+class Strategy implements JsonSerializable, AutoCompleteModelInterface
 {
     private array $configuration = [];
 

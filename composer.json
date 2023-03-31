@@ -22,7 +22,8 @@
   "autoload": {
     "psr-4": {
       "GibsonOS\\Module\\Archivist\\": "src/",
-      "GibsonOS\\Module\\Archivist\\Test\\Unit\\": "tests/unit/"
+      "GibsonOS\\Test\\Unit\\Archivist\\": "tests/unit/",
+      "GibsonOS\\Test\\Functional\\Archivist\\": "tests/functional/"
     }
   },
   "scripts": {

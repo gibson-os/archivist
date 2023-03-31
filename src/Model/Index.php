@@ -3,17 +3,21 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Model;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use GibsonOS\Core\Attribute\Install\Database\Column;
 use GibsonOS\Core\Attribute\Install\Database\Constraint;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
+use JsonSerializable;
+use mysqlDatabase;
 
 /**
  * @method Rule|null getRule()
  * @method Index     setRule(?Rule $rule)
  */
 #[Table]
-class Index extends AbstractModel implements \JsonSerializable
+class Index extends AbstractModel implements JsonSerializable
 {
     #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED], autoIncrement: true)]
     private ?int $id = null;
@@ -34,16 +38,16 @@ class Index extends AbstractModel implements \JsonSerializable
     private ?string $error = null;
 
     #[Column(type: Column::TYPE_TIMESTAMP, default: Column::DEFAULT_CURRENT_TIMESTAMP)]
-    private \DateTimeInterface $changed;
+    private DateTimeInterface $changed;
 
     #[Constraint]
     protected ?Rule $rule = null;
 
-    public function __construct(\mysqlDatabase $database = null)
+    public function __construct(mysqlDatabase $database = null)
     {
         parent::__construct($database);
 
-        $this->changed = new \DateTimeImmutable();
+        $this->changed = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -118,12 +122,12 @@ class Index extends AbstractModel implements \JsonSerializable
         return $this;
     }
 
-    public function getChanged(): \DateTimeInterface
+    public function getChanged(): DateTimeInterface
     {
         return $this->changed;
     }
 
-    public function setChanged(\DateTimeInterface $changed): Index
+    public function setChanged(DateTimeInterface $changed): Index
     {
         $this->changed = $changed;
 

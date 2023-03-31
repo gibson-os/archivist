@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Model;
 
+use DateTimeImmutable;
 use GibsonOS\Core\Attribute\Install\Database\Column;
 use GibsonOS\Core\Attribute\Install\Database\Constraint;
 use GibsonOS\Core\Attribute\Install\Database\Key;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Model\User;
+use JsonSerializable;
 
 /**
  * @method User    getUser()
@@ -18,7 +20,7 @@ use GibsonOS\Core\Model\User;
  * @method Account setRules(Rule[] $indexed)
  */
 #[Table]
-class Account extends AbstractModel implements \JsonSerializable
+class Account extends AbstractModel implements JsonSerializable
 {
     #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED], autoIncrement: true)]
     private ?int $id = null;
@@ -49,7 +51,7 @@ class Account extends AbstractModel implements \JsonSerializable
     private int $userId;
 
     #[Column]
-    private ?\DateTimeImmutable $lastRun = null;
+    private ?DateTimeImmutable $lastRun = null;
 
     #[Constraint]
     protected User $user;
@@ -162,12 +164,12 @@ class Account extends AbstractModel implements \JsonSerializable
         return $this;
     }
 
-    public function getLastRun(): ?\DateTimeImmutable
+    public function getLastRun(): ?DateTimeImmutable
     {
         return $this->lastRun;
     }
 
-    public function setLastRun(?\DateTimeImmutable $lastRun): Account
+    public function setLastRun(?DateTimeImmutable $lastRun): Account
     {
         $this->lastRun = $lastRun;
 

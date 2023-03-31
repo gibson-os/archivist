@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace GibsonOS\Module\Archivist\Test\Unit\Strategy;
+namespace GibsonOS\Test\Unit\Archivist\Strategy;
 
 use Behat\Mink\Element\DocumentElement;
 use Behat\Mink\Element\NodeElement;
@@ -15,14 +15,14 @@ use GibsonOS\Core\Service\WebService;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Service\BrowserService;
 use GibsonOS\Module\Archivist\Strategy\AudibleStrategy;
-use GibsonOS\UnitTest\AbstractTest;
+use GibsonOS\Test\Unit\Core\UnitTest;
 use phpmock\phpunit\PHPMock;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
-class AudibleStrategyTest extends AbstractTest
+class AudibleStrategyTest extends UnitTest
 {
     use ProphecyTrait;
     use PHPMock;

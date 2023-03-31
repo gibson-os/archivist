@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Strategy;
 
+use Generator;
 use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\File\ReaderException;
-use GibsonOS\Core\Exception\Flock\LockError;
 use GibsonOS\Core\Exception\GetError;
+use GibsonOS\Core\Exception\Lock\LockException;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Service\DateTimeService;
@@ -20,6 +21,8 @@ use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Service\RuleService;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 use GibsonOS\Module\Explorer\Service\TrashService;
+use JsonException;
+use ReflectionException;
 
 class DirectoryStrategy implements StrategyInterface
 {
@@ -74,13 +77,13 @@ class DirectoryStrategy implements StrategyInterface
 
     /**
      * @throws GetError
-     * @throws \JsonException
-     * @throws LockError
+     * @throws JsonException
+     * @throws LockException
      * @throws SaveError
      * @throws DateTimeError
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function getFiles(Account $account): \Generator
+    public function getFiles(Account $account): Generator
     {
         $configuration = $account->getConfiguration();
         $directory = $configuration[self::KEY_DIRECTORY];
@@ -160,9 +163,9 @@ class DirectoryStrategy implements StrategyInterface
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      * @throws SaveError
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function getLockName(Account $account): string
     {

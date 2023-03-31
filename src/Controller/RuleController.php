@@ -20,12 +20,14 @@ use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Store\RuleStore;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
+use JsonException;
+use ReflectionException;
 
 class RuleController extends AbstractController
 {
     /**
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws JsonException
+     * @throws ReflectionException
      * @throws SelectError
      */
     #[CheckPermission(Permission::READ)]
@@ -87,7 +89,7 @@ class RuleController extends AbstractController
     /**
      * @param Rule[] $rules
      *
-     * @throws \JsonException
+     * @throws JsonException
      * @throws DeleteError
      */
     #[CheckPermission(Permission::DELETE)]

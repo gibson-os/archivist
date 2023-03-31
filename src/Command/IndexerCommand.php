@@ -5,18 +5,18 @@ namespace GibsonOS\Module\Archivist\Command;
 
 use GibsonOS\Core\Attribute\Command\Argument;
 use GibsonOS\Core\Command\AbstractCommand;
-use GibsonOS\Core\Exception\ArgumentError;
 use GibsonOS\Core\Exception\CreateError;
-use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\FactoryError;
-use GibsonOS\Core\Exception\Flock\LockError;
-use GibsonOS\Core\Exception\Flock\UnlockError;
+use GibsonOS\Core\Exception\Lock\LockException;
+use GibsonOS\Core\Exception\Lock\UnlockException;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Module\Archivist\Exception\RuleException;
 use GibsonOS\Module\Archivist\Repository\AccountRepository;
 use GibsonOS\Module\Archivist\Service\AccountService;
+use JsonException;
 use Psr\Log\LoggerInterface;
+use Throwable;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -38,20 +38,18 @@ class IndexerCommand extends AbstractCommand
     }
 
     /**
-     * @throws ArgumentError
      * @throws CreateError
-     * @throws DateTimeError
      * @throws FactoryError
-     * @throws \JsonException
+     * @throws JsonException
      * @throws LoaderError
-     * @throws LockError
+     * @throws LockException
      * @throws RuleException
      * @throws RuntimeError
      * @throws SaveError
      * @throws SelectError
      * @throws SyntaxError
-     * @throws \Throwable
-     * @throws UnlockError
+     * @throws Throwable
+     * @throws UnlockException
      */
     protected function run(): int
     {

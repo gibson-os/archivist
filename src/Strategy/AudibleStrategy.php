@@ -6,6 +6,7 @@ namespace GibsonOS\Module\Archivist\Strategy;
 use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Session;
+use Generator;
 use GibsonOS\Core\Dto\Ffmpeg\Media;
 use GibsonOS\Core\Dto\Ffmpeg\Stream\Audio;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
@@ -32,7 +33,9 @@ use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Service\BrowserService;
+use JsonException;
 use Psr\Log\LoggerInterface;
+use ReflectionException;
 
 class AudibleStrategy extends AbstractWebStrategy
 {
@@ -151,11 +154,11 @@ class AudibleStrategy extends AbstractWebStrategy
     /**
      * @throws BrowserException
      * @throws DateTimeError
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws JsonException
+     * @throws ReflectionException
      * @throws SaveError
      */
-    public function getFiles(Account $account): \Generator
+    public function getFiles(Account $account): Generator
     {
         $session = $this->getSession($account);
         $page = $session->getPage();
@@ -186,10 +189,10 @@ class AudibleStrategy extends AbstractWebStrategy
      * @throws BrowserException
      * @throws DateTimeError
      * @throws SaveError
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws JsonException
+     * @throws ReflectionException
      */
-    private function getFilesFromPage(Account $account): \Generator
+    private function getFilesFromPage(Account $account): Generator
     {
         $expression = '(' . self::EXPRESSION_NOT_PODCAST . '|' . self::EXPRESSION_PODCAST . ')';
         $session = $this->getSession($account);
@@ -261,7 +264,7 @@ class AudibleStrategy extends AbstractWebStrategy
      * @throws FfmpegException
      * @throws FileNotFound
      * @throws GetError
-     * @throws \JsonException
+     * @throws JsonException
      * @throws ProcessError
      * @throws SaveError
      * @throws StrategyException

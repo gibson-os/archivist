@@ -23,12 +23,14 @@ use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Store\AccountStore;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
+use JsonException;
+use ReflectionException;
 
 class AccountController extends AbstractController
 {
     /**
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws JsonException
+     * @throws ReflectionException
      * @throws SelectError
      */
     #[CheckPermission(Permission::READ)]
@@ -40,7 +42,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      * @throws SaveError
      * @throws FactoryError
      */
@@ -78,7 +80,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      * @throws SaveError
      * @throws FactoryError
      */
@@ -99,7 +101,7 @@ class AccountController extends AbstractController
 
     /**
      * @throws DeleteError
-     * @throws \JsonException
+     * @throws JsonException
      */
     #[CheckPermission(Permission::WRITE)]
     public function delete(

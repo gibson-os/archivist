@@ -5,8 +5,8 @@ namespace GibsonOS\Module\Archivist\Service;
 
 use GibsonOS\Core\Exception\CreateError;
 use GibsonOS\Core\Exception\FactoryError;
-use GibsonOS\Core\Exception\Flock\LockError;
-use GibsonOS\Core\Exception\Flock\UnlockError;
+use GibsonOS\Core\Exception\Lock\LockException;
+use GibsonOS\Core\Exception\Lock\UnlockException;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Manager\ServiceManager;
@@ -16,7 +16,9 @@ use GibsonOS\Module\Archivist\Exception\RuleException;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
+use JsonException;
 use Psr\Log\LoggerInterface;
+use ReflectionException;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -36,16 +38,16 @@ class AccountService
 
     /**
      * @throws FactoryError
-     * @throws \JsonException
+     * @throws JsonException
      * @throws RuleException
      * @throws CreateError
-     * @throws LockError
-     * @throws UnlockError
+     * @throws LockException
+     * @throws UnlockException
      * @throws SaveError
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function execute(Account $account): bool
     {
