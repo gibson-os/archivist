@@ -14,7 +14,8 @@ Ext.define('GibsonOS.module.archivist.rule.Form', {
 
             form.submit({
                 xtype: 'gosFormActionAction',
-                url: baseDir + 'archivist/rule/save',
+                url: baseDir + 'archivist/rule',
+                method: 'POST',
                 params: {
                     id: me.ruleId,
                     accountId: me.accountId

@@ -49,7 +49,8 @@ Ext.define('GibsonOS.module.archivist.account.Form', {
             me.setLoading(true);
 
             me.getForm().submit({
-                url: baseDir + 'archivist/account/save',
+                url: baseDir + 'archivist/account',
+                method: 'POST',
                 timeout: 120000,
                 params: {
                     id: me.accountId

@@ -57,7 +57,8 @@ Ext.define('GibsonOS.module.archivist.rule.Grid', {
                 });
 
                 GibsonOS.Ajax.request({
-                    url: baseDir + 'archivist/rule/delete',
+                    url: baseDir + 'archivist/rule',
+                    method: 'DELETE',
                     params: {
                         'rules': Ext.encode(rules)
                     },

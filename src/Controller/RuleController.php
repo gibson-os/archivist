@@ -10,11 +10,11 @@ use GibsonOS\Core\Attribute\GetModels;
 use GibsonOS\Core\Controller\AbstractController;
 use GibsonOS\Core\Dto\Parameter\BoolParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
+use GibsonOS\Core\Enum\Permission;
 use GibsonOS\Core\Exception\Model\DeleteError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Manager\ModelManager;
-use GibsonOS\Core\Model\User\Permission;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
@@ -30,8 +30,8 @@ class RuleController extends AbstractController
      * @throws ReflectionException
      * @throws SelectError
      */
-    #[CheckPermission(Permission::READ)]
-    public function index(
+    #[CheckPermission([Permission::READ])]
+    public function get(
         RuleStore $ruleStore,
         #[GetModel(['id' => 'accountId', 'user_id' => 'session.user.id'])] Account $account,
         int $start = 0,
@@ -45,11 +45,8 @@ class RuleController extends AbstractController
         return $this->returnSuccess($ruleStore->getList(), $ruleStore->getCount());
     }
 
-    /**
-     * @param class-string $strategy
-     */
-    #[CheckPermission(Permission::WRITE)]
-    public function edit(
+    #[CheckPermission([Permission::WRITE])]
+    public function getEdit(
         #[GetModel(['id' => 'accountId', 'user_id' => 'session.user.id'])] Account $account,
         #[GetModel] Rule $rule = null
     ): AjaxResponse {
@@ -76,8 +73,8 @@ class RuleController extends AbstractController
     /**
      * @throws SaveError
      */
-    #[CheckPermission(Permission::WRITE)]
-    public function save(
+    #[CheckPermission([Permission::WRITE])]
+    public function post(
         ModelManager $modelManager,
         #[GetMappedModel] Rule $rule
     ): AjaxResponse {
@@ -92,7 +89,7 @@ class RuleController extends AbstractController
      * @throws JsonException
      * @throws DeleteError
      */
-    #[CheckPermission(Permission::DELETE)]
+    #[CheckPermission([Permission::DELETE])]
     public function delete(
         ModelManager $modelManager,
         #[GetModels(Rule::class)] array $rules,

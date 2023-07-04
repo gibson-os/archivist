@@ -48,6 +48,7 @@ Ext.define('GibsonOS.module.archivist.rule.Window', {
 
             GibsonOS.Ajax.request({
                 url: baseDir + 'archivist/rule/edit',
+                method: 'GET',
                 params: {
                     id: me.ruleId,
                     accountId: me.accountId

@@ -8,7 +8,8 @@ Ext.define('GibsonOS.module.archivist.store.Account', {
 
         me.proxy = {
             type: 'gosDataProxyAjax',
-            url: baseDir + 'archivist/account/index'
+            url: baseDir + 'archivist/account',
+            method: 'GET'
         };
 
         me.callParent(arguments);

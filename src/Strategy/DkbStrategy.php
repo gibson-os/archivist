@@ -47,21 +47,21 @@ class DkbStrategy extends AbstractWebStrategy
             'j_username' => new StringParameter('Anmeldename'),
             'j_password' => (new StringParameter('Passwort'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
         ];
-//        if (
-//            $strategy->getConfigurationStep() === self::STEP_LOGIN &&
-//            $strategy->hasConfigurationValue('username') &&
-//            $strategy->hasConfigurationValue('password')
-//        ) {
-//            $this->login($strategy, [
-//                'j_username' => $this->cryptService->decrypt($strategy->getConfigurationValue('username')),
-//                'j_password' => $this->cryptService->decrypt($strategy->getConfigurationValue('password')),
-//            ]);
-//        }
-//
-//        return match ($strategy->getConfigurationStep()) {
-//            self::STEP_TAN => $this->getTanParameters(),
-//            self::STEP_PATH => $this->getPathParameters($strategy),
-//        };
+        //        if (
+        //            $strategy->getConfigurationStep() === self::STEP_LOGIN &&
+        //            $strategy->hasConfigurationValue('username') &&
+        //            $strategy->hasConfigurationValue('password')
+        //        ) {
+        //            $this->login($strategy, [
+        //                'j_username' => $this->cryptService->decrypt($strategy->getConfigurationValue('username')),
+        //                'j_password' => $this->cryptService->decrypt($strategy->getConfigurationValue('password')),
+        //            ]);
+        //        }
+        //
+        //        return match ($strategy->getConfigurationStep()) {
+        //            self::STEP_TAN => $this->getTanParameters(),
+        //            self::STEP_PATH => $this->getPathParameters($strategy),
+        //        };
     }
 
     public function setAccountParameters(Account $account, array $parameters): void
@@ -71,22 +71,22 @@ class DkbStrategy extends AbstractWebStrategy
         $configuration['password'] = $this->cryptService->encrypt($parameters['j_password']);
         $account->setConfiguration($configuration);
 
-//        switch ($strategy->getConfigurationStep()) {
-//            case self::STEP_TAN:
-//                $this->validateTan($strategy, $parameters);
-//
+        //        switch ($strategy->getConfigurationStep()) {
+        //            case self::STEP_TAN:
+        //                $this->validateTan($strategy, $parameters);
+        //
         // //                return false;
         // // no break
-//            case self::STEP_PATH:
-//                $strategy->setConfigurationValue('path', $parameters['path']);
-//
+        //            case self::STEP_PATH:
+        //                $strategy->setConfigurationValue('path', $parameters['path']);
+        //
         // //                return true;
         // // no break
-//            default:
-//                $this->login($strategy, $parameters);
-//
+        //            default:
+        //                $this->login($strategy, $parameters);
+        //
         // //                return false;
-//        }
+        //        }
     }
 
     public function getExecuteParameters(Account $account): array
@@ -120,7 +120,7 @@ class DkbStrategy extends AbstractWebStrategy
         $session = $this->getSession($account);
         $page = $session->getPage();
         // @todo er soll jedes Verzeichnis durchlaufen execution parameter directories
-//        $page->clickLink($account->getConfigurationValue('path'));
+        //        $page->clickLink($account->getConfigurationValue('path'));
 
         try {
             while (true) {
@@ -218,7 +218,7 @@ class DkbStrategy extends AbstractWebStrategy
     private function login(Strategy $strategy, array $parameters): void
     {
         $session = $this->browserService->getSession();
-//        $page = $this->browserService->loadPage($session, self::URL);
+        //        $page = $this->browserService->loadPage($session, self::URL);
         $page = $this->browserService->loadPage($session, self::URL . '/banking');
         $this->logger->debug('Init page: ' . $page->getContent());
         $this->browserService->fillFormFields($session, $parameters);

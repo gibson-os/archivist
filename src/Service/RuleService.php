@@ -29,12 +29,12 @@ class RuleService
     public const RULE_LOCK_PREFIX = 'archivistIndexer';
 
     public function __construct(
-        private FileService $fileService,
-        private DirService $dirService,
-        private IndexRepository $indexRepository,
-        private TwigService $twigService,
-        private LoggerInterface $logger,
-        private ModelManager $modelManager
+        private readonly FileService $fileService,
+        private readonly DirService $dirService,
+        private readonly IndexRepository $indexRepository,
+        private readonly TwigService $twigService,
+        private readonly LoggerInterface $logger,
+        private readonly ModelManager $modelManager,
     ) {
         $this->twigService->getTwig()->addExtension(new StringLoaderExtension());
     }

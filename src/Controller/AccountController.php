@@ -8,6 +8,7 @@ use GibsonOS\Core\Attribute\GetMappedModel;
 use GibsonOS\Core\Attribute\GetMappedModels;
 use GibsonOS\Core\Attribute\GetModel;
 use GibsonOS\Core\Controller\AbstractController;
+use GibsonOS\Core\Enum\Permission;
 use GibsonOS\Core\Exception\FactoryError;
 use GibsonOS\Core\Exception\Model\DeleteError;
 use GibsonOS\Core\Exception\Model\SaveError;
@@ -15,7 +16,6 @@ use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Model\User;
-use GibsonOS\Core\Model\User\Permission;
 use GibsonOS\Core\Service\CommandService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Module\Archivist\Command\IndexerCommand;
@@ -33,8 +33,8 @@ class AccountController extends AbstractController
      * @throws ReflectionException
      * @throws SelectError
      */
-    #[CheckPermission(Permission::READ)]
-    public function index(AccountStore $accountStore): AjaxResponse
+    #[CheckPermission([Permission::READ])]
+    public function get(AccountStore $accountStore): AjaxResponse
     {
         $accountStore->setUser($this->sessionService->getUser() ?? new User());
 
@@ -46,8 +46,8 @@ class AccountController extends AbstractController
      * @throws SaveError
      * @throws FactoryError
      */
-    #[CheckPermission(Permission::WRITE)]
-    public function execute(
+    #[CheckPermission([Permission::WRITE])]
+    public function postExecute(
         ServiceManager $serviceManager,
         CommandService $commandService,
         ModelManager $modelManager,
@@ -74,7 +74,8 @@ class AccountController extends AbstractController
         return $this->returnSuccess([]);
     }
 
-    public function status(#[GetModel(['id' => 'id', 'user_id' => 'session.user.id'])] Account $account): AjaxResponse
+    #[CheckPermission([Permission::WRITE])]
+    public function getStatus(#[GetModel(['id' => 'id', 'user_id' => 'session.user.id'])] Account $account): AjaxResponse
     {
         return $this->returnSuccess($account);
     }
@@ -84,8 +85,8 @@ class AccountController extends AbstractController
      * @throws SaveError
      * @throws FactoryError
      */
-    #[CheckPermission(Permission::WRITE)]
-    public function save(
+    #[CheckPermission([Permission::WRITE])]
+    public function post(
         ServiceManager $serviceManager,
         ModelManager $modelManager,
         #[GetMappedModel(['id' => 'id', 'user_id' => 'session.user.id'], ['user' => 'session.user'])] Account $account,
@@ -103,7 +104,7 @@ class AccountController extends AbstractController
      * @throws DeleteError
      * @throws JsonException
      */
-    #[CheckPermission(Permission::WRITE)]
+    #[CheckPermission([Permission::DELETE])]
     public function delete(
         ModelManager $modelManager,
         // @todo #[GetMappedModels(Account::class, ['id' => 'id', 'user_id' => 'session.user.id'])] array $accounts klappt mit session wert nicht

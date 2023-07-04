@@ -6,8 +6,8 @@ namespace GibsonOS\Module\Archivist\Controller;
 use GibsonOS\Core\Attribute\CheckPermission;
 use GibsonOS\Core\Attribute\GetModel;
 use GibsonOS\Core\Controller\AbstractController;
+use GibsonOS\Core\Enum\Permission;
 use GibsonOS\Core\Exception\Repository\SelectError;
-use GibsonOS\Core\Model\User\Permission;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
@@ -22,8 +22,8 @@ class IndexController extends AbstractController
      * @throws JsonException
      * @throws ReflectionException
      */
-    #[CheckPermission(Permission::READ)]
-    public function index(
+    #[CheckPermission([Permission::READ])]
+    public function get(
         IndexStore $indexStore,
         #[GetModel(['id' => 'accountId'])] ?Account $account,
         #[GetModel(['id' => 'ruleId'])] ?Rule $rule,

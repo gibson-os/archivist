@@ -24,6 +24,7 @@ Ext.define('GibsonOS.module.archivist.account.execute.Form', {
         const getStatus = () => {
             GibsonOS.Ajax.request({
                 url: baseDir + 'archivist/account/status',
+                method: 'GET',
                 params: {
                     id: me.accountId
                 },
@@ -42,6 +43,7 @@ Ext.define('GibsonOS.module.archivist.account.execute.Form', {
             timeout: 120,
             xtype: 'gosFormActionAction',
             url: baseDir + 'archivist/account/execute',
+            method: 'POST',
             params: {
                 id: me.accountId
             },

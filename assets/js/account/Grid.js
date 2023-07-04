@@ -59,7 +59,8 @@ Ext.define('GibsonOS.module.archivist.account.Grid', {
                     });
 
                     GibsonOS.Ajax.request({
-                        url: baseDir + 'archivist/account/delete',
+                        url: baseDir + 'archivist/account',
+                        method: 'DELETE',
                         params: {
                             accounts: Ext.encode(accounts)
                         },

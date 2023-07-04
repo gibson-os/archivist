@@ -170,8 +170,8 @@ class AudibleStrategy extends AbstractWebStrategy
                 $link = $page->findLink('Eine Seite vorwärts');
 
                 if (
-                    $link === null ||
-                    $link->getParent()->hasClass('bc-button-disabled')
+                    $link === null
+                    || $link->getParent()->hasClass('bc-button-disabled')
                 ) {
                     return;
                 }
@@ -369,10 +369,10 @@ class AudibleStrategy extends AbstractWebStrategy
         $series = $titleParts->getSeries();
 
         if (
-            !empty($series) &&
-            count($cleanTitleParts) === 2 &&
-            mb_stripos($cleanTitleParts[0], $series) === 0 &&
-            mb_stripos($cleanTitleParts[1], $series) === false
+            !empty($series)
+            && count($cleanTitleParts) === 2
+            && mb_stripos($cleanTitleParts[0], $series) === 0
+            && mb_stripos($cleanTitleParts[1], $series) === false
         ) {
             $cleanTitle = $cleanTitleParts[1] . ':' . $cleanTitleParts[0];
         }

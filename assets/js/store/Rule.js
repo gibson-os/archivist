@@ -8,7 +8,8 @@ Ext.define('GibsonOS.module.archivist.store.Rule', {
 
         me.proxy = {
             type: 'gosDataProxyAjax',
-            url: baseDir + 'archivist/rule/index',
+            url: baseDir + 'archivist/rule',
+            method: 'GET',
             extraParams: {
                 accountId: data.accountId
             }

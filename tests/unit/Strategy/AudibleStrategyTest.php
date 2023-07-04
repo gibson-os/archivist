@@ -6,26 +6,32 @@ namespace GibsonOS\Test\Unit\Archivist\Strategy;
 use Behat\Mink\Element\DocumentElement;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
+use Codeception\Test\Unit;
 use DMore\ChromeDriver\ChromeDriver;
+use GibsonOS\Core\Manager\ModelManager;
+use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Service\CryptService;
 use GibsonOS\Core\Service\DateTimeService;
 use GibsonOS\Core\Service\FfmpegService;
+use GibsonOS\Core\Service\LoggerService;
 use GibsonOS\Core\Service\ProcessService;
 use GibsonOS\Core\Service\WebService;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Service\BrowserService;
 use GibsonOS\Module\Archivist\Strategy\AudibleStrategy;
-use GibsonOS\Test\Unit\Core\UnitTest;
+use GibsonOS\Test\Unit\Core\ModelManagerTrait;
+use mysqlDatabase;
 use phpmock\phpunit\PHPMock;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
-class AudibleStrategyTest extends UnitTest
+class AudibleStrategyTest extends Unit
 {
     use ProphecyTrait;
     use PHPMock;
+    use ModelManagerTrait;
 
     private AudibleStrategy $audibleStrategy;
 
@@ -39,8 +45,11 @@ class AudibleStrategyTest extends UnitTest
 
     private ObjectProphecy|CryptService $cryptService;
 
+    private ServiceManager $serviceManager;
+
     protected function _before(): void
     {
+        $this->loadModelManager();
         putenv('TIMEZONE=Europe/Berlin');
         putenv('DATE_LATITUDE=51.2642156');
         putenv('DATE_LONGITUDE=6.8001438');
@@ -49,6 +58,11 @@ class AudibleStrategyTest extends UnitTest
         $this->ffmpegService = $this->prophesize(FfmpegService::class);
         $this->processService = $this->prophesize(ProcessService::class);
         $this->cryptService = $this->prophesize(CryptService::class);
+        $this->serviceManager = new ServiceManager();
+        $this->serviceManager->setInterface(LoggerInterface::class, LoggerService::class);
+        $this->serviceManager->setService(mysqlDatabase::class, $this->mysqlDatabase->reveal());
+        $this->serviceManager->setService(ModelManager::class, $this->modelManager->reveal());
+
         $this->audibleStrategy = new AudibleStrategy(
             $this->browserService->reveal(),
             $this->webService->reveal(),

@@ -20,7 +20,6 @@ use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Service\RuleService;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
-use GibsonOS\Module\Explorer\Service\TrashService;
 use JsonException;
 use ReflectionException;
 
@@ -96,8 +95,8 @@ class DirectoryStrategy implements StrategyInterface
             }
 
             if (
-                is_dir($file) ||
-                in_array($file, $this->viewedFiles)
+                is_dir($file)
+                || in_array($file, $this->viewedFiles)
             ) {
                 continue;
             }
@@ -154,7 +153,7 @@ class DirectoryStrategy implements StrategyInterface
     {
         foreach ($this->loadedFiles as $file) {
             unlink($file);
-//            $this->trashService->add($file);
+            //            $this->trashService->add($file);
         }
 
         $this->waitTime = 0;
