@@ -84,14 +84,9 @@ class IndexStore extends AbstractDatabaseStore
         return $this;
     }
 
-    protected function getDefaultOrder(): string
+    protected function getDefaultOrder(): array
     {
-        return '`i`.`changed`';
-    }
-
-    protected function getDefaultOrderDirection(): OrderDirection
-    {
-        return OrderDirection::DESC;
+        return ['`i`.`changed`' => OrderDirection::DESC];
     }
 
     protected function getOrderMapping(): array
