@@ -25,8 +25,10 @@ class IndexController extends AbstractController
     #[CheckPermission([Permission::READ])]
     public function get(
         IndexStore $indexStore,
-        #[GetModel(['id' => 'accountId'])] ?Account $account,
-        #[GetModel(['id' => 'ruleId'])] ?Rule $rule,
+        #[GetModel(['id' => 'accountId'])]
+        ?Account $account,
+        #[GetModel(['id' => 'ruleId'])]
+        ?Rule $rule,
         array $sort = [],
     ): AjaxResponse {
         $indexStore->setSortByExt($sort);

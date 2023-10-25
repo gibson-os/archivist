@@ -20,7 +20,6 @@ use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Service\BrowserService;
 use GibsonOS\Module\Archivist\Strategy\AudibleStrategy;
 use GibsonOS\Test\Unit\Core\ModelManagerTrait;
-use mysqlDatabase;
 use phpmock\phpunit\PHPMock;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -60,7 +59,6 @@ class AudibleStrategyTest extends Unit
         $this->cryptService = $this->prophesize(CryptService::class);
         $this->serviceManager = new ServiceManager();
         $this->serviceManager->setInterface(LoggerInterface::class, LoggerService::class);
-        $this->serviceManager->setService(mysqlDatabase::class, $this->mysqlDatabase->reveal());
         $this->serviceManager->setService(ModelManager::class, $this->modelManager->reveal());
 
         $this->audibleStrategy = new AudibleStrategy(
@@ -137,7 +135,7 @@ class AudibleStrategyTest extends Unit
             ->willReturn(new NodeElement('foo', $session))
         ;
 
-        $account = new Account();
+        $account = new Account($this->modelWrapper->reveal());
         $this->audibleStrategy->setAccountParameters($account, [
             'email' => 'Arthur',
             'password' => 'Dent',
@@ -158,7 +156,7 @@ class AudibleStrategyTest extends Unit
         $session = $this->prophesize(Session::class);
         /** @var ObjectProphecy|DocumentElement $page */
         $page = $this->prophesize(DocumentElement::class);
-        $account = (new Account())->setStrategy(AudibleStrategy::class);
+        $account = (new Account($this->modelWrapper->reveal()))->setStrategy(AudibleStrategy::class);
 
         if ($subContent === null) {
             $page->getContent()->willReturn($content);

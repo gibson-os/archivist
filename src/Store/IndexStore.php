@@ -5,10 +5,14 @@ namespace GibsonOS\Module\Archivist\Store;
 
 use GibsonOS\Core\Attribute\GetTableName;
 use GibsonOS\Core\Store\AbstractDatabaseStore;
+use GibsonOS\Core\Wrapper\DatabaseStoreWrapper;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Index;
 use GibsonOS\Module\Archivist\Model\Rule;
-use mysqlDatabase;
+use MDO\Dto\Query\Join;
+use MDO\Enum\OrderDirection;
+use MDO\Exception\ClientException;
+use ReflectionException;
 
 class IndexStore extends AbstractDatabaseStore
 {
@@ -17,10 +21,11 @@ class IndexStore extends AbstractDatabaseStore
     private ?Rule $rule = null;
 
     public function __construct(
-        mysqlDatabase $database = null,
-        #[GetTableName(Rule::class)] private readonly string $ruleTableName,
+        DatabaseStoreWrapper $databaseStoreWrapper,
+        #[GetTableName(Rule::class)]
+        private readonly string $ruleTableName,
     ) {
-        parent::__construct($database);
+        parent::__construct($databaseStoreWrapper);
     }
 
     protected function getModelClassName(): string
@@ -28,21 +33,32 @@ class IndexStore extends AbstractDatabaseStore
         return Index::class;
     }
 
-    protected function initTable(): void
+    protected function getAlias(): ?string
     {
-        parent::initTable();
+        return 'i';
+    }
+
+    /**
+     * @throws ClientException
+     * @throws ReflectionException
+     */
+    protected function initQuery(): void
+    {
+        parent::initQuery();
 
         if ($this->account === null) {
             return;
         }
 
-        $this->table->appendJoin($this->ruleTableName, sprintf('`rule_id`=`%s`.`id`', $this->ruleTableName));
+        $this->selectQuery->addJoin(
+            new Join($this->getTable($this->ruleTableName), 'r', '`i`.`rule_id`=`r`.`id`')
+        );
     }
 
     protected function setWheres(): void
     {
         if ($this->rule !== null) {
-            $this->addWhere('`rule_id`=?', [$this->rule->getId() ?? 0]);
+            $this->addWhere('`i`.`rule_id`=?', [$this->rule->getId() ?? 0]);
 
             return;
         }
@@ -51,7 +67,7 @@ class IndexStore extends AbstractDatabaseStore
             return;
         }
 
-        $this->addWhere(sprintf('`%s`.`account_id`=?', $this->ruleTableName), [$this->account->getId() ?? 0]);
+        $this->addWhere('`r`.`account_id`=?', [$this->account->getId() ?? 0]);
     }
 
     public function setAccount(?Account $account): IndexStore
@@ -70,7 +86,12 @@ class IndexStore extends AbstractDatabaseStore
 
     protected function getDefaultOrder(): string
     {
-        return '`changed` DESC';
+        return '`i`.`changed`';
+    }
+
+    protected function getDefaultOrderDirection(): OrderDirection
+    {
+        return OrderDirection::DESC;
     }
 
     protected function getOrderMapping(): array

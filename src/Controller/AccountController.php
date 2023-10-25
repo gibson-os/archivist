@@ -18,12 +18,15 @@ use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Model\User;
 use GibsonOS\Core\Service\CommandService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
+use GibsonOS\Core\Wrapper\ModelWrapper;
 use GibsonOS\Module\Archivist\Command\IndexerCommand;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Store\AccountStore;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonException;
+use MDO\Exception\ClientException;
+use MDO\Exception\RecordException;
 use ReflectionException;
 
 class AccountController extends AbstractController
@@ -32,11 +35,13 @@ class AccountController extends AbstractController
      * @throws JsonException
      * @throws ReflectionException
      * @throws SelectError
+     * @throws ClientException
+     * @throws RecordException
      */
     #[CheckPermission([Permission::READ])]
-    public function get(AccountStore $accountStore): AjaxResponse
+    public function get(ModelWrapper $modelWrapper, AccountStore $accountStore): AjaxResponse
     {
-        $accountStore->setUser($this->sessionService->getUser() ?? new User());
+        $accountStore->setUser($this->sessionService->getUser() ?? new User($modelWrapper));
 
         return $this->returnSuccess($accountStore->getList(), $accountStore->getCount());
     }
@@ -51,7 +56,8 @@ class AccountController extends AbstractController
         ServiceManager $serviceManager,
         CommandService $commandService,
         ModelManager $modelManager,
-        #[GetModel(['id' => 'id', 'user_id' => 'session.user.id'])] Account $account,
+        #[GetModel(['id' => 'id', 'user_id' => 'session.user.id'])]
+        Account $account,
         array $parameters = [],
     ): AjaxResponse {
         if (count(array_filter($account->getRules(), fn (Rule $rule): bool => $rule->isActive())) === 0) {
@@ -89,7 +95,8 @@ class AccountController extends AbstractController
     public function post(
         ServiceManager $serviceManager,
         ModelManager $modelManager,
-        #[GetMappedModel(['id' => 'id', 'user_id' => 'session.user.id'], ['user' => 'session.user'])] Account $account,
+        #[GetMappedModel(['id' => 'id', 'user_id' => 'session.user.id'], ['user' => 'session.user'])]
+        Account $account,
         array $configuration = [],
     ): AjaxResponse {
         $strategy = $serviceManager->get($account->getStrategy(), StrategyInterface::class);
@@ -108,7 +115,8 @@ class AccountController extends AbstractController
     public function delete(
         ModelManager $modelManager,
         // @todo #[GetMappedModels(Account::class, ['id' => 'id', 'user_id' => 'session.user.id'])] array $accounts klappt mit session wert nicht
-        #[GetMappedModels(Account::class)] array $accounts
+        #[GetMappedModels(Account::class)]
+        array $accounts
     ): AjaxResponse {
         foreach ($accounts as $account) {
             $modelManager->delete($account);

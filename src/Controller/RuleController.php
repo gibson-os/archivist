@@ -33,7 +33,8 @@ class RuleController extends AbstractController
     #[CheckPermission([Permission::READ])]
     public function get(
         RuleStore $ruleStore,
-        #[GetModel(['id' => 'accountId', 'user_id' => 'session.user.id'])] Account $account,
+        #[GetModel(['id' => 'accountId', 'user_id' => 'session.user.id'])]
+        Account $account,
         int $start = 0,
         int $limit = 100,
         array $sort = []
@@ -47,8 +48,10 @@ class RuleController extends AbstractController
 
     #[CheckPermission([Permission::WRITE])]
     public function getEdit(
-        #[GetModel(['id' => 'accountId', 'user_id' => 'session.user.id'])] Account $account,
-        #[GetModel] Rule $rule = null
+        #[GetModel(['id' => 'accountId', 'user_id' => 'session.user.id'])]
+        Account $account,
+        #[GetModel]
+        Rule $rule = null
     ): AjaxResponse {
         $parameters = [
             'name' => (new StringParameter('Name'))
@@ -76,7 +79,8 @@ class RuleController extends AbstractController
     #[CheckPermission([Permission::WRITE])]
     public function post(
         ModelManager $modelManager,
-        #[GetMappedModel] Rule $rule
+        #[GetMappedModel]
+        Rule $rule
     ): AjaxResponse {
         $modelManager->saveWithoutChildren($rule);
 
@@ -92,7 +96,8 @@ class RuleController extends AbstractController
     #[CheckPermission([Permission::DELETE])]
     public function delete(
         ModelManager $modelManager,
-        #[GetModels(Rule::class)] array $rules,
+        #[GetModels(Rule::class)]
+        array $rules,
     ): AjaxResponse {
         foreach ($rules as $rule) {
             $modelManager->delete($rule);

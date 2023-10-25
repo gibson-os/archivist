@@ -10,6 +10,7 @@ use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
 use GibsonOS\Core\Service\TwigService;
+use GibsonOS\Core\Wrapper\ModelWrapper;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Exception\RuleException;
 use GibsonOS\Module\Archivist\Model\Index;
@@ -35,6 +36,7 @@ class RuleService
         private readonly TwigService $twigService,
         private readonly LoggerInterface $logger,
         private readonly ModelManager $modelManager,
+        private readonly ModelWrapper $modelWrapper,
     ) {
         $this->twigService->getTwig()->addExtension(new StringLoaderExtension());
     }
@@ -100,7 +102,7 @@ class RuleService
         $newFileName = preg_replace('/\s{2,}/', ' ', $newFileName);
         $newFileName = trim(preg_replace('/ (\.|\)|\?|!)/', '$1', $newFileName));
         $inputPath = $this->dirService->addEndSlash($file->getPath()) . $file->getName();
-        $index = (new Index())
+        $index = (new Index($this->modelWrapper))
             ->setRule($rule)
             ->setInputPath($inputPath)
             ->setOutputPath($newFileName)
