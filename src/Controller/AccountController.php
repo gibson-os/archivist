@@ -116,7 +116,7 @@ class AccountController extends AbstractController
         ModelManager $modelManager,
         // @todo #[GetMappedModels(Account::class, ['id' => 'id', 'user_id' => 'session.user.id'])] array $accounts klappt mit session wert nicht
         #[GetMappedModels(Account::class)]
-        array $accounts
+        array $accounts,
     ): AjaxResponse {
         foreach ($accounts as $account) {
             $modelManager->delete($account);

@@ -23,7 +23,7 @@ abstract class AbstractWebStrategy implements StrategyInterface
         protected LoggerInterface $logger,
         protected CryptService $cryptService,
         protected DateTimeService $dateTimeService,
-        protected ModelManager $modelManager
+        protected ModelManager $modelManager,
     ) {
     }
 
@@ -36,17 +36,17 @@ abstract class AbstractWebStrategy implements StrategyInterface
         preg_match(
             '/' . $key . '="' . preg_quote($value, '/') . '"[^>]*' . $valueKey . '="([^"]*)"/',
             $response,
-            $matches
+            $matches,
         );
 
         if (!isset($matches[1])) {
             throw new StrategyException(
-                'Value for ' . $valueKey . ' on element with ' . $key . ' "' . $value . '" not found!'
+                'Value for ' . $valueKey . ' on element with ' . $key . ' "' . $value . '" not found!',
             );
         }
 
         $this->logger->debug(
-            'Get value "' . $matches[1] . '" for "' . $valueKey . '" on element with ' . $key . ' "' . $value . '"'
+            'Get value "' . $matches[1] . '" for "' . $valueKey . '" on element with ' . $key . ' "' . $value . '"',
         );
 
         return $matches[1];

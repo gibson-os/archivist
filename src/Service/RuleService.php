@@ -70,7 +70,7 @@ class RuleService
             preg_match(
                 '/' . $observedContent . '/s',
                 $file->getContent() ?? '',
-                $contentMatches
+                $contentMatches,
             );
 
             if (empty($contentMatches)) {

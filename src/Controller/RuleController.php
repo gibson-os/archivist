@@ -37,7 +37,7 @@ class RuleController extends AbstractController
         Account $account,
         int $start = 0,
         int $limit = 100,
-        array $sort = []
+        array $sort = [],
     ): AjaxResponse {
         $ruleStore->setAccount($account);
         $ruleStore->setLimit($limit, $start);
@@ -51,7 +51,7 @@ class RuleController extends AbstractController
         #[GetModel(['id' => 'accountId', 'user_id' => 'session.user.id'])]
         Account $account,
         #[GetModel]
-        Rule $rule = null
+        Rule $rule = null,
     ): AjaxResponse {
         $parameters = [
             'name' => (new StringParameter('Name'))
@@ -80,7 +80,7 @@ class RuleController extends AbstractController
     public function post(
         ModelManager $modelManager,
         #[GetMappedModel]
-        Rule $rule
+        Rule $rule,
     ): AjaxResponse {
         $modelManager->saveWithoutChildren($rule);
 

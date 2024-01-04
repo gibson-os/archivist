@@ -60,7 +60,7 @@ class BrowserService
                         $element = $this->waitForElementById($session, $id, $maxWait - self::WAIT_TIME);
                     }
                 },
-                $maxWait
+                $maxWait,
             );
         } catch (BrowserException) {
             throw new BrowserException(\sprintf('Element #%s not found!', $id), $session);
@@ -86,7 +86,7 @@ class BrowserService
                         $element = $this->waitForLink($session, $link, $maxWait - self::WAIT_TIME);
                     }
                 },
-                $maxWait
+                $maxWait,
             );
         } catch (BrowserException) {
             throw new BrowserException(\sprintf('Link "%s" not found!', $link), $session);
@@ -112,7 +112,7 @@ class BrowserService
                         $element = $this->waitForButton($session, $button, $maxWait - self::WAIT_TIME);
                     }
                 },
-                $maxWait
+                $maxWait,
             );
         } catch (BrowserException) {
             throw new BrowserException(\sprintf('Button "%s" not found!', $button), $session);

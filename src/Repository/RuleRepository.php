@@ -73,7 +73,7 @@ class RuleRepository extends AbstractRepository
             ->addWhere(new Where(
                 sprintf(
                     '`id` IN (%s)',
-                    $this->getRepositoryWrapper()->getSelectService()->getParametersString($ids)
+                    $this->getRepositoryWrapper()->getSelectService()->getParametersString($ids),
                 ),
                 [$ids],
             ))

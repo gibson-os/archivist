@@ -75,7 +75,7 @@ class AudibleStrategy extends AbstractWebStrategy
         DateTimeService $dateTimeService,
         ModelManager $modelManager,
         private readonly FfmpegService $ffmpegService,
-        private readonly ProcessService $processService
+        private readonly ProcessService $processService,
     ) {
         parent::__construct($browserService, $webService, $logger, $cryptService, $dateTimeService, $modelManager);
     }
@@ -98,11 +98,11 @@ class AudibleStrategy extends AbstractWebStrategy
         $configuration = $account->getConfiguration();
         $configuration[self::KEY_EMAIL] = $this->cryptService->encrypt(
             $parameters[self::KEY_EMAIL]
-            ?? $this->cryptService->decrypt($configuration[self::KEY_EMAIL])
+            ?? $this->cryptService->decrypt($configuration[self::KEY_EMAIL]),
         );
         $configuration[self::KEY_PASSWORD] = $this->cryptService->encrypt(
             $parameters[self::KEY_PASSWORD]
-            ?? $this->cryptService->decrypt($configuration[self::KEY_PASSWORD])
+            ?? $this->cryptService->decrypt($configuration[self::KEY_PASSWORD]),
         );
         $account->setConfiguration($configuration);
     }
@@ -125,8 +125,8 @@ class AudibleStrategy extends AbstractWebStrategy
             self::STEP_LIBRARY => [],
             default => throw new StrategyException(sprintf(
                 'Unknown audible step %s',
-                $executionParameters[self::KEY_STEP]
-            ))
+                $executionParameters[self::KEY_STEP],
+            )),
         };
     }
 
@@ -146,8 +146,8 @@ class AudibleStrategy extends AbstractWebStrategy
             self::STEP_LIBRARY => true,
             default => throw new StrategyException(sprintf(
                 'Unknown audible step %s',
-                $executionParameters[self::KEY_STEP]
-            ))
+                $executionParameters[self::KEY_STEP],
+            )),
         };
     }
 
@@ -276,13 +276,13 @@ class AudibleStrategy extends AbstractWebStrategy
             throw new StrategyException(sprintf(
                 'Class name %s is not equal with %s',
                 $account->getStrategy(),
-                self::class
+                self::class,
             ));
         }
 
         $response = $this->webService->get(
             (new Request(html_entity_decode($file->getPath())))
-                ->setCookieFile($this->browserService->createCookieFile($this->getSession($account)))
+                ->setCookieFile($this->browserService->createCookieFile($this->getSession($account))),
         );
 
         $resource = $response->getBody()->getResource();
@@ -305,7 +305,7 @@ class AudibleStrategy extends AbstractWebStrategy
         $this->modelManager->saveWithoutChildren($account->setMessage(sprintf(
             'Ermittel Activation Bytes mit Checksumme %s für %s',
             $checksum,
-            $file->getName()
+            $file->getName(),
         )));
         $this->logger->info(sprintf('Get activation bytes for checksum %s', $checksum));
         $activationBytes = $this->getActivationBytes($checksum);
@@ -318,7 +318,7 @@ class AudibleStrategy extends AbstractWebStrategy
             $tmpFileNameMp3,
             null,
             'libmp3lame',
-            ['activation_bytes' => $activationBytes]
+            ['activation_bytes' => $activationBytes],
         );
         $mp3File = fopen($tmpFileNameMp3, 'r');
         $file->setResource($mp3File, filesize($tmpFileNameMp3));
@@ -381,7 +381,7 @@ class AudibleStrategy extends AbstractWebStrategy
         $cleanTitle = preg_replace(
             '/(\b)(' . preg_quote($series, '/') . '|' . preg_quote($episode, '/') . ')(\b)/i',
             '$1$3',
-            $cleanTitle
+            $cleanTitle,
         );
 
         if (!empty($series)) {
@@ -421,7 +421,7 @@ class AudibleStrategy extends AbstractWebStrategy
             '..' . DIRECTORY_SEPARATOR .
             '..' . DIRECTORY_SEPARATOR .
             'bin' . DIRECTORY_SEPARATOR .
-            'inAudible-NG-tables' . DIRECTORY_SEPARATOR
+            'inAudible-NG-tables' . DIRECTORY_SEPARATOR,
         );
         $rcrackProccess = $this->processService->open(sprintf('cd %s && ./rcrack . -h %s', $rcrack, $checksum), 'r');
 

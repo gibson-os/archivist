@@ -51,7 +51,7 @@ class IndexStore extends AbstractDatabaseStore
         }
 
         $this->selectQuery->addJoin(
-            new Join($this->getTable($this->ruleTableName), 'r', '`i`.`rule_id`=`r`.`id`')
+            new Join($this->getTable($this->ruleTableName), 'r', '`i`.`rule_id`=`r`.`id`'),
         );
     }
 

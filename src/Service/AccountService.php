@@ -60,7 +60,7 @@ class AccountService
 
         $rules = array_filter(
             $account->getRules(),
-            fn (Rule $rule): bool => $rule->isActive()
+            fn (Rule $rule): bool => $rule->isActive(),
         );
 
         if (count($rules) === 0) {
@@ -74,7 +74,7 @@ class AccountService
         $this->logger->info(sprintf(
             'Get files with %s strategy for account %s',
             $strategy->getName(),
-            $account->getName()
+            $account->getName(),
         ));
 
         foreach ($strategy->getFiles($account) as $file) {

@@ -155,6 +155,9 @@
       <path value="$PROJECT_DIR$/vendor/php-http/promise" />
       <path value="$PROJECT_DIR$/vendor/php-http/httplug" />
       <path value="$PROJECT_DIR$/vendor/php-http/guzzle7-adapter" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/lexer" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/annotations" />
+      <path value="$PROJECT_DIR$/vendor/captainhook/secrets" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">

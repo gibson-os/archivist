@@ -23,7 +23,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
         private readonly ServiceManager $serviceManager,
         private readonly DirService $dirService,
         private readonly FileService $fileService,
-        private readonly AccountRepository $accountRepository
+        private readonly AccountRepository $accountRepository,
     ) {
     }
 
@@ -36,7 +36,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
     {
         $files = $this->dirService->getFiles(
             realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR .
-            '..' . DIRECTORY_SEPARATOR . 'Strategy' . DIRECTORY_SEPARATOR
+            '..' . DIRECTORY_SEPARATOR . 'Strategy' . DIRECTORY_SEPARATOR,
         );
         $namespace = 'GibsonOS\\Module\\Archivist\\Strategy\\';
         $strategies = [];

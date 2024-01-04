@@ -102,8 +102,8 @@ class DkbStrategy extends AbstractWebStrategy
             self::STEP_PATH => [],
             default => throw new StrategyException(sprintf(
                 'Unknown dkb step %s',
-                $executionParameters[self::KEY_STEP]
-            ))
+                $executionParameters[self::KEY_STEP],
+            )),
         };
     }
 
@@ -146,7 +146,7 @@ class DkbStrategy extends AbstractWebStrategy
         preg_match_all(
             '/(\d{2})\.(\d{2})\.(\d{4})<\/div>\s*<a.+?href="([^"]*)".+?tid="getMailboxAttachment">([^<]+)/s',
             $responseBody,
-            $fileMatches
+            $fileMatches,
         );
         $files = [];
 
@@ -155,7 +155,7 @@ class DkbStrategy extends AbstractWebStrategy
                 $fileName,
                 self::URL . html_entity_decode($fileMatches[4][$id]),
                 $this->dateTimeService->get($fileMatches[3][$id] . '-' . $fileMatches[2][$id] . '-' . $fileMatches[1][$id]),
-                $account
+                $account,
             );
         }
 
@@ -175,13 +175,13 @@ class DkbStrategy extends AbstractWebStrategy
             throw new StrategyException(sprintf(
                 'Class name %s is not equal with %s',
                 $account->getStrategy(),
-                self::class
+                self::class,
             ));
         }
 
         $response = $this->webService->get(
             (new Request($file->getPath()))
-                ->setCookieFile($this->browserService->createCookieFile($this->getSession($account)))
+                ->setCookieFile($this->browserService->createCookieFile($this->getSession($account))),
         );
 
         $resource = $response->getBody()->getResource();

@@ -32,7 +32,7 @@ class IndexerCommand extends AbstractCommand
     public function __construct(
         private readonly AccountRepository $accountRepository,
         private readonly AccountService $accountService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct($logger);
     }
