@@ -32,7 +32,7 @@ class BrowserService
     /**
      * @throws BrowserException
      */
-    public function loadPage(Session $session, string $url, string $waitId = null): DocumentElement
+    public function loadPage(Session $session, string $url, ?string $waitId = null): DocumentElement
     {
         $session->visit($url);
 

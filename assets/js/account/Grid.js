@@ -51,19 +51,15 @@ Ext.define('GibsonOS.module.archivist.account.Grid', {
                 text: 'Ja',
                 handler() {
                     me.setLoading(true);
-
-                    accounts = [];
+                    let accounts = [];
 
                     Ext.iterate(records, record => {
                         accounts.push({id: record.get('id')});
                     });
 
                     GibsonOS.Ajax.request({
-                        url: baseDir + 'archivist/account',
+                        url: baseDir + 'archivist/account?accounts=' + Ext.encode(accounts),
                         method: 'DELETE',
-                        params: {
-                            accounts: Ext.encode(accounts)
-                        },
                         success() {
                             me.getStore().load();
                         },

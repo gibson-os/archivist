@@ -8,32 +8,36 @@ use GibsonOS\Core\Attribute\GetMappedModel;
 use GibsonOS\Core\Attribute\GetModel;
 use GibsonOS\Core\Attribute\GetModels;
 use GibsonOS\Core\Controller\AbstractController;
-use GibsonOS\Core\Dto\Parameter\BoolParameter;
-use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Enum\Permission;
+use GibsonOS\Core\Exception\FormException;
 use GibsonOS\Core\Exception\Model\DeleteError;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Service\Response\AjaxResponse;
+use GibsonOS\Module\Archivist\Dto\Form\RuleFormConfig;
+use GibsonOS\Module\Archivist\Form\RuleForm;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Store\RuleStore;
-use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 use JsonException;
+use MDO\Exception\ClientException;
+use MDO\Exception\RecordException;
 use ReflectionException;
 
 class RuleController extends AbstractController
 {
     /**
      * @throws JsonException
+     * @throws RecordException
      * @throws ReflectionException
      * @throws SelectError
+     * @throws ClientException
      */
     #[CheckPermission([Permission::READ])]
     public function get(
         RuleStore $ruleStore,
-        #[GetModel(['id' => 'accountId', 'user_id' => 'session.user.id'])]
+        #[GetModel(['id' => 'accountId', 'user_id' => 'session.userId'])]
         Account $account,
         int $start = 0,
         int $limit = 100,
@@ -46,35 +50,26 @@ class RuleController extends AbstractController
         return $this->returnSuccess($ruleStore->getList(), $ruleStore->getCount());
     }
 
+    /**
+     * @throws FormException
+     */
     #[CheckPermission([Permission::WRITE])]
     public function getEdit(
-        #[GetModel(['id' => 'accountId', 'user_id' => 'session.user.id'])]
+        #[GetModel(['id' => 'accountId', 'user_id' => 'session.userId'])]
         Account $account,
-        #[GetModel]
-        Rule $rule = null,
+        #[GetModel(['id' => 'id', 'account_id' => 'accountId'])]
+        ?Rule $rule = null,
     ): AjaxResponse {
-        $parameters = [
-            'name' => (new StringParameter('Name'))
-                ->setValue($rule?->getName()),
-            'observedFilename' => (new StringParameter('Beobachtete Dateinamen'))
-                ->setValue($rule?->getObservedFilename()),
-            'observedContent' => (new StringParameter('Beobachteter Inhalt'))
-                ->setValue($rule?->getObservedContent()),
-            'moveDirectory' => (new DirectoryParameter('Ablage Verzeichnis'))
-                ->setValue($rule?->getMoveDirectory()),
-            'moveFilename' => (new StringParameter('Ablage Dateiname'))
-                ->setValue($rule?->getMoveFilename()),
-            'active' => (new BoolParameter('Aktiv'))
-                ->setValue($rule?->isActive()),
-        ];
+        $form = new RuleForm();
 
-        // @todo einfach js formular daraus machen? Aktiv hat glaube ich Probleme gemacht
-
-        return $this->returnSuccess($parameters);
+        return $this->returnSuccess($form->getForm(new RuleFormConfig($account, $rule)));
     }
 
     /**
+     * @throws JsonException
+     * @throws ReflectionException
      * @throws SaveError
+     * @throws RecordException
      */
     #[CheckPermission([Permission::WRITE])]
     public function post(
@@ -84,7 +79,7 @@ class RuleController extends AbstractController
     ): AjaxResponse {
         $modelManager->saveWithoutChildren($rule);
 
-        return $this->returnSuccess();
+        return $this->returnSuccess($rule);
     }
 
     /**

@@ -18,6 +18,8 @@ use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Repository\IndexRepository;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonException;
+use MDO\Exception\ClientException;
+use MDO\Exception\RecordException;
 use Psr\Log\LoggerInterface;
 use ReflectionException;
 use Twig\Error\LoaderError;
@@ -42,14 +44,16 @@ class RuleService
     }
 
     /**
-     * @throws RuleException
      * @throws CreateError
-     * @throws SaveError
      * @throws JsonException
-     * @throws ReflectionException
      * @throws LoaderError
+     * @throws ReflectionException
+     * @throws RuleException
      * @throws RuntimeError
+     * @throws SaveError
      * @throws SyntaxError
+     * @throws ClientException
+     * @throws RecordException
      */
     public function execute(Rule $rule, File $file, StrategyInterface $strategy): void
     {

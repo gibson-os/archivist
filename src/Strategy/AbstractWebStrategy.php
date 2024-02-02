@@ -52,7 +52,7 @@ abstract class AbstractWebStrategy implements StrategyInterface
         return $matches[1];
     }
 
-    protected function getSession(Account $account = null): Session
+    protected function getSession(?Account $account = null): Session
     {
         $executionParameters = $account?->getExecutionParameters() ?? [];
 

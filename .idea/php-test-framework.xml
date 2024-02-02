@@ -21,6 +21,13 @@
           </versions>
         </cache>
       </tool>
+      <tool tool_name="PHPUnit">
+        <cache>
+          <versions>
+            <info id="LocalC:\Users\Meins\Documents\Projekte\GibsonOs\Archivist\vendor\autoload.php" version="9.6.15" />
+          </versions>
+        </cache>
+      </tool>
     </tools_cache>
   </component>
 </project>

@@ -1,5 +1,5 @@
 Ext.define('GibsonOS.module.archivist.rule.Window', {
-    extend: 'GibsonOS.Window',
+    extend: 'GibsonOS.module.core.component.form.Window',
     alias: ['widget.gosModuleArchivistRuleWindow'],
     title: 'Regel',
     width: 500,
@@ -11,19 +11,19 @@ Ext.define('GibsonOS.module.archivist.rule.Window', {
         task: 'rule'
     },
     initComponent() {
-        let me = this;
+        const me = this;
 
-        me.items = [{
-            xtype: 'gosModuleArchivistRuleForm',
-            accountId: me.accountId,
-            ruleId: me.ruleId
-        }];
+        me.url = baseDir + 'archivist/rule/edit'
+        me.params = {
+            id: me.ruleId,
+            accountId: me.accountId
+        };
 
         if (me.ruleId !== null) {
             me.items = [{
                 xtype: 'gosTabPanel',
                 items: [{
-                    xtype: 'gosModuleArchivistRuleForm',
+                    xtype: 'gosCoreComponentFormPanel',
                     title: 'Regel',
                     accountId: me.accountId,
                     ruleId: me.ruleId
@@ -37,27 +37,11 @@ Ext.define('GibsonOS.module.archivist.rule.Window', {
 
         me.callParent();
 
-        const formPanel = me.down('gosModuleCoreParameterForm');
-        const form = formPanel.getForm();
+        const form = me.down('form');
+        const basicForm = form.getForm();
 
-        form.on('actioncomplete', () => {
+        basicForm.on('actioncomplete', () => {
             me.close();
-        })
-        formPanel.on('render', () => {
-            formPanel.setLoading(true);
-
-            GibsonOS.Ajax.request({
-                url: baseDir + 'archivist/rule/edit',
-                method: 'GET',
-                params: {
-                    id: me.ruleId,
-                    accountId: me.accountId
-                },
-                success(response) {
-                    formPanel.addFields(Ext.decode(response.responseText).data);
-                    formPanel.setLoading(false);
-                }
-            });
         });
     }
 });

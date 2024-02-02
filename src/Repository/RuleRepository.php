@@ -49,7 +49,7 @@ class RuleRepository extends AbstractRepository
         return $this->fetchAll('1', [], Rule::class, orderBy: ['`active`' => OrderDirection::DESC]);
     }
 
-    public function hasActive(string $observedDirectory, string $observedFilename = null): bool
+    public function hasActive(string $observedDirectory, ?string $observedFilename = null): bool
     {
         $where = '`observed_directory`=? AND `active`=?';
         $parameters = [$observedDirectory, 1];

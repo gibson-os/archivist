@@ -17,6 +17,7 @@ use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonException;
+use MDO\Exception\RecordException;
 use Psr\Log\LoggerInterface;
 use ReflectionException;
 use Twig\Error\LoaderError;
@@ -48,6 +49,7 @@ class AccountService
      * @throws RuntimeError
      * @throws SyntaxError
      * @throws ReflectionException
+     * @throws RecordException
      */
     public function execute(Account $account): bool
     {

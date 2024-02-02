@@ -7,6 +7,7 @@ use GibsonOS\Core\Attribute\CheckPermission;
 use GibsonOS\Core\Attribute\GetMappedModel;
 use GibsonOS\Core\Attribute\GetMappedModels;
 use GibsonOS\Core\Attribute\GetModel;
+use GibsonOS\Core\Attribute\GetModels;
 use GibsonOS\Core\Controller\AbstractController;
 use GibsonOS\Core\Enum\Permission;
 use GibsonOS\Core\Exception\FactoryError;
@@ -20,6 +21,7 @@ use GibsonOS\Core\Service\CommandService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Core\Wrapper\ModelWrapper;
 use GibsonOS\Module\Archivist\Command\IndexerCommand;
+use GibsonOS\Module\Archivist\Form\AccountForm;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Archivist\Store\AccountStore;
@@ -47,16 +49,18 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @throws JsonException
-     * @throws SaveError
      * @throws FactoryError
+     * @throws JsonException
+     * @throws RecordException
+     * @throws ReflectionException
+     * @throws SaveError
      */
     #[CheckPermission([Permission::WRITE])]
     public function postExecute(
         ServiceManager $serviceManager,
         CommandService $commandService,
         ModelManager $modelManager,
-        #[GetModel(['id' => 'id', 'user_id' => 'session.user.id'])]
+        #[GetModel(['id' => 'id', 'user_id' => 'session.userId'])]
         Account $account,
         array $parameters = [],
     ): AjaxResponse {
@@ -81,24 +85,33 @@ class AccountController extends AbstractController
     }
 
     #[CheckPermission([Permission::WRITE])]
-    public function getStatus(#[GetModel(['id' => 'id', 'user_id' => 'session.user.id'])] Account $account): AjaxResponse
+    public function getStatus(#[GetModel(['id' => 'id', 'user_id' => 'session.userId'])] Account $account): AjaxResponse
     {
         return $this->returnSuccess($account);
     }
 
+    public function getForm(AccountForm $accountForm): AjaxResponse
+    {
+        return $this->returnSuccess($accountForm->getForm());
+    }
+
     /**
-     * @throws JsonException
-     * @throws SaveError
      * @throws FactoryError
+     * @throws JsonException
+     * @throws RecordException
+     * @throws ReflectionException
+     * @throws SaveError
      */
     #[CheckPermission([Permission::WRITE])]
     public function post(
         ServiceManager $serviceManager,
         ModelManager $modelManager,
-        #[GetMappedModel(['id' => 'id', 'user_id' => 'session.user.id'], ['user' => 'session.user'])]
+        #[GetMappedModel(['id' => 'id', 'user_id' => 'session.userId'])]
         Account $account,
+        User $permissionUser,
         array $configuration = [],
     ): AjaxResponse {
+        $account->setUser($permissionUser);
         $strategy = $serviceManager->get($account->getStrategy(), StrategyInterface::class);
         $strategy->setAccountParameters($account, $configuration);
 
@@ -115,7 +128,7 @@ class AccountController extends AbstractController
     public function delete(
         ModelManager $modelManager,
         // @todo #[GetMappedModels(Account::class, ['id' => 'id', 'user_id' => 'session.user.id'])] array $accounts klappt mit session wert nicht
-        #[GetMappedModels(Account::class)]
+        #[GetModels(Account::class, ['id' => 'id', 'user_id' => 'session.userId'])]
         array $accounts,
     ): AjaxResponse {
         foreach ($accounts as $account) {
