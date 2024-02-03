@@ -24,7 +24,7 @@ class IndexRepository extends AbstractRepository
     public function getByInputPath(int $ruleId, string $inputPath): Index
     {
         return $this->fetchOne(
-            '`i`.`input_path`=? AND `i`.`rule_id`=?',
+            '`t`.`input_path`=? AND `t`.`rule_id`=?',
             [$inputPath, $ruleId],
             Index::class,
             children: [new ChildrenMapping('rule', 'rule_', 'r')],

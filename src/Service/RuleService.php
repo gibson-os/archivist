@@ -67,10 +67,11 @@ class RuleService
             return;
         }
 
-        $observedContent = $rule->getObservedContent();
-        $contentMatches = [];
+        $observedContents = explode(PHP_EOL, $rule->getObservedContent() ?? '');
+        $allContentMatches = [];
 
-        if ($observedContent !== null) {
+        foreach ($observedContents as $observedContent) {
+            $contentMatches = [];
             preg_match(
                 '/' . $observedContent . '/s',
                 $file->getContent() ?? '',
@@ -78,10 +79,18 @@ class RuleService
             );
 
             if (empty($contentMatches)) {
-                $this->logger->info(sprintf('No content match for rule "%s"', $rule->getName()));
+                $this->logger->info(sprintf(
+                    'No content match for pattern "%s" for rule "%s" in file %s',
+                    $observedContent,
+                    $rule->getName(),
+                    $file->getName(),
+                ));
 
                 return;
             }
+
+            array_shift($contentMatches);
+            $allContentMatches = array_merge($allContentMatches, array_values($contentMatches));
         }
 
         $this->logger->info(sprintf('Indexing file "%s"', $file->getName()));
@@ -96,7 +105,7 @@ class RuleService
             $context['match' . $index] = $match;
         }
 
-        foreach ($contentMatches as $index => $contentMatch) {
+        foreach ($allContentMatches as $index => $contentMatch) {
             $context['contentMatch' . $index] = $contentMatch;
         }
 
