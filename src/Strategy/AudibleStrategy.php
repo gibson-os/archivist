@@ -7,6 +7,7 @@ use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Session;
 use Generator;
+use GibsonOS\Core\Attribute\GetServices;
 use GibsonOS\Core\Dto\Ffmpeg\Media;
 use GibsonOS\Core\Dto\Ffmpeg\Stream\Audio;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
@@ -33,40 +34,33 @@ use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Service\BrowserService;
+use GibsonOS\Module\Archivist\Strategy\Audible\AudibleStrategyInterface;
 use JsonException;
+use MDO\Exception\RecordException;
 use Psr\Log\LoggerInterface;
 use ReflectionException;
 
 class AudibleStrategy extends AbstractWebStrategy
 {
-    private const URL = 'https://audible.de/';
+    public const URL = 'https://audible.de/';
 
-    private const KEY_EMAIL = 'email';
+    public const KEY_EMAIL = 'email';
 
     private const KEY_PASSWORD = 'password';
 
-    private const KEY_CAPTCHA = 'guess';
+    public const KEY_CAPTCHA = 'guess';
 
-    private const KEY_OTP = 'otpCode';
+    public const KEY_OTP = 'otpCode';
 
-    private const KEY_CAPTCHA_IMAGE = 'captchaImage';
-
-    private const KEY_STEP = 'step';
-
-    private const STEP_LOGIN = 0;
-
-    private const STEP_CAPTCHA = 1;
-
-    private const STEP_LIBRARY = 2;
-
-    private const STEP_OTP = 3;
-
-    private const LINK_LIBRARY = 'Bibliothek';
+    public const KEY_CAPTCHA_IMAGE = 'captchaImage';
 
     private const EXPRESSION_PODCAST = 'href="([^"]*)"[^<]*<[^<]*chevron-container.+?</a>.+?';
 
     private const EXPRESSION_NOT_PODCAST = 'href="([^"]*)"[^<]*<[^<]*<[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
 
+    /**
+     * @param AudibleStrategyInterface[] $strategies
+     */
     public function __construct(
         BrowserService $browserService,
         WebService $webService,
@@ -76,6 +70,8 @@ class AudibleStrategy extends AbstractWebStrategy
         ModelManager $modelManager,
         private readonly FfmpegService $ffmpegService,
         private readonly ProcessService $processService,
+        #[GetServices(['archivist/src/Strategy/Audible'], AudibleStrategyInterface::class)]
+        private readonly array $strategies,
     ) {
         parent::__construct($browserService, $webService, $logger, $cryptService, $dateTimeService, $modelManager);
     }
@@ -97,12 +93,10 @@ class AudibleStrategy extends AbstractWebStrategy
     {
         $configuration = $account->getConfiguration();
         $configuration[self::KEY_EMAIL] = $this->cryptService->encrypt(
-            $parameters[self::KEY_EMAIL]
-            ?? $this->cryptService->decrypt($configuration[self::KEY_EMAIL]),
+            $parameters[self::KEY_EMAIL] ?? $this->cryptService->decrypt($configuration[self::KEY_EMAIL]),
         );
         $configuration[self::KEY_PASSWORD] = $this->cryptService->encrypt(
-            $parameters[self::KEY_PASSWORD]
-            ?? $this->cryptService->decrypt($configuration[self::KEY_PASSWORD]),
+            $parameters[self::KEY_PASSWORD] ?? $this->cryptService->decrypt($configuration[self::KEY_PASSWORD]),
         );
         $account->setConfiguration($configuration);
     }
@@ -114,41 +108,41 @@ class AudibleStrategy extends AbstractWebStrategy
      */
     public function getExecuteParameters(Account $account): array
     {
-        $executionParameters = $account->getExecutionParameters();
+        $session = $this->getSession($account);
 
-        return match ($executionParameters[self::KEY_STEP] ?? self::STEP_LOGIN) {
-            self::STEP_LOGIN => throw new StrategyException('Not logged in!'),
-            self::STEP_CAPTCHA => [
-                self::KEY_CAPTCHA_IMAGE => (new StringParameter('Captcha'))
-                    ->setImage($account->getExecutionParameters()[self::KEY_CAPTCHA_IMAGE]),
-            ],
-            self::STEP_LIBRARY => [],
-            default => throw new StrategyException(sprintf(
-                'Unknown audible step %s',
-                $executionParameters[self::KEY_STEP],
-            )),
-        };
+        foreach ($this->strategies as $strategy) {
+            if (!$strategy->supports($session)) {
+                continue;
+            }
+
+            return $strategy->getExecuteParameters($session, $account);
+        }
+
+        throw new StrategyException('Unknown audible state');
     }
 
-    /**
-     * @throws BrowserException
-     * @throws ElementNotFoundException
-     * @throws StrategyException
-     */
     public function setExecuteParameters(Account $account, array $parameters): bool
     {
-        $executionParameters = $account->getExecutionParameters();
+        $session = $this->getSession($account);
 
-        return match ($executionParameters[self::KEY_STEP] ?? self::STEP_LOGIN) {
-            self::STEP_LOGIN => $this->validateLogin($account),
-            self::STEP_CAPTCHA => $this->validateCaptcha($account, $parameters),
-            self::STEP_OTP => $this->validateOtp($account, $parameters),
-            self::STEP_LIBRARY => true,
-            default => throw new StrategyException(sprintf(
-                'Unknown audible step %s',
-                $executionParameters[self::KEY_STEP],
-            )),
-        };
+        foreach ($this->strategies as $strategy) {
+            if (!$strategy->supports($session)) {
+                continue;
+            }
+
+            $executeReturn = $strategy->execute($session, $account);
+
+            $parameters = $account->getExecutionParameters();
+            $parameters[self::KEY_SESSION] = $session;
+            $account->setExecutionParameters($parameters);
+
+            return $executeReturn;
+        }
+
+        throw new StrategyException(sprintf(
+            'Unknown audible state: <iframe src="data:text/html;charset=utf-8,%s" />',
+            urlencode('<html>' . $session->getPage()->getContent() . '</html>'),
+        ));
     }
 
     /**
@@ -157,6 +151,7 @@ class AudibleStrategy extends AbstractWebStrategy
      * @throws JsonException
      * @throws ReflectionException
      * @throws SaveError
+     * @throws DriverException
      */
     public function getFiles(Account $account): Generator
     {
@@ -188,9 +183,11 @@ class AudibleStrategy extends AbstractWebStrategy
     /**
      * @throws BrowserException
      * @throws DateTimeError
-     * @throws SaveError
+     * @throws DriverException
      * @throws JsonException
      * @throws ReflectionException
+     * @throws SaveError
+     * @throws RecordException
      */
     private function getFilesFromPage(Account $account): Generator
     {
@@ -266,6 +263,8 @@ class AudibleStrategy extends AbstractWebStrategy
      * @throws GetError
      * @throws JsonException
      * @throws ProcessError
+     * @throws RecordException
+     * @throws ReflectionException
      * @throws SaveError
      * @throws StrategyException
      * @throws WebException
@@ -442,135 +441,18 @@ class AudibleStrategy extends AbstractWebStrategy
         throw new StrategyException('Activation bytes not found!');
     }
 
-    /**
-     * @throws BrowserException
-     */
-    private function setCaptchaStep(Session $session, Account $account): void
+    protected function getSession(?Account $account = null): Session
     {
-        $executionParameters = $account->getExecutionParameters();
-        $captchaImage = $this->browserService->waitForElementById($session, 'auth-captcha-image');
-        $captchaImageSource = $captchaImage->getAttribute('src') ?? '';
-        $executionParameters[self::KEY_SESSION] = serialize($session);
-        $executionParameters[self::KEY_CAPTCHA_IMAGE] = $captchaImageSource;
-        $executionParameters[self::KEY_STEP] = self::STEP_CAPTCHA;
-        $account->setExecutionParameters($executionParameters);
-    }
+        $executionParameters = $account?->getExecutionParameters() ?? [];
 
-    /**
-     * @throws BrowserException
-     * @throws ElementNotFoundException
-     */
-    private function validateCaptcha(Account $account, array $parameters): bool
-    {
-        $configuration = $account->getConfiguration();
-        $email = $this->cryptService->decrypt($configuration[self::KEY_EMAIL]);
-        $password = $this->cryptService->decrypt($configuration[self::KEY_PASSWORD]);
-        $session = $this->getSession($account);
-        $page = $session->getPage();
-        $this->browserService->fillFormFields($session, [
-            self::KEY_EMAIL => $email,
-            self::KEY_PASSWORD => $password,
-            self::KEY_CAPTCHA => $parameters[self::KEY_CAPTCHA_IMAGE],
-        ]);
-        $page->pressButton('signInSubmit');
-
-        try {
-            $this->loadLibrary($session, $account);
-        } catch (BrowserException) {
-            $this->setCaptchaStep($session, $account);
-
-            return false;
+        if (isset($executionParameters[self::KEY_SESSION])) {
+            return unserialize($executionParameters[self::KEY_SESSION]);
         }
 
-        return true;
-    }
-
-    private function setOtpStep(Session $session, Account $account): void
-    {
-        $executionParameters = $account->getExecutionParameters();
-        $executionParameters[self::KEY_SESSION] = serialize($session);
-        $executionParameters[self::KEY_STEP] = self::STEP_OTP;
-        $account->setExecutionParameters($executionParameters);
-    }
-
-    /**
-     * @throws BrowserException
-     * @throws ElementNotFoundException
-     */
-    private function validateOtp(Account $account, array $parameters): bool
-    {
-        $session = $this->getSession($account);
-        $page = $session->getPage();
-        $this->browserService->fillFormFields($session, [
-            self::KEY_OTP => $parameters[self::KEY_OTP],
-        ]);
-        $page->pressButton('auth-signin-button');
-
-        try {
-            $this->loadLibrary($session, $account);
-        } catch (BrowserException) {
-            $this->setOtpStep($session, $account);
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @throws BrowserException
-     * @throws ElementNotFoundException
-     */
-    private function validateLogin(Account $account): bool
-    {
-        $configuration = $account->getConfiguration();
         $session = $this->browserService->getSession();
-        $email = $this->cryptService->decrypt($configuration[self::KEY_EMAIL]);
-        $password = $this->cryptService->decrypt($configuration[self::KEY_PASSWORD]);
-        $page = $this->browserService->loadPage($session, self::URL);
-        $page->clickLink('Anmelden');
-        $this->browserService->waitForElementById($session, 'ap_email');
+        $session->visit(self::URL);
+        $this->browserService->waitForLoaded($session);
 
-        $this->browserService->fillFormFields($session, [
-            self::KEY_EMAIL => $email,
-            self::KEY_PASSWORD => $password,
-        ]);
-        $page->pressButton('signInSubmit');
-
-        try {
-            $this->loadLibrary($session, $account);
-        } catch (BrowserException) {
-            if ($page->findById('auth-mfa-otpcode') !== null) {
-                $this->setOtpStep($session, $account);
-
-                return false;
-            }
-
-            if ($page->findById('guess') !== null) {
-                $this->setCaptchaStep($session, $account);
-
-                return false;
-            }
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @throws BrowserException
-     * @throws ElementNotFoundException
-     */
-    private function loadLibrary(Session $session, Account $account): void
-    {
-        $this->browserService->waitForLink($session, self::LINK_LIBRARY, 30000000);
-        $page = $this->browserService->getPage($session);
-        $page->clickLink(self::LINK_LIBRARY);
-        $this->browserService->waitForElementById($session, 'lib-subheader-actions');
-        $executionParameters = $account->getExecutionParameters();
-        $executionParameters[self::KEY_SESSION] = serialize($session);
-        $executionParameters[self::KEY_STEP] = self::STEP_LIBRARY;
-        $account->setExecutionParameters($executionParameters);
+        return $session;
     }
 }

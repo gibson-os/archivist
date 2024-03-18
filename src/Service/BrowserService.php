@@ -121,6 +121,27 @@ class BrowserService
         return $element;
     }
 
+    public function waitForLoaded(Session $session, int $maxWait = 10000000): void
+    {
+        try {
+            $this->waitFor(
+                $session,
+                function () use (&$element, $session, $maxWait) {
+                    $element = $session->getPage()->find('xpath', 'body');
+
+                    if ($element === null) {
+                        usleep(self::WAIT_TIME);
+
+                        $this->waitForLoaded($session, $maxWait - self::WAIT_TIME);
+                    }
+                },
+                $maxWait,
+            );
+        } catch (BrowserException) {
+            throw new BrowserException('Body not found!', $session);
+        }
+    }
+
     /**
      * @throws BrowserException
      */
