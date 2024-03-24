@@ -3,17 +3,12 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Archivist\Strategy;
 
-use Behat\Mink\Exception\DriverException;
-use Behat\Mink\Exception\ElementNotFoundException;
-use Behat\Mink\Session;
 use Generator;
-use GibsonOS\Core\Attribute\GetServices;
 use GibsonOS\Core\Dto\Ffmpeg\Media;
 use GibsonOS\Core\Dto\Ffmpeg\Stream\Audio;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
-use GibsonOS\Core\Dto\Parameter\StringParameter;
+use GibsonOS\Core\Dto\Parameter\TextParameter;
 use GibsonOS\Core\Dto\Web\Request;
-use GibsonOS\Core\Exception\DateTimeError;
 use GibsonOS\Core\Exception\DeleteError;
 use GibsonOS\Core\Exception\FfmpegException;
 use GibsonOS\Core\Exception\FileNotFound;
@@ -23,57 +18,36 @@ use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Exception\WebException;
 use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Service\CryptService;
-use GibsonOS\Core\Service\DateTimeService;
 use GibsonOS\Core\Service\FfmpegService;
 use GibsonOS\Core\Service\ProcessService;
 use GibsonOS\Core\Service\WebService;
-use GibsonOS\Module\Archivist\Dto\Audible\TitleParts;
+use GibsonOS\Module\Archivist\Collector\AudibleFileCollector;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
-use GibsonOS\Module\Archivist\Exception\BrowserException;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
 use GibsonOS\Module\Archivist\Model\Account;
-use GibsonOS\Module\Archivist\Service\BrowserService;
-use GibsonOS\Module\Archivist\Strategy\Audible\AudibleStrategyInterface;
 use JsonException;
 use MDO\Exception\RecordException;
 use Psr\Log\LoggerInterface;
 use ReflectionException;
 
-class AudibleStrategy extends AbstractWebStrategy
+class AudibleStrategy implements StrategyInterface
 {
-    public const URL = 'https://audible.de/';
+    public const URL = 'https://www.audible.de';
 
-    public const KEY_EMAIL = 'email';
+    private const KEY_COOKIES_JAR = 'cookiesJar';
 
-    private const KEY_PASSWORD = 'password';
+    private const KEY_LOGIN = 'login';
 
-    public const KEY_CAPTCHA = 'guess';
-
-    public const KEY_OTP = 'otpCode';
-
-    public const KEY_CAPTCHA_IMAGE = 'captchaImage';
-
-    private const EXPRESSION_PODCAST = 'href="([^"]*)"[^<]*<[^<]*chevron-container.+?</a>.+?';
-
-    private const EXPRESSION_NOT_PODCAST = 'href="([^"]*)"[^<]*<[^<]*<[^<]*<[^<]*<[^<]*Herunterladen.+?</a>.+?';
-
-    /**
-     * @param AudibleStrategyInterface[] $strategies
-     */
     public function __construct(
-        BrowserService $browserService,
-        WebService $webService,
-        LoggerInterface $logger,
-        CryptService $cryptService,
-        DateTimeService $dateTimeService,
-        ModelManager $modelManager,
+        private readonly WebService $webService,
+        private readonly LoggerInterface $logger,
+        private readonly CryptService $cryptService,
+        private readonly ModelManager $modelManager,
         private readonly FfmpegService $ffmpegService,
         private readonly ProcessService $processService,
-        #[GetServices(['archivist/src/Strategy/Audible'], AudibleStrategyInterface::class)]
-        private readonly array $strategies,
+        private readonly AudibleFileCollector $audibleFileCollector,
     ) {
-        parent::__construct($browserService, $webService, $logger, $cryptService, $dateTimeService, $modelManager);
     }
 
     public function getName(): string
@@ -83,181 +57,78 @@ class AudibleStrategy extends AbstractWebStrategy
 
     public function getAccountParameters(Strategy $strategy): array
     {
-        return [
-            self::KEY_EMAIL => (new StringParameter('E-Mail'))->setInputType(StringParameter::INPUT_TYPE_EMAIL),
-            self::KEY_PASSWORD => (new StringParameter('Passwort'))->setInputType(StringParameter::INPUT_TYPE_PASSWORD),
-        ];
+        return [self::KEY_COOKIES_JAR => (new TextParameter('Cookie jar Datei'))];
     }
 
     public function setAccountParameters(Account $account, array $parameters): void
     {
         $configuration = $account->getConfiguration();
-        $configuration[self::KEY_EMAIL] = $this->cryptService->encrypt(
-            $parameters[self::KEY_EMAIL] ?? $this->cryptService->decrypt($configuration[self::KEY_EMAIL]),
-        );
-        $configuration[self::KEY_PASSWORD] = $this->cryptService->encrypt(
-            $parameters[self::KEY_PASSWORD] ?? $this->cryptService->decrypt($configuration[self::KEY_PASSWORD]),
+        $configuration[self::KEY_COOKIES_JAR] = $this->cryptService->encrypt(
+            $parameters[self::KEY_COOKIES_JAR] ?? $this->cryptService->decrypt($configuration[self::KEY_COOKIES_JAR]),
         );
         $account->setConfiguration($configuration);
     }
 
     /**
-     * @throws StrategyException
-     *
      * @return AbstractParameter[]
      */
     public function getExecuteParameters(Account $account): array
     {
-        $session = $this->getSession($account);
-
-        foreach ($this->strategies as $strategy) {
-            if (!$strategy->supports($session)) {
-                continue;
-            }
-
-            return $strategy->getExecuteParameters($session, $account);
+        if ($account->getExecutionParameters()[self::KEY_LOGIN] ?? false) {
+            return [];
         }
 
-        throw new StrategyException('Unknown audible state');
+        return [self::KEY_COOKIES_JAR => (new TextParameter('Cookies jar Datei'))];
     }
 
     public function setExecuteParameters(Account $account, array $parameters): bool
     {
-        $session = $this->getSession($account);
+        $configuration = $account->getConfiguration();
+        $cookiesJar = $parameters[self::KEY_COOKIES_JAR] ?? null;
+        $account->setExecutionParameters([self::KEY_LOGIN => false]);
 
-        foreach ($this->strategies as $strategy) {
-            if (!$strategy->supports($session)) {
-                continue;
-            }
-
-            $executeReturn = $strategy->execute($session, $account);
-
-            $parameters = $account->getExecutionParameters();
-            $parameters[self::KEY_SESSION] = $session;
-            $account->setExecutionParameters($parameters);
-
-            return $executeReturn;
+        if ($cookiesJar === null && isset($configuration[self::KEY_COOKIES_JAR])) {
+            $cookiesJar = $this->cryptService->decrypt($configuration[self::KEY_COOKIES_JAR]);
         }
 
-        throw new StrategyException(sprintf(
-            'Unknown audible state: <iframe src="data:text/html;charset=utf-8,%s" />',
-            urlencode('<html>' . $session->getPage()->getContent() . '</html>'),
-        ));
+        if ($cookiesJar === null) {
+            return false;
+        }
+
+        $account->setConfiguration([self::KEY_COOKIES_JAR => $this->cryptService->encrypt($cookiesJar)]);
+        $response = $this->webService->get($this->getRequest($account, sprintf('%s/library', self::URL)));
+
+        if (preg_match('#>\s*Bibliothek\s*</h1>#', $response->getBody()->getContent()) !== 1) {
+            return false;
+        }
+
+        $account->setExecutionParameters([self::KEY_LOGIN => true]);
+
+        return true;
     }
 
-    /**
-     * @throws BrowserException
-     * @throws DateTimeError
-     * @throws JsonException
-     * @throws ReflectionException
-     * @throws SaveError
-     * @throws DriverException
-     */
     public function getFiles(Account $account): Generator
     {
-        $session = $this->getSession($account);
-        $page = $session->getPage();
+        $response = $this->webService->get($this->getRequest($account, sprintf('%s/library', self::URL)));
+        $page = 1;
+        $content = $response->getBody()->getContent();
+        $lastPage = $this->getLastPage($content);
 
-        try {
-            while (true) {
-                yield from $this->getFilesFromPage($account);
+        do {
+            $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Bibliothek Seite %d', $page)));
 
-                $link = $page->findLink('Eine Seite vorwärts');
+            yield from $this->audibleFileCollector->getFilesFromPage($account, $content);
 
-                if (
-                    $link === null
-                    || $link->getParent()->hasClass('bc-button-disabled')
-                ) {
-                    return;
-                }
-
-                $this->logger->info('Open next page');
-                $link->click();
-                $this->browserService->waitForElementById($session, 'lib-subheader-actions');
-            }
-        } catch (ElementNotFoundException) {
-            // do nothing
-        }
-    }
-
-    /**
-     * @throws BrowserException
-     * @throws DateTimeError
-     * @throws DriverException
-     * @throws JsonException
-     * @throws ReflectionException
-     * @throws SaveError
-     * @throws RecordException
-     */
-    private function getFilesFromPage(Account $account): Generator
-    {
-        $expression = '(' . self::EXPRESSION_NOT_PODCAST . '|' . self::EXPRESSION_PODCAST . ')';
-        $session = $this->getSession($account);
-        $page = $session->getPage();
-
-        $pageParts = explode('class="adbl-library-content-row"', $page->getContent());
-
-        $expression =
-//            'bc-size-headline3">([^<]*).+?(Serie.+?<a[^>]*>([^<]*)</a>[^<]*(<span class="bc-text">\s*Titel (\S*))?.+?)?summaryLabel.+?' .
-            'bc-size-headline3">([^<]*).+?(Serie:.+?<a[^>]*>([^<]*)</a>(,\s*Titel (\S*))?.+?)?' .
-            $expression .
-            'bc-spacing-top-base'
-        ;
-
-        foreach ($pageParts as $pagePart) {
-            $this->logger->debug(sprintf('Search #%s# in %s', $expression, $pagePart));
-            $matches = ['', '', '', '', '', '', '', '', '', ''];
-
-            if (preg_match('#' . $expression . '#s', $pagePart, $matches) !== 1) {
-                continue;
-            }
-
-            $titleParts = new TitleParts($matches[1], $matches[3], $matches[5]);
-
-            if (count($matches) === 9) { // Podcast
-                $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Überprüfe %s', $matches[1])));
-                $this->logger->info(sprintf('Open podcast page %s', self::URL . $matches[8]));
-                $currentUrl = $session->getCurrentUrl();
-                $this->browserService->goto($session, $matches[8]);
-                $this->browserService->waitForElementById($session, 'lib-subheader-actions');
-                $titleParts->setSeries($titleParts->getTitle());
-
-                foreach ($this->getFiles($account) as $file) {
-                    if (!$file instanceof File) {
-                        continue;
-                    }
-
-                    $titleParts->setTitle($file->getName());
-
-                    yield new File($this->cleanTitle($titleParts), $file->getPath(), $file->getCreateDate(), $account);
-                }
-
-                $this->modelManager->saveWithoutChildren($account->setMessage('Gehe zurück zur Bibliothek'));
-                $this->logger->info(sprintf('Go back to %s', $currentUrl));
-                $this->browserService->goto($session, $currentUrl);
-                $this->browserService->waitForElementById($session, 'lib-subheader-actions');
-
-                continue;
-            }
-
-            $series = $titleParts->getSeries();
-
-            if (empty($series)) {
-                $this->findSeriesAndEpisode($titleParts);
-            }
-
-            $title = $this->cleanTitle($titleParts);
-            $this->logger->info(sprintf('Find %s', $title));
-
-            yield new File($title, self::URL . $matches[7], $this->dateTimeService->get(), $account);
-        }
-
-        yield null;
+            ++$page;
+            $response = $this->webService->get(
+                $this->getRequest($account, sprintf('%s/library?page=%d', self::URL, $page)),
+            );
+            $content = $response->getBody()->getContent();
+        } while ($page < $lastPage);
     }
 
     /**
      * @throws DeleteError
-     * @throws DriverException
      * @throws FfmpegException
      * @throws FileNotFound
      * @throws GetError
@@ -279,11 +150,7 @@ class AudibleStrategy extends AbstractWebStrategy
             ));
         }
 
-        $response = $this->webService->get(
-            (new Request(html_entity_decode($file->getPath())))
-                ->setCookieFile($this->browserService->createCookieFile($this->getSession($account))),
-        );
-
+        $response = $this->webService->get($this->getRequest($account, html_entity_decode($file->getPath())));
         $resource = $response->getBody()->getResource();
 
         if ($resource === null) {
@@ -327,86 +194,13 @@ class AudibleStrategy extends AbstractWebStrategy
         return $file;
     }
 
-    /**
-     * @throws ElementNotFoundException
-     */
     public function unload(Account $account): void
     {
-        $session = $this->getSession($account);
-        $page = $session->getPage();
-        $page->clickLink('Abmelden');
-        $session->stop();
     }
 
     public function getLockName(Account $account): string
     {
         return 'audible';
-    }
-
-    private function findSeriesAndEpisode(TitleParts $titleParts): void
-    {
-        $splitTitle = explode(':', str_ireplace(['staffel'], '', $titleParts->getTitle()));
-
-        if (count($splitTitle) !== 2) {
-            return;
-        }
-
-        $matches = ['', '', ''];
-
-        if (preg_match('/(.*)\s([\d\W]?\d)\s*$/', $splitTitle[1], $matches) !== 1) {
-            return;
-        }
-
-        $titleParts->setSeries(trim($matches[1]) ?: trim($splitTitle[0]));
-        $titleParts->setEpisode(trim($matches[2]));
-    }
-
-    private function cleanTitle(TitleParts $titleParts): string
-    {
-        $cleanTitle = $titleParts->getTitle();
-        $cleanTitleParts = explode(':', $cleanTitle);
-        $series = $titleParts->getSeries();
-
-        if (
-            !empty($series)
-            && count($cleanTitleParts) === 2
-            && mb_stripos($cleanTitleParts[0], $series) === 0
-            && mb_stripos($cleanTitleParts[1], $series) === false
-        ) {
-            $cleanTitle = $cleanTitleParts[1] . ':' . $cleanTitleParts[0];
-        }
-
-        $episode = $titleParts->getEpisode();
-        $cleanTitle = preg_replace(
-            '/(\b)(' . preg_quote($series, '/') . '|' . preg_quote($episode, '/') . ')(\b)/i',
-            '$1$3',
-            $cleanTitle,
-        );
-
-        if (!empty($series)) {
-            $cleanTitle = preg_replace('/:.*/s', '', $cleanTitle);
-        }
-
-        $cleanTitle = trim($cleanTitle);
-
-        if (empty($cleanTitle)) {
-            $cleanTitle = $series;
-        }
-
-        $cleanTitle = preg_replace('/^[-:._]*/', '', $cleanTitle);
-        $cleanTitle = preg_replace('/[-:._]*$/', '', $cleanTitle);
-        $cleanTitle = preg_replace('/:/', ' - ', $cleanTitle);
-        $cleanTitle = str_replace('/', ' ', $cleanTitle);
-        $cleanTitle = preg_replace('/\s\.\s/', ' ', $cleanTitle);
-
-        if (!empty($episode)) {
-            $cleanTitle = $episode . ' ' . $cleanTitle;
-        }
-
-        return
-            (empty($series) ? '' : '[' . trim($series) . '] ') .
-            trim(preg_replace('/\s{2,}/s', ' ', $cleanTitle))
-        ;
     }
 
     /**
@@ -441,18 +235,23 @@ class AudibleStrategy extends AbstractWebStrategy
         throw new StrategyException('Activation bytes not found!');
     }
 
-    protected function getSession(?Account $account = null): Session
+    private function getRequest(Account $account, string $url): Request
     {
-        $executionParameters = $account?->getExecutionParameters() ?? [];
+        $configuration = $account->getConfiguration();
+        $cookiesJar = $this->cryptService->decrypt($configuration[self::KEY_COOKIES_JAR] ?? '');
+        $cookieFileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('cookies') . '.jar';
+        file_put_contents($cookieFileName, $cookiesJar);
 
-        if (isset($executionParameters[self::KEY_SESSION])) {
-            return unserialize($executionParameters[self::KEY_SESSION]);
-        }
+        return (new Request($url))
+            ->setCookieFile($cookieFileName)
+        ;
+    }
 
-        $session = $this->browserService->getSession();
-        $session->visit(self::URL);
-        $this->browserService->waitForLoaded($session);
+    private function getLastPage(string $content): int
+    {
+        preg_match_all('/refinementFormLink[^>]*>(\d*)/', $content, $matches);
 
-        return $session;
+        return (int) end($matches[1]);
+
     }
 }

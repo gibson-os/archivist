@@ -68,6 +68,7 @@ class AccountController extends AbstractController
             return $this->returnFailure('Account has no active rules!');
         }
 
+        /** @var StrategyInterface $strategy */
         $strategy = $serviceManager->get($account->getStrategy(), StrategyInterface::class);
         $strategy->setExecuteParameters($account, $parameters);
         $executeParameters = $strategy->getExecuteParameters($account);
