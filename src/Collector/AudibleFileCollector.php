@@ -25,7 +25,7 @@ class AudibleFileCollector
     {
         $pageParts = explode('class="adbl-library-content-row"', $content);
         $expression =
-            'bc-size-headline3"\s*>([^<]*).+?(Serie:.+?<a[^>]*>([^<]*)</a>(,\s*Titel (\S*))?.+?)?' .
+            'bc-size-headline3"\s*>([^<]*).+?(Serie:.+?<a[^>]*>([^<]*)</a>(\s*,.+?Titel (\S*))?.+?)?' .
             self::EXPRESSION_NOT_PODCAST .
             'bc-spacing-top-base'
         ;
@@ -38,7 +38,7 @@ class AudibleFileCollector
                 continue;
             }
 
-            $titleParts = new TitleParts($matches[1], $matches[3], $matches[5]);
+            $titleParts = new TitleParts(trim($matches[1]), trim($matches[3]), trim($matches[5]));
             $series = $titleParts->getSeries();
 
             if (empty($series)) {
