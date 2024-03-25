@@ -3,28 +3,25 @@ declare(strict_types=1);
 
 namespace GibsonOS\Test\Unit\Archivist\Strategy;
 
-use Behat\Mink\Element\DocumentElement;
-use Behat\Mink\Element\NodeElement;
-use Behat\Mink\Session;
 use Codeception\Test\Unit;
-use DMore\ChromeDriver\ChromeDriver;
-use GibsonOS\Core\Manager\ModelManager;
-use GibsonOS\Core\Manager\ServiceManager;
+use GibsonOS\Core\Dto\Web\Body;
+use GibsonOS\Core\Dto\Web\Request;
+use GibsonOS\Core\Dto\Web\Response;
+use GibsonOS\Core\Enum\HttpStatusCode;
 use GibsonOS\Core\Service\CryptService;
-use GibsonOS\Core\Service\DateTimeService;
 use GibsonOS\Core\Service\FfmpegService;
-use GibsonOS\Core\Service\LoggerService;
+use GibsonOS\Core\Service\FileService;
 use GibsonOS\Core\Service\ProcessService;
 use GibsonOS\Core\Service\WebService;
+use GibsonOS\Module\Archivist\Collector\AudibleFileCollector;
+use GibsonOS\Module\Archivist\Factory\Request\AudibleRequestFactory;
 use GibsonOS\Module\Archivist\Model\Account;
-use GibsonOS\Module\Archivist\Service\BrowserService;
 use GibsonOS\Module\Archivist\Strategy\AudibleStrategy;
 use GibsonOS\Test\Unit\Core\ModelManagerTrait;
 use phpmock\phpunit\PHPMock;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class AudibleStrategyTest extends Unit
 {
@@ -34,8 +31,6 @@ class AudibleStrategyTest extends Unit
 
     private AudibleStrategy $audibleStrategy;
 
-    private ObjectProphecy|BrowserService $browserService;
-
     private ObjectProphecy|WebService $webService;
 
     private ObjectProphecy|FfmpegService $ffmpegService;
@@ -44,7 +39,11 @@ class AudibleStrategyTest extends Unit
 
     private ObjectProphecy|CryptService $cryptService;
 
-    private ServiceManager $serviceManager;
+    private ObjectProphecy|AudibleFileCollector $audibleFileCollector;
+
+    private ObjectProphecy|AudibleRequestFactory $audibleRequestFactory;
+
+    private ObjectProphecy|FileService $fileService;
 
     protected function _before(): void
     {
@@ -52,155 +51,263 @@ class AudibleStrategyTest extends Unit
         putenv('TIMEZONE=Europe/Berlin');
         putenv('DATE_LATITUDE=51.2642156');
         putenv('DATE_LONGITUDE=6.8001438');
-        $this->browserService = $this->prophesize(BrowserService::class);
         $this->webService = $this->prophesize(WebService::class);
+        $this->cryptService = $this->prophesize(CryptService::class);
         $this->ffmpegService = $this->prophesize(FfmpegService::class);
         $this->processService = $this->prophesize(ProcessService::class);
-        $this->cryptService = $this->prophesize(CryptService::class);
-        $this->serviceManager = new ServiceManager();
-        $this->serviceManager->setInterface(LoggerInterface::class, LoggerService::class);
-        $this->serviceManager->setService(ModelManager::class, $this->modelManager->reveal());
+        $this->audibleFileCollector = $this->prophesize(AudibleFileCollector::class);
+        $this->audibleRequestFactory = $this->prophesize(AudibleRequestFactory::class);
+        $this->fileService = $this->prophesize(FileService::class);
 
         $this->audibleStrategy = new AudibleStrategy(
-            $this->browserService->reveal(),
             $this->webService->reveal(),
-            $this->prophesize(LoggerInterface::class)->reveal(),
+            new NullLogger(),
             $this->cryptService->reveal(),
-            $this->serviceManager->get(DateTimeService::class),
             $this->modelManager->reveal(),
             $this->ffmpegService->reveal(),
-            $this->processService->reveal()
+            $this->processService->reveal(),
+            $this->audibleFileCollector->reveal(),
+            $this->audibleRequestFactory->reveal(),
+            $this->fileService->reveal(),
         );
     }
 
-    public function testLogin(): void
+    public function testGetExecuteParametersNoLogin(): void
     {
-        $session = new Session(new ChromeDriver('http://localhost:9222', null, 'chrome://new-tab-page'));
-        /** @var ObjectProphecy|DocumentElement $page */
-        $page = $this->prophesize(DocumentElement::class);
+        $this->assertCount(
+            1,
+            $this->audibleStrategy->getExecuteParameters(new Account($this->modelWrapper->reveal())),
+        );
+    }
 
-        $this->browserService->getSession()
-            ->shouldBeCalledOnce()
-            ->willReturn($session)
-        ;
-        $this->browserService->getPage($session)
-            ->shouldBeCalledOnce()
-            ->willReturn($page->reveal())
-        ;
-        $this->browserService->loadPage($session, 'https://audible.de/')
-            ->shouldBeCalledOnce()
-            ->willReturn($page->reveal())
-        ;
-        $page->clickLink('Anmelden')
-            ->shouldBeCalledOnce()
-        ;
-        $this->browserService->waitForElementById($session, 'ap_email')
-            ->shouldBeCalledOnce()
-            ->willReturn(new NodeElement('foo', $session))
-        ;
-        $this->cryptService->encrypt('Arthur')
-            ->shouldBeCalledOnce()
-            ->willReturn('Arthur')
-        ;
-        $this->cryptService->encrypt('Dent')
-            ->shouldBeCalledOnce()
-            ->willReturn('Dent')
-        ;
-        $this->cryptService->decrypt('Arthur')
-            ->shouldBeCalledOnce()
-            ->willReturn('Arthur')
-        ;
-        $this->cryptService->decrypt('Dent')
-            ->shouldBeCalledOnce()
-            ->willReturn('Dent')
-        ;
-        $this->browserService->fillFormFields($session, [
-            'email' => 'Arthur',
-            'password' => 'Dent',
-        ])
-            ->shouldBeCalledOnce()
-        ;
-        $page->pressButton('signInSubmit')
-            ->shouldBeCalledOnce()
-        ;
-        $this->browserService->waitForLink($session, 'Bibliothek', 30000000)
-            ->shouldBeCalledOnce()
-            ->willReturn(new NodeElement('foo', $session))
-        ;
-        $page->clickLink('Bibliothek')
-            ->shouldBeCalledOnce()
-        ;
-        $this->browserService->waitForElementById($session, 'lib-subheader-actions')
-            ->shouldBeCalledOnce()
-            ->willReturn(new NodeElement('foo', $session))
-        ;
-
+    public function testGetExecuteParametersLoginFalse(): void
+    {
         $account = new Account($this->modelWrapper->reveal());
-        $this->audibleStrategy->setAccountParameters($account, [
-            'email' => 'Arthur',
-            'password' => 'Dent',
-        ]);
-        $this->audibleStrategy->setExecuteParameters($account, []);
+        $account->setExecutionParameters(['login' => false]);
+
+        $this->assertCount(
+            1,
+            $this->audibleStrategy->getExecuteParameters($account),
+        );
     }
 
-    public function testLoginWithCaptcha(): void
+    public function testGetExecuteParameters(): void
     {
+        $account = new Account($this->modelWrapper->reveal());
+        $account->setExecutionParameters(['login' => true]);
+
+        $this->assertCount(
+            0,
+            $this->audibleStrategy->getExecuteParameters($account),
+        );
     }
 
-    /**
-     * @dataProvider getData
-     */
-    public function testGetFiles(string $name, string $content, ?string $subContent): void
+    public function testSetExecuteParametersNoCookiesJar(): void
     {
-        /** @var ObjectProphecy|Session $session */
-        $session = $this->prophesize(Session::class);
-        /** @var ObjectProphecy|DocumentElement $page */
-        $page = $this->prophesize(DocumentElement::class);
-        $account = (new Account($this->modelWrapper->reveal()))->setStrategy(AudibleStrategy::class);
+        $account = new Account($this->modelWrapper->reveal());
 
-        if ($subContent === null) {
-            $page->getContent()->willReturn($content);
-        } else {
-            $page->getContent()->willReturn($content, $subContent, $content, $content);
-            $this->browserService->waitForElementById($session->reveal(), 'lib-subheader-actions')
+        $this->assertFalse($this->audibleStrategy->setExecuteParameters($account, []));
+        $this->assertEquals(['login' => false], $account->getExecutionParameters());
+        $this->assertEquals([], $account->getConfiguration());
+    }
+
+    public function testSetExecuteParametersCookiesJarParameter(): void
+    {
+        $this->cryptService->decrypt('marvin')
+            ->shouldNotBeCalled()
+        ;
+        $this->cryptService->encrypt('marvin')
+            ->shouldBeCalledOnce()
+            ->willReturn('galaxy')
+        ;
+        $this->cryptService->decrypt('galaxy')
+            ->shouldBeCalledOnce()
+            ->willReturn('marvin')
+        ;
+        $request = (new Request('https://www.audible.de/library'))->setCookieFile('marvin');
+        $this->audibleRequestFactory->getRequest('https://www.audible.de/library', 'marvin')
+            ->shouldBeCalledOnce()
+            ->willReturn($request)
+        ;
+        $this->webService->get($request)
+            ->shouldBeCalledOnce()
+            ->willReturn(new Response($request, HttpStatusCode::OK, [], (new Body())->setContent(' ', 1), 'marvin'))
+        ;
+        $account = new Account($this->modelWrapper->reveal());
+
+        $this->assertFalse($this->audibleStrategy->setExecuteParameters($account, ['cookiesJar' => 'marvin']));
+        $this->assertEquals(['login' => false], $account->getExecutionParameters());
+        $this->assertEquals(['cookiesJar' => 'galaxy'], $account->getConfiguration());
+    }
+
+    public function testSetExecuteParametersCookiesJarConfiguration(): void
+    {
+        $this->cryptService->decrypt('galaxy')
+            ->shouldBeCalledTimes(2)
+            ->willReturn('marvin')
+        ;
+        $this->cryptService->encrypt('marvin')
+            ->shouldBeCalledOnce()
+            ->willReturn('galaxy')
+        ;
+        $request = (new Request('https://www.audible.de/library'))->setCookieFile('marvin');
+        $this->audibleRequestFactory->getRequest('https://www.audible.de/library', 'marvin')
+            ->shouldBeCalledOnce()
+            ->willReturn($request)
+        ;
+        $this->webService->get($request)
+            ->shouldBeCalledOnce()
+            ->willReturn(new Response($request, HttpStatusCode::OK, [], (new Body())->setContent(' ', 1), 'marvin'))
+        ;
+        $account = (new Account($this->modelWrapper->reveal()))
+            ->setConfiguration(['cookiesJar' => 'galaxy'])
+        ;
+
+        $this->assertFalse($this->audibleStrategy->setExecuteParameters($account, []));
+        $this->assertEquals(['login' => false], $account->getExecutionParameters());
+        $this->assertEquals(['cookiesJar' => 'galaxy'], $account->getConfiguration());
+    }
+
+    public function testSetExecuteParametersCookiesJarParameterAndConfiguration(): void
+    {
+        $this->cryptService->decrypt('galaxy')
+            ->shouldBeCalledOnce()
+            ->willReturn('marvin')
+        ;
+        $this->cryptService->decrypt('ford')
+            ->shouldNotBeCalled()
+        ;
+        $this->cryptService->encrypt('marvin')
+            ->shouldBeCalledOnce()
+            ->willReturn('galaxy')
+        ;
+        $request = (new Request('https://www.audible.de/library'))->setCookieFile('marvin');
+        $this->audibleRequestFactory->getRequest('https://www.audible.de/library', 'marvin')
+            ->shouldBeCalledOnce()
+            ->willReturn($request)
+        ;
+        $this->webService->get($request)
+            ->shouldBeCalledOnce()
+            ->willReturn(new Response($request, HttpStatusCode::OK, [], (new Body())->setContent(' ', 1), 'marvin'))
+        ;
+        $account = (new Account($this->modelWrapper->reveal()))
+            ->setConfiguration(['cookiesJar' => 'ford'])
+        ;
+
+        $this->assertFalse($this->audibleStrategy->setExecuteParameters($account, ['cookiesJar' => 'marvin']));
+        $this->assertEquals(['login' => false], $account->getExecutionParameters());
+        $this->assertEquals(['cookiesJar' => 'galaxy'], $account->getConfiguration());
+    }
+
+    public function testSetExecuteParametersSuccess(): void
+    {
+        $this->cryptService->decrypt('galaxy')
+            ->shouldBeCalledOnce()
+            ->willReturn('marvin')
+        ;
+        $this->cryptService->decrypt('ford')
+            ->shouldNotBeCalled()
+        ;
+        $this->cryptService->encrypt('marvin')
+            ->shouldBeCalledOnce()
+            ->willReturn('galaxy')
+        ;
+        $request = (new Request('https://www.audible.de/library'))->setCookieFile('marvin');
+        $this->audibleRequestFactory->getRequest('https://www.audible.de/library', 'marvin')
+            ->shouldBeCalledOnce()
+            ->willReturn($request)
+        ;
+        $content = '<h1 class="bc-heading
+    bc-color-base
+    
+    
+    
+    
+    bc-size-display 
+    
+    bc-text-bold 
+    
+    
+    
+    
+    bc-text-normal">
+                Bibliothek
+            </h1>';
+        $this->webService->get($request)
+            ->shouldBeCalledOnce()
+            ->willReturn(new Response($request, HttpStatusCode::OK, [], (new Body())->setContent($content, mb_strlen($content)), 'marvin'))
+        ;
+        $account = (new Account($this->modelWrapper->reveal()))
+            ->setConfiguration(['cookiesJar' => 'ford'])
+        ;
+
+        $this->assertTrue($this->audibleStrategy->setExecuteParameters($account, ['cookiesJar' => 'marvin']));
+        $this->assertEquals(['login' => true], $account->getExecutionParameters());
+        $this->assertEquals(['cookiesJar' => 'galaxy'], $account->getConfiguration());
+    }
+
+    public function testGetFiles(): void
+    {
+        $account = (new Account($this->modelWrapper->reveal()))->setConfiguration(['cookiesJar' => 'galaxy']);
+        $request = (new Request('https://www.audible.de/library'))->setCookieFile('marvin');
+        $content = 'refinementFormLink    >42';
+        $response = new Response($request, HttpStatusCode::OK, [], (new Body())->setContent($content, mb_strlen($content)), 'marvin');
+
+        $this->cryptService->decrypt('galaxy')
+            ->shouldBeCalledTimes(43)
+            ->willReturn('marvin')
+        ;
+        $this->audibleRequestFactory->getRequest('https://www.audible.de/library', 'marvin')
+            ->shouldBeCalledOnce()
+            ->willReturn($request)
+        ;
+        $this->webService->get($request)
+            ->shouldBeCalledOnce()
+            ->willReturn($response)
+        ;
+        $content = ' ';
+
+        for ($i = 1; $i <= 42; ++$i) {
+            $request = (new Request('https://www.audible.de/library?page=' . $i))->setCookieFile('marvin');
+            $response = new Response($request, HttpStatusCode::OK, [], (new Body())->setContent($content, mb_strlen($content)), 'marvin');
+            $this->audibleRequestFactory->getRequest('https://www.audible.de/library?page=' . $i, 'marvin')
                 ->shouldBeCalledOnce()
-                ->willReturn($this->prophesize(NodeElement::class)->reveal())
+                ->willReturn($request)
             ;
-            $session->getCurrentUrl()->shouldBeCalledOnce();
-            $this->browserService->goto($session->reveal(), Argument::any())->shouldBeCalledOnce();
-            $this->modelManager->saveWithoutChildren(Argument::any())->shouldBeCalledOnce();
+            $this->webService->get($request)
+                ->shouldBeCalledOnce()
+                ->willReturn($response)
+            ;
         }
 
-        $page->getContent()->shouldBeCalledTimes($subContent === null ? 1 : 2);
-        $session->getPage()
-            ->shouldBeCalledTimes($subContent === null ? 2 : 4)
-            ->willReturn($page)
-        ;
-        $this->browserService->getSession()
-            ->shouldBeCalledTimes($subContent === null ? 2 : 4)
-            ->willReturn($session)
+        $this->audibleFileCollector->getFilesFromPage($account, $content)
+            ->shouldBeCalledTimes(42)
+            ->willYield([null])
         ;
 
-        $this->assertSame($name, $this->audibleStrategy->getFiles($account)->current()->getName());
+        iterator_to_array($this->audibleStrategy->getFiles($account));
     }
 
-    public function getData(): array
+    public function testGetFilesNoPage(): void
     {
-        $testData = [];
+        $account = (new Account($this->modelWrapper->reveal()))->setConfiguration(['cookiesJar' => 'galaxy']);
+        $request = (new Request('https://www.audible.de/library'))->setCookieFile('marvin');
+        $content = 'arthur dent';
+        $response = new Response($request, HttpStatusCode::OK, [], (new Body())->setContent($content, mb_strlen($content)), 'marvin');
 
-        foreach (glob('tests/_data/audible/content/*.content') as $testFile) {
-            $testName = str_replace('.content', '', $testFile);
-            $subTestFile = $testName . '.subcontent';
-            $testNameParts = explode('/', $testName);
-            $testName = end($testNameParts);
+        $this->cryptService->decrypt('galaxy')
+            ->shouldBeCalledOnce()
+            ->willReturn('marvin')
+        ;
+        $this->audibleRequestFactory->getRequest('https://www.audible.de/library', 'marvin')
+            ->shouldBeCalledOnce()
+            ->willReturn($request)
+        ;
+        $this->webService->get($request)
+            ->shouldBeCalledOnce()
+            ->willReturn($response)
+        ;
 
-            $testData[$testName] = [
-                $testName,
-                file_get_contents($testFile),
-                file_exists($subTestFile) ? file_get_contents($subTestFile) : null,
-            ];
-        }
-
-        return $testData;
+        $this->assertCount(0, iterator_to_array($this->audibleStrategy->getFiles($account)));
     }
 }

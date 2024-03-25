@@ -11,6 +11,7 @@ use GibsonOS\Core\Dto\Parameter\TextParameter;
 use GibsonOS\Core\Dto\Web\Request;
 use GibsonOS\Core\Exception\DeleteError;
 use GibsonOS\Core\Exception\FfmpegException;
+use GibsonOS\Core\Exception\File\OpenError;
 use GibsonOS\Core\Exception\FileNotFound;
 use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\Model\SaveError;
@@ -19,12 +20,14 @@ use GibsonOS\Core\Exception\WebException;
 use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Service\CryptService;
 use GibsonOS\Core\Service\FfmpegService;
+use GibsonOS\Core\Service\FileService;
 use GibsonOS\Core\Service\ProcessService;
 use GibsonOS\Core\Service\WebService;
 use GibsonOS\Module\Archivist\Collector\AudibleFileCollector;
 use GibsonOS\Module\Archivist\Dto\File;
 use GibsonOS\Module\Archivist\Dto\Strategy;
 use GibsonOS\Module\Archivist\Exception\StrategyException;
+use GibsonOS\Module\Archivist\Factory\Request\AudibleRequestFactory;
 use GibsonOS\Module\Archivist\Model\Account;
 use JsonException;
 use MDO\Exception\RecordException;
@@ -47,6 +50,8 @@ class AudibleStrategy implements StrategyInterface
         private readonly FfmpegService $ffmpegService,
         private readonly ProcessService $processService,
         private readonly AudibleFileCollector $audibleFileCollector,
+        private readonly AudibleRequestFactory $audibleRequestFactory,
+        private readonly FileService $fileService,
     ) {
     }
 
@@ -81,6 +86,9 @@ class AudibleStrategy implements StrategyInterface
         return [self::KEY_COOKIES_JAR => (new TextParameter('Cookies jar Datei'))];
     }
 
+    /**
+     * @throws WebException
+     */
     public function setExecuteParameters(Account $account, array $parameters): bool
     {
         $configuration = $account->getConfiguration();
@@ -107,6 +115,13 @@ class AudibleStrategy implements StrategyInterface
         return true;
     }
 
+    /**
+     * @throws JsonException
+     * @throws RecordException
+     * @throws ReflectionException
+     * @throws SaveError
+     * @throws WebException
+     */
     public function getFiles(Account $account): Generator
     {
         $response = $this->webService->get($this->getRequest($account, sprintf('%s/library', self::URL)));
@@ -114,17 +129,17 @@ class AudibleStrategy implements StrategyInterface
         $content = $response->getBody()->getContent();
         $lastPage = $this->getLastPage($content);
 
-        do {
+        while ($page <= $lastPage) {
             $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Bibliothek Seite %d', $page)));
-
-            yield from $this->audibleFileCollector->getFilesFromPage($account, $content);
-
-            ++$page;
             $response = $this->webService->get(
                 $this->getRequest($account, sprintf('%s/library?page=%d', self::URL, $page)),
             );
             $content = $response->getBody()->getContent();
-        } while ($page < $lastPage);
+
+            yield from $this->audibleFileCollector->getFilesFromPage($account, $content);
+
+            ++$page;
+        }
     }
 
     /**
@@ -139,6 +154,7 @@ class AudibleStrategy implements StrategyInterface
      * @throws SaveError
      * @throws StrategyException
      * @throws WebException
+     * @throws OpenError
      */
     public function setFileResource(File $file, Account $account): File
     {
@@ -157,12 +173,12 @@ class AudibleStrategy implements StrategyInterface
             throw new StrategyException('File is empty!');
         }
 
-        $tmpFileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'audible' . uniqid() . '.aax';
-        $tmpFileNameMp3 = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'audible' . uniqid() . '.mp3';
+        $tmpFileName = sprintf('%s%s%s.aax', sys_get_temp_dir(), DIRECTORY_SEPARATOR, uniqid('audible'));
+        $tmpFileNameMp3 = sprintf('%s%s%s.mp3', sys_get_temp_dir(), DIRECTORY_SEPARATOR, uniqid('audible'));
 
-        $newFile = fopen($tmpFileName, 'w');
+        $newFile = $this->fileService->open($tmpFileName, 'w');
         stream_copy_to_stream($resource, $newFile);
-        fclose($newFile);
+        $this->fileService->close($newFile);
 
         $this->modelManager->saveWithoutChildren($account->setMessage(sprintf('Ermittel Checksumme für %s', $file->getName())));
         $this->logger->info(sprintf('Get checksum for %s', $file->getName()));
@@ -186,7 +202,7 @@ class AudibleStrategy implements StrategyInterface
             'libmp3lame',
             ['activation_bytes' => $activationBytes],
         );
-        $mp3File = fopen($tmpFileNameMp3, 'r');
+        $mp3File = $this->fileService->open($tmpFileNameMp3, 'r');
         $file->setResource($mp3File, filesize($tmpFileNameMp3));
         unlink($tmpFileNameMp3);
         unlink($tmpFileName);
@@ -239,12 +255,8 @@ class AudibleStrategy implements StrategyInterface
     {
         $configuration = $account->getConfiguration();
         $cookiesJar = $this->cryptService->decrypt($configuration[self::KEY_COOKIES_JAR] ?? '');
-        $cookieFileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('cookies') . '.jar';
-        file_put_contents($cookieFileName, $cookiesJar);
 
-        return (new Request($url))
-            ->setCookieFile($cookieFileName)
-        ;
+        return $this->audibleRequestFactory->getRequest($url, $cookiesJar);
     }
 
     private function getLastPage(string $content): int

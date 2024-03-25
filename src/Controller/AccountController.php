@@ -79,7 +79,6 @@ class AccountController extends AbstractController
             return $this->returnSuccess($executeParameters);
         }
 
-        $modelManager->saveWithoutChildren($account->setMessage('Starte'));
         $commandService->executeAsync(IndexerCommand::class, ['accountId' => $account->getId()]);
 
         return $this->returnSuccess([]);

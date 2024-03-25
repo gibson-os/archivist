@@ -59,6 +59,7 @@ class AccountService
 
         $lockName = self::RULE_LOCK_PREFIX . $strategy->getLockName($account);
         $this->lockService->lock($lockName);
+        $this->modelManager->saveWithoutChildren($account->setMessage('Starte'));
 
         $rules = array_filter(
             $account->getRules(),
