@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GibsonOS\Test\Unit\Archivist\Strategy;
 
 use Codeception\Test\Unit;
+use DateTimeImmutable;
 use GibsonOS\Core\Dto\Web\Body;
 use GibsonOS\Core\Dto\Web\Request;
 use GibsonOS\Core\Dto\Web\Response;
@@ -14,11 +15,14 @@ use GibsonOS\Core\Service\FileService;
 use GibsonOS\Core\Service\ProcessService;
 use GibsonOS\Core\Service\WebService;
 use GibsonOS\Module\Archivist\Collector\AudibleFileCollector;
+use GibsonOS\Module\Archivist\Dto\File;
+use GibsonOS\Module\Archivist\Exception\StrategyException;
 use GibsonOS\Module\Archivist\Factory\Request\AudibleRequestFactory;
 use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Strategy\AudibleStrategy;
 use GibsonOS\Test\Unit\Core\ModelManagerTrait;
 use phpmock\phpunit\PHPMock;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\NullLogger;
@@ -309,5 +313,170 @@ class AudibleStrategyTest extends Unit
         ;
 
         $this->assertCount(0, iterator_to_array($this->audibleStrategy->getFiles($account)));
+    }
+
+    public function testSetFileResourceEmptyFile(): void
+    {
+        $account = (new Account($this->modelWrapper->reveal()))
+            ->setConfiguration(['cookiesJar' => 'galaxy'])
+            ->setStrategy(AudibleStrategy::class)
+        ;
+        $dateTime = new DateTimeImmutable();
+        $file = new File('arthur', 'dent', $dateTime, $account);
+
+        $this->cryptService->decrypt('galaxy')
+            ->shouldBeCalledOnce()
+            ->willReturn('marvin')
+        ;
+        $request = new Request('dent');
+        $this->audibleRequestFactory->getRequest('dent', 'marvin')
+            ->shouldBeCalledOnce()
+            ->willReturn($request)
+        ;
+        $response = new Response($request, HttpStatusCode::OK, [], new Body(), '');
+        $this->webService->get($request)
+            ->shouldBeCalledOnce()
+            ->willReturn($response)
+        ;
+
+        $this->expectException(StrategyException::class);
+
+        $this->audibleStrategy->setFileResource($file, $account);
+    }
+
+    public function testSetFileResourceNoActivationByte(): void
+    {
+        $account = (new Account($this->modelWrapper->reveal()))
+            ->setConfiguration(['cookiesJar' => 'galaxy'])
+            ->setStrategy(AudibleStrategy::class)
+        ;
+        $dateTime = new DateTimeImmutable();
+        $file = new File('arthur', 'dent', $dateTime, $account);
+
+        $this->cryptService->decrypt('galaxy')
+            ->shouldBeCalledOnce()
+            ->willReturn('marvin')
+        ;
+        $request = new Request('dent');
+        $this->audibleRequestFactory->getRequest('dent', 'marvin')
+            ->shouldBeCalledOnce()
+            ->willReturn($request)
+        ;
+        $response = new Response($request, HttpStatusCode::OK, [], (new Body())->setContent(' ', 1), '');
+        $this->webService->get($request)
+            ->shouldBeCalledOnce()
+            ->willReturn($response)
+        ;
+        $newFile = fopen('php://memory', 'w');
+        $this->fileService->open(Argument::any(), 'w')
+            ->shouldBeCalledOnce()
+            ->willReturn($newFile)
+        ;
+        $this->fileService->close($newFile)
+            ->shouldBeCalledOnce()
+            ->willReturn(true)
+        ;
+        $this->ffmpegService->getChecksum(Argument::any())
+            ->shouldBeCalledOnce()
+            ->willReturn('zaphord')
+        ;
+
+        $rcrack = realpath(
+            __DIR__ . DIRECTORY_SEPARATOR .
+            '..' . DIRECTORY_SEPARATOR .
+            '..' . DIRECTORY_SEPARATOR .
+            '..' . DIRECTORY_SEPARATOR .
+            'bin' . DIRECTORY_SEPARATOR .
+            'inAudible-NG-tables' . DIRECTORY_SEPARATOR,
+        );
+        $rcrackResource = fopen('php://memory', 'r');
+        $this->processService->open(sprintf('cd %s && ./rcrack . -h zaphord', $rcrack), 'r')
+            ->shouldBeCalledOnce()
+            ->willReturn($rcrackResource)
+        ;
+        $this->processService->close($rcrackResource)
+            ->shouldBeCalledOnce()
+        ;
+
+        $this->expectException(StrategyException::class);
+
+        $this->audibleStrategy->setFileResource($file, $account);
+    }
+
+    public function testSetFileResource(): void
+    {
+        $account = (new Account($this->modelWrapper->reveal()))
+            ->setConfiguration(['cookiesJar' => 'galaxy'])
+            ->setStrategy(AudibleStrategy::class)
+        ;
+        $dateTime = new DateTimeImmutable();
+        $file = new File('arthur', 'dent', $dateTime, $account);
+
+        $this->cryptService->decrypt('galaxy')
+            ->shouldBeCalledOnce()
+            ->willReturn('marvin')
+        ;
+        $request = new Request('dent');
+        $this->audibleRequestFactory->getRequest('dent', 'marvin')
+            ->shouldBeCalledOnce()
+            ->willReturn($request)
+        ;
+        $response = new Response($request, HttpStatusCode::OK, [], (new Body())->setContent(' ', 1), '');
+        $this->webService->get($request)
+            ->shouldBeCalledOnce()
+            ->willReturn($response)
+        ;
+        $newFile = fopen('php://memory', 'w');
+        $this->fileService->open(Argument::any(), 'w')
+            ->shouldBeCalledOnce()
+            ->will(function ($arguments) use ($newFile) {
+                fopen($arguments[0], 'w');
+
+                return $newFile;
+            })
+        ;
+        $this->fileService->close($newFile)
+            ->shouldBeCalledOnce()
+            ->willReturn(true)
+        ;
+        $this->ffmpegService->getChecksum(Argument::any())
+            ->shouldBeCalledOnce()
+            ->willReturn('zaphord')
+        ;
+        $rcrack = realpath(
+            __DIR__ . DIRECTORY_SEPARATOR .
+            '..' . DIRECTORY_SEPARATOR .
+            '..' . DIRECTORY_SEPARATOR .
+            '..' . DIRECTORY_SEPARATOR .
+            'bin' . DIRECTORY_SEPARATOR .
+            'inAudible-NG-tables' . DIRECTORY_SEPARATOR,
+        );
+        $rcrackResource = fopen('php://memory', 'r+');
+        fwrite($rcrackResource, 'hex:bebblebrox');
+        fseek($rcrackResource, 0);
+        $this->processService->open(sprintf('cd %s && ./rcrack . -h zaphord', $rcrack), 'r')
+            ->shouldBeCalledOnce()
+            ->willReturn($rcrackResource)
+        ;
+        $this->processService->close($rcrackResource)
+            ->shouldBeCalledOnce()
+        ;
+        $this->ffmpegService->convert(
+            Argument::any(),
+            Argument::any(),
+            null,
+            'libmp3lame',
+            ['activation_bytes' => 'bebblebrox'],
+        )
+            ->shouldBeCalledOnce()
+        ;
+        $this->fileService->open(Argument::any(), 'r')
+            ->shouldBeCalledOnce()
+            ->will(function ($arguments) {
+                return fopen($arguments[0], 'w');
+            })
+        ;
+
+        $this->audibleStrategy->setFileResource($file, $account);
     }
 }
