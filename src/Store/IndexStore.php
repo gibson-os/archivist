@@ -49,7 +49,7 @@ class IndexStore extends AbstractDatabaseStore
     {
         parent::initQuery();
 
-        if ($this->account === null) {
+        if (!$this->account instanceof Account) {
             return;
         }
 
@@ -60,13 +60,13 @@ class IndexStore extends AbstractDatabaseStore
 
     protected function setWheres(): void
     {
-        if ($this->rule !== null) {
+        if ($this->rule instanceof Rule) {
             $this->addWhere('`i`.`rule_id`=?', [$this->rule->getId() ?? 0]);
 
             return;
         }
 
-        if ($this->account === null) {
+        if (!$this->account instanceof Account) {
             return;
         }
 

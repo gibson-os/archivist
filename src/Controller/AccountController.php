@@ -64,7 +64,7 @@ class AccountController extends AbstractController
         Account $account,
         array $parameters = [],
     ): AjaxResponse {
-        if (count(array_filter($account->getRules(), fn (Rule $rule): bool => $rule->isActive())) === 0) {
+        if (array_filter($account->getRules(), fn (Rule $rule): bool => $rule->isActive()) === []) {
             return $this->returnFailure('Account has no active rules!');
         }
 

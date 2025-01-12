@@ -61,7 +61,7 @@ class RuleService
         $matches = [];
         preg_match('/' . ($rule->getObservedFilename() ?? '.*') . '/', $file->getName(), $matches);
 
-        if (empty($matches)) {
+        if ($matches === []) {
             $this->logger->info(sprintf('No match for rule "%s"', $rule->getName()));
 
             return;
@@ -78,7 +78,7 @@ class RuleService
                 $contentMatches,
             );
 
-            if (empty($contentMatches)) {
+            if ($contentMatches === []) {
                 $this->logger->info(sprintf(
                     'No content match for pattern "%s" for rule "%s" in file %s',
                     $observedContent,

@@ -9,6 +9,7 @@ use GibsonOS\Core\Dto\Parameter\BoolParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Dto\Parameter\TextParameter;
 use GibsonOS\Core\Form\AbstractModelForm;
+use GibsonOS\Core\Model\ModelInterface;
 use GibsonOS\Module\Archivist\Dto\Form\RuleFormConfig;
 use GibsonOS\Module\Archivist\Model\Rule;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
@@ -40,7 +41,7 @@ class RuleForm extends AbstractModelForm
         $parameters = ['accountId' => $config->getAccount()->getId()];
         $rule = $config->getModel();
 
-        if ($rule !== null) {
+        if ($rule instanceof ModelInterface) {
             $parameters['id'] = $rule->getId();
         }
 

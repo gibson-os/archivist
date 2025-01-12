@@ -66,7 +66,7 @@ class AccountService
             fn (Rule $rule): bool => $rule->isActive(),
         );
 
-        if (count($rules) === 0) {
+        if ($rules === []) {
             $this->logger->warning(sprintf('No active rules for account %s!', $account->getName()));
             $this->modelManager->saveWithoutChildren($account->setMessage('Keine aktiven Regeln vorhanden'));
 

@@ -11,6 +11,7 @@ use GibsonOS\Core\Manager\ServiceManager;
 use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
 use GibsonOS\Module\Archivist\Dto\Strategy;
+use GibsonOS\Module\Archivist\Model\Account;
 use GibsonOS\Module\Archivist\Repository\AccountRepository;
 use GibsonOS\Module\Archivist\Strategy\StrategyInterface;
 use JsonException;
@@ -68,7 +69,7 @@ class StrategyAutoComplete implements AutoCompleteInterface
 
             $strategy = new Strategy($name, $className);
 
-            if ($rule !== null && $rule->getStrategy() === $className) {
+            if ($rule instanceof Account && $rule->getStrategy() === $className) {
                 $strategy->setConfiguration($rule->getConfiguration());
             }
 

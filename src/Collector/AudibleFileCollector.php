@@ -41,7 +41,7 @@ class AudibleFileCollector
             $titleParts = new TitleParts(trim($matches[1]), trim($matches[3]), trim($matches[5]));
             $series = $titleParts->getSeries();
 
-            if (empty($series)) {
+            if ($series === '') {
                 $this->findSeriesAndEpisode($titleParts);
             }
 
@@ -79,7 +79,7 @@ class AudibleFileCollector
         $series = $titleParts->getSeries();
 
         if (
-            !empty($series)
+            $series !== ''
             && count($cleanTitleParts) === 2
             && mb_stripos($cleanTitleParts[0], $series) === 0
             && mb_stripos($cleanTitleParts[1], $series) === false
@@ -94,13 +94,13 @@ class AudibleFileCollector
             $cleanTitle,
         );
 
-        if (!empty($series)) {
+        if ($series !== '') {
             $cleanTitle = preg_replace('/:.*/s', '', $cleanTitle);
         }
 
         $cleanTitle = trim($cleanTitle);
 
-        if (empty($cleanTitle)) {
+        if ($cleanTitle === '') {
             $cleanTitle = $series;
         }
 
@@ -110,12 +110,12 @@ class AudibleFileCollector
         $cleanTitle = str_replace('/', ' ', $cleanTitle);
         $cleanTitle = preg_replace('/\s\.\s/', ' ', $cleanTitle);
 
-        if (!empty($episode)) {
+        if ($episode !== '') {
             $cleanTitle = $episode . ' ' . $cleanTitle;
         }
 
         return
-            (empty($series) ? '' : '[' . trim($series) . '] ') .
+            ($series === '' ? '' : '[' . trim($series) . '] ') .
             trim(preg_replace('/\s{2,}/s', ' ', $cleanTitle))
         ;
     }

@@ -68,7 +68,7 @@ class BrowserService
             throw new BrowserException(\sprintf('Element #%s not found!', $id), $session);
         }
 
-        if ($element === null) {
+        if (!$element instanceof NodeElement) {
             throw new BrowserException(\sprintf('Element #%s not found!', $id), $session);
         }
 
@@ -100,7 +100,7 @@ class BrowserService
             throw new BrowserException(\sprintf('Link "%s" not found!', $link), $session);
         }
 
-        if ($element === null) {
+        if (!$element instanceof NodeElement) {
             throw new BrowserException(\sprintf('Link "%s" not found!', $link), $session);
         }
 
@@ -132,7 +132,7 @@ class BrowserService
             throw new BrowserException(\sprintf('Button "%s" not found!', $button), $session);
         }
 
-        if ($element === null) {
+        if (!$element instanceof NodeElement) {
             throw new BrowserException(\sprintf('Button "%s" not found!', $button), $session);
         }
 

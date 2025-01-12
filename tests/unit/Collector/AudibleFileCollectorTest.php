@@ -438,7 +438,7 @@ class AudibleFileCollectorTest extends Unit
                 'page12.html',
                 [
                     [
-                        'name' => '[DOORS - Staffel 2] DOORS - Drei Sekunden',
+                        'name' => '[DOORS - Staffel 2] 0 DOORS - Drei Sekunden',
                         'path' => 'https://www.audible.de/library/download?asin=B07YSR9KCW&codec=AAX_44_128',
                     ], [
                         'name' => '[Ghostsitter] 3 Die komplette Staffel',
@@ -483,7 +483,7 @@ class AudibleFileCollectorTest extends Unit
                         'name' => '[Das Pummeleinhorn] 2 Das Pummeleinhorn',
                         'path' => 'https://www.audible.de/library/download?asin=B0892MP2SW&codec=AAX_44_128',
                     ], [
-                        'name' => '[DOORS Kurzgeschichten] DOORS - Der Beginn',
+                        'name' => '[DOORS Kurzgeschichten] 0 DOORS - Der Beginn',
                         'path' => 'https://www.audible.de/library/download?asin=B07GH1TK6H&codec=AAX_44_128',
                     ], [
                         'name' => '[Lou Clark] Auf diese Art zusammen',
