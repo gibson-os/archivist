@@ -48,6 +48,8 @@ class BrowserService
      */
     public function waitForElementById(Session $session, string $id, int $maxWait = 10000000): NodeElement
     {
+        $element = null;
+
         try {
             $this->waitFor(
                 $session,
@@ -66,6 +68,10 @@ class BrowserService
             throw new BrowserException(\sprintf('Element #%s not found!', $id), $session);
         }
 
+        if ($element === null) {
+            throw new BrowserException(\sprintf('Element #%s not found!', $id), $session);
+        }
+
         return $element;
     }
 
@@ -74,6 +80,8 @@ class BrowserService
      */
     public function waitForLink(Session $session, string $link, int $maxWait = 10000000): NodeElement
     {
+        $element = null;
+
         try {
             $this->waitFor(
                 $session,
@@ -92,6 +100,10 @@ class BrowserService
             throw new BrowserException(\sprintf('Link "%s" not found!', $link), $session);
         }
 
+        if ($element === null) {
+            throw new BrowserException(\sprintf('Link "%s" not found!', $link), $session);
+        }
+
         return $element;
     }
 
@@ -100,6 +112,8 @@ class BrowserService
      */
     public function waitForButton(Session $session, string $button, int $maxWait = 10000000): NodeElement
     {
+        $element = null;
+
         try {
             $this->waitFor(
                 $session,
@@ -118,6 +132,10 @@ class BrowserService
             throw new BrowserException(\sprintf('Button "%s" not found!', $button), $session);
         }
 
+        if ($element === null) {
+            throw new BrowserException(\sprintf('Button "%s" not found!', $button), $session);
+        }
+
         return $element;
     }
 
@@ -126,7 +144,7 @@ class BrowserService
         try {
             $this->waitFor(
                 $session,
-                function () use (&$element, $session, $maxWait) {
+                function () use ($session, $maxWait) {
                     $element = $session->getPage()->find('xpath', 'body');
 
                     if ($element === null) {

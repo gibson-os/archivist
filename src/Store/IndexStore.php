@@ -14,6 +14,9 @@ use MDO\Enum\OrderDirection;
 use MDO\Exception\ClientException;
 use ReflectionException;
 
+/**
+ * @extends AbstractDatabaseStore<Index>
+ */
 class IndexStore extends AbstractDatabaseStore
 {
     private ?Account $account = null;

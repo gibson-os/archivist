@@ -7,6 +7,9 @@ use GibsonOS\Core\Model\User;
 use GibsonOS\Core\Store\AbstractDatabaseStore;
 use GibsonOS\Module\Archivist\Model\Account;
 
+/**
+ * @extends AbstractDatabaseStore<Account>
+ */
 class AccountStore extends AbstractDatabaseStore
 {
     private User $user;
